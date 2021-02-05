@@ -1,0 +1,109 @@
+.el-pagination {
+  text-align: center; 
+}
+
+.app-container{
+  margin: 20px;
+}
+.container-title{
+    //     display: grid;
+    // grid-template-columns: 60% 10% 30%;
+    // align-items: center;
+    display: flex;
+   justify-content: space-between;
+   line-height: 42px;
+    position: relative;
+   border-bottom: 10px solid #F7F7F7;
+   margin-bottom: 10px;
+   padding-bottom: 10px;
+}
+.container-title h3{
+  padding-left:10px;
+}
+// 标题部分的样式
+.container-title h3::before{
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: -7px;
+    width: 10px;
+    height: 33px;
+    background: #0075EE;
+}
+.container-title .select_query{
+    //   display: grid;
+    // grid-template-columns: 45% 20%;
+    align-items: center;
+    margin-left: 20px;
+}
+.container-title .filter-item{
+  margin:0;
+  border: 1px solid #0078FF;
+}
+
+.container-middle{
+  display:flex;
+  justify-content: space-between; 
+   margin: 20px;
+}
+/* 操作部分 */
+  .btn-upt{   
+    margin: 0 .5rem 0 0!important;
+    color: #0075EE;
+    padding-left: 14px;
+  }
+//确定按钮
+/deep/.su-button{
+  background: #0052CC;
+}
+// 弹出框
+/deep/.el-dialog{
+  .el-dialog__header{
+    // background: #0075EE;
+    background: white;
+    .el-dialog__title,.el-dialog__close{
+      color: black;
+    }
+  }
+  .el-dialog__footer{
+    text-align: center;
+  }
+     
+}
+ /deep/ .deleteDialog{
+          .el-dialog__header{
+              background: white;
+          }
+          .el-dialog__body{
+             text-align: center;
+             padding:0;
+          } 
+    }
+    // 星号
+/deep/ .addDialog{
+  .el-form-item__label::before{
+    content: '*';
+    color: red;
+    margin-right: 10px;
+    font-size: 20px;
+    position: relative;
+    top: 6px;
+  }
+}
+
+// 分页
+/deep/.el-input__inner{ 
+border: 1px solid #0075EE;
+}
+/deep/.el-pager li.active{ 
+background: #0075EE;
+}
+/deep/.el-pagination button:disabled,
+/deep/.btn-next,
+/deep/.el-pager li{  
+background: #D8D8D8;
+    margin-right: 10px;
+}
+/deep/.el-select__caret{
+  color: black;
+}

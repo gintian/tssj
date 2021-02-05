@@ -1,0 +1,23 @@
+{
+  "id": "2367348",
+  "name": "ts",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1425911",
+      "name": "展开",
+      "font_class": "zhankai",
+      "unicode": "e840",
+      "unicode_decimal": 59456
+    },
+    {
+      "icon_id": "17833649",
+      "name": "收起",
+      "font_class": "shouqi",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="77px" height="75px" viewBox="0 0 77 75" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63 (92445) - https://sketch.com -->
+    <title>当前扫描数量</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="73" height="71"></rect>
+        <filter x="-3.4%" y="-3.5%" width="106.8%" height="107.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="0" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feMorphology radius="2.5" operator="erode" in="SourceAlpha" result="shadowInner"></feMorphology>
+            <feOffset dx="0" dy="0" in="shadowInner" result="shadowInner"></feOffset>
+            <feComposite in="shadowOffsetOuter1" in2="shadowInner" operator="out" result="shadowOffsetOuter1"></feComposite>
+            <feGaussianBlur stdDeviation="0.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1首页" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1（1）首页" transform="translate(-711.000000, -622.000000)">
+            <g id="雷达信息" transform="translate(246.000000, 436.000000)">
+                <g id="编组-5"></g>
+                <g id="当前扫描数量" transform="translate(467.000000, 188.000000)">
+                    <path d="M35.999989,11 C27.1646149,11 20,18.1571658 20,26.99226 C20,31.4053698 21.7934239,35.4026583 24.6867602,38.2982223 L35.999989,49.6071429 L47.3162447,38.2982223 C50.3225401,35.2955939 52.0070201,31.230528 52,26.9952182 C52,18.160124 44.8383901,11.0029582 35.999989,11.0029582 L35.999989,11 Z M36.8421089,34.5 C35.050885,34.494989 33.3348113,33.6966816 32.0714105,32.2806989 C30.8080098,30.8647162 30.1007751,28.9470504 30.1052632,26.9495728 L30.1052632,26.9432844 C30.1000258,24.9460967 30.8066324,23.0284224 32.0695855,21.6123488 C33.3325385,20.1962753 35.0483233,19.3978672 36.8392893,19.3928571 L36.8421089,19.3928571 C38.6333328,19.3978681 40.3494065,20.1961756 41.6128072,21.6121582 C42.876208,23.0281409 43.5834427,24.9458067 43.5789474,26.9432844 L43.5789474,26.9495728 C43.5883358,31.1049227 40.576839,34.4829562 36.8505675,34.4968558 L36.8421089,34.4968558 L36.8421089,34.5 Z M30.1052632,54.6428571 C30.1052632,56.4969559 33.1214501,58 36.8421053,58 C40.5627604,58 43.5789474,56.4969559 43.5789474,54.6428571 C43.5789474,52.7887583 40.5627604,51.2857143 36.8421053,51.2857143 C33.1214501,51.2857143 30.1052632,52.7887583 30.1052632,54.6428571 Z" id="形状" fill="#5A8AF8" fill-rule="nonzero"></path>
+                    <g id="矩形备份-12">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                        <rect stroke="#5A8AF8" stroke-width="2" stroke-linejoin="square" x="1" y="1" width="71" height="69"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
