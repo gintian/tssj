@@ -62,7 +62,7 @@
         }).then(res => {
           console.log("登录返回的数据",res.data)
           if(res.data.error===0){
- this.$store.dispatch('setUserData', res)
+          this.$store.dispatch('setUserData', res)
           this.$store.commit('setJSESSIONID', res.data.JSESSIONID)
           this.$router.push({ path: '/map2' })
           }

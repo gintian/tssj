@@ -21,12 +21,12 @@
             </div>
         </div>
         <div class="down">
-            <el-button type="primary" @click="info" style="margin-left: 10px;margin-top: 5px;"  size="mini" icon="el-icon-warning-outline">信息</el-button>
-            <el-button type="primary" @click="track"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-view" v-show="shipTabObj.targettype!==1">跟踪</el-button>
+            <el-button type="primary" @click="shipDetail" style="margin-left: 10px;margin-top: 5px;"  size="mini" icon="el-icon-warning-outline">信息</el-button>
+            <!-- <el-button type="primary" @click="track"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-view" v-show="shipTabObj.targettype!==1">跟踪</el-button> -->
             <el-button type="primary" @click="histroy"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-share" v-show="shipTabObj.targettype!==3">轨迹</el-button>
 
             <div v-show="shipTabObj.targettype!==3">
-                <el-button type="primary" @click="shipDetail"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-document" >船舶详情</el-button>
+                <!-- <el-button type="primary" @click="shipDetail"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-document" >船舶详情</el-button> -->
                 <el-button type="primary" @click="focus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-off" v-show="!shipTabObj.isFocus">设定为重点目标</el-button>
                 <!-- <el-button type="primary" @click="disFocus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-on"  v-show="shipTabObj.isFocus">取关</el-button> -->
             </div>
@@ -70,8 +70,9 @@ export default {
     },
     watch:{
         shipTabObj :function(val) {
+          console.log('shipTabObj',val.lasttime)
             if(val.targettype === 3){
-                // console.log(val)
+                // console.log("targettype",val.targettype)
                 this.ordArr = [
                     { id:6, name:'批号' ,prop:'targetid' },
                     //{ id:3, name:'方位' ,prop:'azimuth' },
@@ -83,34 +84,34 @@ export default {
             }else {
 
               // console.log(val.updatetime)
-              if(val.updatetime){
+              // if(val.updatetime){
 
-                this.shipTabObj.updatetime = new Date(val.updatetime).toISOString().split('T')[0] + ' ' +  new Date(val.updatetime).toTimeString().split(' ')[0];
-              }
+              //   this.shipTabObj.updatetime = new Date(val.updatetime).toISOString().split('T')[0] + ' ' +  new Date(val.updatetime).toTimeString().split(' ')[0];
+              // }
 
-                //this.datetoString.bind(new Date(val.updatetime))('yyyy-MM-dd hh:mm:ss'); //new Date(val.updatetime).toLocaleString();
-               // new Date().toISOString().split('T')[0] + new Date().toISOString().split('T')[1].split('.')[0]
+              //   this.datetoString.bind(new Date(val.updatetime))('yyyy-MM-dd hh:mm:ss'); //new Date(val.updatetime).toLocaleString();
+              //  new Date().toISOString().split('T')[0] + new Date().toISOString().split('T')[1].split('.')[0]
 
               this.ordArr = [
-                { id: 1, name: 'MMSI', prop: 'mmsi' },
-                // { id: 3, name: '经度', prop: 'lon' },
-                { id: 5, name: '呼号', prop: 'callSign' },
-                // { id: 9, name: '航速', prop: 'speed' },
-                // { id: 7, name: '船长度', prop: 'length' },
-                // { id: 11, name: '类型', prop: 'shiptype' },
-                // { id: 13, name: '最大吃水', prop: 'maxDraft' },
-                // { id: 15, name: '目的地', prop: 'dest' },
-                // { id: 2, name: '名称', prop: 'name' },
-                // { id: 4, name: '纬度', prop: 'lat' },
-                { id: 6, name: 'IMO', prop: 'imo' },
-                // { id: 10, name: '航向', prop: 'course' },
-                // { id: 8, name: '船宽度', prop: 'width' },
-                // { id: 12, name: '状态', prop: 'status' },
-                { id: 14, name: '船艏向', prop: 'trueHead' },
-
-                //{ id:15, name:'预计航行时间' ,prop:'eta'},
-                { id: 16, name: '更新时间', prop: 'updatetime' }
-              ]
+                { id:0, name:'IMO' ,prop:'imo'},
+                { id:1, name:'MMSI' ,prop:'mmsi'},
+                { id:2, name:'更新时间' ,prop:'lasttime'},
+                { id:3, name:'类型' ,prop:'shipType'},
+                // { id:4, name:'航速' ,prop:'speed'},
+                // { id:5, name:'状态' ,prop:'status'},
+                // { id:6, name:'航向' ,prop:'course'},
+                { id:7, name:'名称' ,prop:'name'},
+                { id:8, name:'经度' ,prop:'lon' },
+                { id:9, name:'纬度' ,prop:'lat'},
+                // // { id:10, name:'船长度' ,prop:'length'},
+                // // { id:11, name:'船宽度' ,prop:'width'},
+                // // { id:12, name:'最大吃水' ,prop:'maxDraft'},
+                // // { id:13, name:'船艏向' ,prop:'trueHead'},
+                // // { id:14, name:'目的地' ,prop:'dest'},
+                // //{ id:15, name:'预计航行时间' ,prop:'eta'},
+                // // { id:16, name:'更新时间' ,prop:'updatetime'},
+                 { id:16, name:'更新时间' ,prop:'lasttime'},
+            ]
             }
         }
     },
@@ -130,21 +131,22 @@ export default {
             ordArr:[
                 { id:0, name:'IMO' ,prop:'imo'},
                 { id:1, name:'MMSI' ,prop:'mmsi'},
-                { id:2, name:'呼号' ,prop:'callSign'},
-                { id:3, name:'类型' ,prop:'shiptype'},
-                { id:4, name:'航速' ,prop:'speed'},
-                { id:5, name:'状态' ,prop:'status'},
-                { id:6, name:'航向' ,prop:'course'},
+                { id:2, name:'更新时间' ,prop:'lasttime'},
+                { id:3, name:'类型' ,prop:'shipType'},
+                // { id:4, name:'航速' ,prop:'speed'},
+                // { id:5, name:'状态' ,prop:'status'},
+                // { id:6, name:'航向' ,prop:'course'},
                 { id:7, name:'名称' ,prop:'name'},
-                { id:8, name:'经度' ,prop:'lon'},
+                { id:8, name:'经度' ,prop:'lon' },
                 { id:9, name:'纬度' ,prop:'lat'},
-                { id:10, name:'船长度' ,prop:'length'},
-                { id:11, name:'船宽度' ,prop:'width'},
-                { id:12, name:'最大吃水' ,prop:'maxDraft'},
-                { id:13, name:'船艏向' ,prop:'trueHead'},
-                { id:14, name:'目的地' ,prop:'dest'},
-                //{ id:15, name:'预计航行时间' ,prop:'eta'},
-                { id:16, name:'更新时间' ,prop:'updatetime'},
+                // // { id:10, name:'船长度' ,prop:'length'},
+                // // { id:11, name:'船宽度' ,prop:'width'},
+                // // { id:12, name:'最大吃水' ,prop:'maxDraft'},
+                // // { id:13, name:'船艏向' ,prop:'trueHead'},
+                // // { id:14, name:'目的地' ,prop:'dest'},
+                // //{ id:15, name:'预计航行时间' ,prop:'eta'},
+                // // { id:16, name:'更新时间' ,prop:'updatetime'},
+                //  { id:16, name:'更新时间' ,prop:'lasttime'},
             ],
             //urltypeArr
           dialogVisible:false,

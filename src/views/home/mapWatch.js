@@ -51,7 +51,7 @@ let flyDataImg=function(speed) {
 
 export default {
   async shipData(val) {
-    // console.log('数据变化',val);// #d61c44 #26B574 handler
+    console.log('数据变化',val);// #d61c44 #26B574 handler
     // this.removeOverlay('shipType');
     //
     // if (this.map.getZoom() < this.maxMapZoom) {
@@ -134,22 +134,26 @@ export default {
         })
       }).addTo(this.animateLayer);
       console.log(data[0].data.signal);
+      // 1是Ais目标2是融合目标3是雷达目标
       if(info.targettype === 3){
         this.dialogInfo.ship = info
         this.showInfo.ship = true
         return
       }
-      this.service.post('/ship/shipDetail', {
+      this.service.get('/ship/view', {
+       params:{
         mmsi: info.mmsi
+       }
       }).then(res => {
-        console.log(res)
-        this.dialogInfo.ship = res.data
+        // console.log(res)
+        this.dialogInfo.ship = res.ais
         this.dialogInfo.ship.targettype = info.targettype
         this.dialogInfo.ship.targetid = info.targetid
         this.dialogInfo.ship.radarid = info.radarid
-        this.dialogInfo.ship.attributionid = info.attributionid
-        this.dialogInfo.ship.urltype = info.urltype
-        if (res.code === 0) {
+        // this.dialogInfo.ship.attributionid = info.attributionid
+        // this.dialogInfo.ship.urltype = info.urltype
+        console.log( this.dialogInfo.ship)
+        if (res.error === 0) {
           this.showInfo.ship=true
         }
 
@@ -259,7 +263,7 @@ export default {
   //   }
   // },
   async socketFlyData(val) {
-    console.log('数据变化',val)
+    // console.log('数据变化',val)
     this.planeLayer.clearLayers()
     let mz=this.map.getZoom()
     function createMarker(e) {
@@ -343,7 +347,7 @@ export default {
     let count=0
     for (let i of val) {
       // console.log(i.Latitude)
-      console.log(i.ID+'/'+this.planeID.id+'/')
+      // console.log(i.ID+'/'+this.planeID.id+'/')
       // if (i.ID=== this.planeID.id) {
       //   console.log(this.planeID.id)
       //   if(this.planeID.class){this.planeLayer.removeLayer(this.planeID.class);}

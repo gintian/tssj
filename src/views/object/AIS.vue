@@ -44,8 +44,8 @@
     </el-table-column>
     <el-table-column prop="status" label="运行状态" align="center">
       <template slot-scope="scope">
-            <span v-if="scope.row.status == true">正常</span>
-            <span v-if="scope.row.status == false">异常</span>
+            <span v-if="scope.row.status == true">异常</span>
+            <span v-if="scope.row.status == false">正常</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -116,7 +116,7 @@
             <el-input v-model="temp.lat" />
           </el-form-item>
           <el-form-item label="运行状态" prop="status">
-              <el-input v-model="temp.status" />
+              <el-input v-model="update" @change="changeu" />
             </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -169,7 +169,7 @@ export default {
           showBtn:true,
           showMap:false,
           disabled:false
-        },
+        }, 
       mapData:[],
       tableData: [], //表格展示的数据
       pages:1, //总页数
@@ -177,8 +177,10 @@ export default {
       listQuery:{
         pageNumber:1, //当前页面
         pageSize:10, //条数
-        name:''  //查询条件
+        name:'' , //查询条件
+        id:''
       },
+      delid:'',
       dialogDelVisible:false, //删除弹层显示与隐藏
       dialogFormVisible:false, //编辑弹层显示与隐藏
       dialogFormVisible1:false, //新增弹层显示与隐藏
@@ -199,7 +201,6 @@ export default {
         status:'',
       },
       Business_exception:null,
-      //  visible: false,
     }
   },
   filters:{},
@@ -213,15 +214,23 @@ export default {
             return 'background-color: #DEE8FE;color: #000;font-weight: 500;'
           }
         }, 
-
+    changeu(val){
+      console.log("val",val)
+      if(val=="异常"){
+        this.temp.status=true
+      }else if(val=='正常'){
+        this.temp.status=false
+      }
+    },
     getList(){  //获取数据
-         this.service.get( '/radar/page',{
-             pageNumber: this.listQuery.pageNo,
-              pageSize: this.listQuery.pageSize,
-              name: this.listQuery.name
+         this.service.get( '/ais/page',{
+             params:{
+           pageNumber: this.listQuery.pageNo,
+          pageSize: this.listQuery.pageSize,
+          name: this.listQuery.name}
          }).then(req => {
-          console.log("雷达数据",req)
-          this.tableData = req.data.page.list
+          console.log("AIS数据",req)
+          this.tableData = req.page.list
         }) 
     },
      handleClickView(row) {
@@ -238,12 +247,12 @@ export default {
       require.ensure([], () => {
         // eslint-disable-next-line camelcase,global-require
         const { export_json_to_excel } = require('@/vandor/export2Excel.js');
-        const tHeader = ['考评单位名称', '得分']; // 表头
-        const filterVal = ['evaluationCompanyName', 'acquisitionScore']; // 值
+        const tHeader = ['序号', '名称','编号','经度','纬度','运行状态']; // 表头
+        const filterVal = ['id', 'name','id','lat','lon','status']; // 值
         const list = this.tableData;
         console.log('后端返回的数据', list);
         const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, '下载数据excel');
+        export_json_to_excel(tHeader, data, 'ais数据表');
       });
     },
     // 格式转换
@@ -254,9 +263,7 @@ export default {
     query(){ //按名称查询
       this.getList();
     },
-    handleSubmit(row){
-      
-    },
+    
     //当前条数变化
     handleSizeChange(val=this.listQuery.pageSize ){
       this.listQuery.pageSize = val;
@@ -269,14 +276,30 @@ export default {
     },
     //删除弹层
     handleDel(row){
+      console.log(row)
+       this.delid=row.id
+       console.log("这行数据的id",this.delid)
       this.temp = {...row};
       this.dialogDelVisible = true; //弹层显示
     },
     //删除提交
-    delData(){},
+    delData(){
+         this.service.get( '/ais/delete?id='+this.delid,{     
+         }).then(req => {
+          console.log("删除AIS数据",req)
+          this.getList();
+          this.dialogDelVisible = false;
+        }) 
+    },
      //编辑弹层
     handleUpdate(index,row){
      this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
+      if(this.temp.status=true){
+        this.update = "正常"
+      }else if(this.temp.status=false){
+       this.update = "异常"
+      }
+    
       this.dialogFormVisible = true; //弹层显示
     },
     // 添加雷达
@@ -286,24 +309,11 @@ export default {
      AddData(){
         let userList=this.addsForm;  
         let {station,name,lat,lon,status} = userList;
-        //判断数据是否为空
-        if(station==''||name==''||lat==''||lon==''||status==''){
-          this.$message.error('新增内容每一项都不准为空')
-        }else{
-        //每一条都不为空时才向后台发送http请求
           this.service.post('/ais/save',this.addsForm).then(res => {
             console.log("新增的AIS数据",res)
-            let {errCode,errMsg} = res.data;
-            if(!errCode==1){
-              this.$set(this.addsForm,{});
-              this.getList();   //重新渲染数据列表
-              this.dialogFormVisible1 = false;
-            }else{
-              this.$message.error(errMsg);  //弹出后台返回错误
-            }
-          }, response => {
-          });
-        }
+          this.getList(); 
+          this.dialogFormVisible1 = false;}
+          );
     },
     //编辑提交
     updateData(){
@@ -312,11 +322,12 @@ export default {
           station:this.temp.station,
           name:this.temp.name,
           lat:this.temp.lat,
-        lon:this.temp.lon,
+         lon:this.temp.lon,
         status:this.temp.status,
        }).then(req => {
           console.log("编辑AIS信息",req)
           this.getList();
+          this.dialogFormVisible = false;
       })
     }
   }

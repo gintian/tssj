@@ -1,17 +1,24 @@
 <template>
    <div id="home">
        <div id="map" ></div>
-        <!-- 折叠开关国家显示-->
+        <!-- 折叠开关国家船舶信息显示-->
             <div  id="countrySigns" style="position: absolute;top: 3%;z-index: 400;left: 2%;background: #0075EE;width:37px;height:30px;" v-drag>
                 <country-signs @flag='flag()'></country-signs>
             </div>
         <!-- 搜索框 -->
          <div class="query-input"  style="position: absolute;top: 3%;z-index: 400; right: 2%;">
-                <el-input  placeholder="请输入船舶名称或MMSI" style="width: 200px;" class="filter-item" 
+                <!-- <el-input  placeholder="请输入船舶名称或MMSI" style="width: 200px;" class="filter-item" 
                 @input="query()"/>
-                <el-button style="background:#0075EE;font-size:14px;width:20px;" type="primary" icon="el-icon-search" @click="query()" >
+                <el-button style="background:#0075EE;font-size:14px;width:6px;" type="primary" icon="el-icon-search" @click="query()" >
                   搜索
-                </el-button>
+                </el-button> -->
+                <el-dropdown size="medium" split-button type="primary" trigger="click" >
+                    <i class="el-icon-search" style="margin-right:10px;"></i>高级搜索
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item  v-for="item in downMenuList"  :key="item.index" 
+                         @click.native="choosed(item.index)">{{item.name}}</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
          </div>
        <!--     海量点-->
        <img :src="pointCollectionImg" alt=""  style="position: fixed;left: 20px;top: 94px;z-index: 400;pointer-events: none;" v-show="showPointCollectionImg">
@@ -38,10 +45,7 @@
        <div  id="selectMarker" style=" position: absolute;right: 5%; top:20%;z-index: 400;width: 350px"  v-drag v-show="showSelectMarker">
            <SelectMarker @selectMarker="selectMarker" @hide='showSelectMarker=false'  close-on-click-modal></SelectMarker>
        </div>
-            <!-- 海域 -->
-        <div  id="selectMarker1" style=" position: absolute;right: 5%; top:20%;z-index: 400;width: 350px"  v-drag >
-           <SelectMarker1></SelectMarker1>
-       </div>
+            
        <!-- 船只信息 -->
        <div  style="height: auto;width: auto;position: absolute;left: 23%; top:10%;z-index: 500;" id='ShipDataInfo' v-drag v-show="showInfo.ship">
            <ShipInfoView :shipTabObj='dialogInfo.ship'
@@ -214,9 +218,7 @@
                    </el-radio-group>
                </div>
                <div class="line"></div>
-               <!--                    <div class="mainSearch">-->
-               <!--                        <el-input placeholder="请输入区域名称搜索" v-model="search"></el-input>-->
-               <!--                        <span @click="showDrawView=true" class="selectAdd">+</span></div>-->
+            
                <div class="mainContent">
 
                    <group-tree @openDrawView="openDrawView" :map="map" :groupData="groupData" :areaLayer="areaLayer"
@@ -231,29 +233,27 @@
 
            <div class="drawTitle groupViewTitle">
                <div>
-                   <p>区域绘制</p>
+                   <p>添加区域</p>
                    <span @click="closeDraw">X</span>
                </div>
            </div>
            <div class="DrawMain">
 
-               <!--            <div >-->
                <el-form label-position="left" :rules="formRules" status-icon label-width="80px" ref="ruleForm"
                         :model="drawData">
                    <div class="drawItem"><span>形状:</span>
                        <p v-for="(item,index) in DrawType" :key="index" :class="{'acitve':index===isDrawType}"
                           @click="drawArea(item.value,index)">{{item.label}}</p></div>
                    <el-row>
-                       <el-col :span="15">
-                           <el-form-item label="名称:" prop="name" label-width="60px">
+                       <el-col :span="15" style="margin-left:10px;">
+                           <el-form-item label="名称:" prop="name" label-width="60px"  class="name-item" >
                                <el-input class="nameInput" v-model="drawData.name"
                                          ref="nameInput" size="medium "/>
                            </el-form-item>
                        </el-col>
                    </el-row>
-                   <el-row>
+                   <!-- <el-row>
                        <el-col :span="15">
-
                            <el-form-item label="类型:" label-width="60px" prop="lever">
                                <el-select v-model="drawData.lever">
                                    <el-option
@@ -268,7 +268,6 @@
                    </el-row>
                    <el-row>
                        <el-col :span="15">
-
                            <el-form-item label="分组:" label-width="60px" prop="groupId">
                                <el-select v-model="drawData.groupId" placeholder="请选择">
                                    <el-option
@@ -285,13 +284,12 @@
                    </el-row>
                    <el-row>
                        <el-col :span="15">
-
                            <el-form-item label="描述:" label-width="60px">
                                <el-input v-model="drawData.description"
                                          type="textarea"/>
                            </el-form-item>
                        </el-col>
-                   </el-row>
+                   </el-row> -->
                    <div class="drawItem" v-show="drawData.positions[0]"><span>+新增点
                             <el-button  icon="el-icon-edit" circle size="mini" style="height: 27px;" @click="disabledDraw=false,drawData.preview=true" v-show="!drawData.preview"></el-button>
                             <el-button   type="success" icon="el-icon-check" circle size="mini" style="height: 27px;" v-show="drawData.preview" @click="drawPreview"></el-button>
@@ -300,13 +298,10 @@
                            <el-form-item label="" label-width="0" prop="radius"><input v-model="drawData.radius" :disabled="disabledDraw"/>  <p>半径</p></el-form-item>
                        </div>
                        <div class="drawPos" v-for="(pos,index) in drawData.positions" :key="index">
-
                            <span>{{index+1}}.</span><input v-model="pos[0]" :disabled="disabledDraw"/>
                            <p>经</p> <input v-model="pos[1]" :disabled="disabledDraw"/>
                            <p>纬</p>
                        </div>
-
-
                    </div>
                    <div class="drawItem">
                        <el-button
@@ -316,7 +311,6 @@
                        <el-button type="primary" @click="subDraw('ruleForm')">确认</el-button>
                    </div>
                </el-form>
-               <!--            </div>-->
            </div>
 
        </div>
@@ -335,7 +329,6 @@
   import ButtonGroup from '../../components/ButtonGroup.vue'
   import MapControl from '../../components/map/MapControl'
   import SelectMarker from '../../components/map/SelectMarker'
-  import SelectMarker1 from '../../components/map/SelectMarker1' //海域
   import ShipCount from '../../components/map/ShipCount'
   import ShipAreaCount from '../../components/map/ShipAreaCount'
   import AnchInfoView from '../../components/map/AnchInfoView'
@@ -354,7 +347,6 @@
   import ShipDetailView from '../../components/map/ShipDetailView';
   import ShipHistory from '../../components/map/ShipHistroyView';
   import FocusDialog from '../../components/map/FocusDialog'
-
    import groupTree from '../../components/groupTree.vue'
   import MapSigns from '../../components/MapSigns.vue'
   import CountrySigns  from '../../components/CountrySigns .vue'
@@ -363,14 +355,15 @@
   export default {
     name: 'Map',
     components: {
-      Dropdown, ButtonGroup,MapControl,SelectMarker,SelectMarker1,ShipCount,ShipAreaCount,AnchInfoView,PierInfoView,PortInfoView,SeaLineInfoView,StationInfoView,RadarInfoView,RadarDataTabView,
+      Dropdown, ButtonGroup,MapControl,SelectMarker,ShipCount,ShipAreaCount,AnchInfoView,PierInfoView,PortInfoView,SeaLineInfoView,StationInfoView,RadarInfoView,RadarDataTabView,
       AisInfoView,AisDataTabView,VideoView,LeftDrawer,DailyEventDiag,ShipInfoView,ShipDetailView,ShipHistory,FocusDialog,groupTree,
       'map-signs': MapSigns,
       'country-signs':CountrySigns 
     },
     data() {
       return {
-
+          downMenuList:[{name:'目标名称',index:'0'},{name:'目标编号',index:'1'},
+          {name:'目标类型',index:'2'},{name:'出现时间',index:'3'},{name:'出现区域',index:'4'},],
         ...mapData,...mapSocket,
          formRules: formRules,
       }
@@ -384,8 +377,9 @@
     },
 
     mounted() {
+        
       this.flag()
-      this.query()
+    //   this.query()
       this.mapInit()
       this.initWebSocket()
       this.map.setView([30.37892927824675,122.19491755725795], 10);
@@ -421,63 +415,49 @@
         this.websocketsend(JSON.stringify({action:'allRadar',data:{isshow:1,uid:this.$store.getters.user.data.id}}))
 
       },500)
-     
-
-      // let icon = L.icon({
-      //   iconUrl: require('../../assets/history/ship.png'),
-      //   iconSize: [40,44],
-      //   iconAnchor: [40,44]
-      // })
-
-      // var myMovingMarker = L.Marker.movingMarker([[30.446697803690274,121.23364833802734],[31.522516525076792,123.71961012268834]],
-      //   [20000],{
-      //     icon:icon
-      //   }).addTo(this.map);
-      // myMovingMarker.start();
-      // setTimeout(()=>{ myMovingMarker.pause()},5000)
-      // setTimeout(()=>{ myMovingMarker.resume()},8000)
 
     },
     methods: {
-      query(){
-
-      },
+     choosed(item){
+            console.log(item)
+            // if(item.index=0){}
+        },
       //统计国家数
         flag(){
           this.service.get('/ship/flag').then(res=>{
             console.log("查询到的国家列表",res)
           })
         },
+
         ...mapUtils,...homeMethods,...mapSocketFun,
       //加载区域船舶
       loadAreaShip(isShow){
-        // if(this.initLoadOnce){
-          console.log('loadAreaShip')
+            console.log('loadAreaShip')
            console.log(this.$store.getters.user.data.user.id)
           let swne = this.getMapBounds()
           let d = {
             'isshow': isShow,
-            //attributionid: this.currentIslandObj.id,
             'maxLat': swne['neLat'],
             'minLat': swne['swLat'],
             'minLon': swne['swLon'],
             'maxLon': swne['neLon'],
+            'times':[],
+            'types':[],
+            "waters":[],
             'uid':this.$store.getters.user.data.user.id?this.$store.getters.user.data.user.id:null
           }
           this.service.get('/ship/areaList',{params:{
             ...d
           }}).then(res=>{
-            console.log(res)
+            console.log("区域内船舶加载",res)
             if (this.map.getZoom() >= this.maxMapZoom) {
-              this.areaShipData = [...res.data.list]
+              this.areaShipData = [...res.list]
             }
-
-            this.leftDrawerData.row1 = res.data.targetMap.columns
-            this.leftDrawerData.row3 = res.data.typeMap
-            // console.log(this.leftDrawerData.row3)
-            this.leftDrawerData.row3.typeList.forEach(e=>{if(this.leftDrawerShipType.name===e.name)this.leftDrawerShipType.num=e.num;})
-          })
-        // }
+            // this.leftDrawerData.row1 = res.data.targetMap.columns
+            // this.leftDrawerData.row3 = res.data.typeMap
+            // // console.log(this.leftDrawerData.row3)
+            // this.leftDrawerData.row3.typeList.forEach(e=>{if(this.leftDrawerShipType.name===e.name)this.leftDrawerShipType.num=e.num;})
+          }) 
       },
       //初始化海量点
       addShipPointCollection(size, id = -1){
@@ -650,7 +630,8 @@
 
     .groupViewMain {
         padding: 15px;
-        background: #305071;
+        // background: #305071;
+        background: white;
     }
     .groupViewMain /deep/.el-input__inner{
         background: transparent;
@@ -659,7 +640,8 @@
 
     .groupViewMain p {
         display: inline;
-        color: white;
+        // color: white;
+        color: black;
     }
 
     .groupViewMain p span:nth-child(1) {
@@ -846,28 +828,14 @@
     }
 
     .drawTitle span {
-        /*width: 30px;*/
-        /*height: 50px;*/
-        /*text-align: center;*/
-        /*line-height: 50px;*/
-        /*float: right;*/
         margin-right: 10px;
-        /*color: white;*/
-
-        /*!*background: white;*!*/
-        /*cursor: pointer;*/
-        /*display: flex;*/
-        /*position: absolute;*/
-        /*right: 0;*/
-        /*margin-left: 90%;*/
-        /*margin-top: 2%;*/
     }
 
     .DrawMain {
         width: 86%;
         height: 80%;
-        background: #305071;
-        color: #ffffff;
+        background: #ffffff;
+        color: #000000;
         margin: 0 auto;
         max-height: 80%;
         overflow: auto;
@@ -880,12 +848,13 @@
     }
 
     .DrawMain .drawItem {
-        margin: 10px 0;
+        // margin: 10px 0;
+        margin: 15px 20px;
     }
 
     .DrawMain /deep/.el-input__inner,.DrawMain /deep/.el-form-item__label,.DrawMain /deep/.el-textarea__inner{
         background: transparent;
-        color: white;
+        color: black;
     }
     #drawView .DrawMain .drawItem #el-select.el-input__inner {
         height: 32px;
@@ -924,10 +893,10 @@
         outline: none;
         border: #d5d9e2 solid 1px;
         border-radius: 3px;
+        background: #eeeeee;
     }
 
     .drawPos {
-
         margin-top: 10px;
     }
 

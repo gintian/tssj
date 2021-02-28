@@ -16,12 +16,12 @@
                 <template slot="title"><i :class="item.iconCls"></i><span slot="title">{{item.name}}</span></template>
                 <el-menu-item v-for="term in item.children" :key="term.path" :index="term.path" v-if="term.menuShow"
                               :class="$route.path==term.path?'is-active':''">
-                  <img :src="term.iconCls"><span slot="title">{{term.name}}</span>
+                  <i :class="term.iconCls"></i><span slot="title">{{term.name}}</span>
                 </el-menu-item>
               </el-submenu>
               <el-menu-item v-else-if="item.leaf&&item.children&&item.children.length" :index="item.children[0].path"
-                            :class="$route.path==item.children[0].path?'is-active':''" v-show="item.menuShow">
-                <img :src="item.iconCls"><span slot="title">{{item.children[0].name}}</span>
+                            :class="$route.path==item.children[0].path?'is-active':''" v-show="item.menuShow"  style="height:94px;line-height:33px;padding-top:20px;">
+                <i :class="item.iconCls"></i><span slot="title">{{item.children[0].name}}</span>
               </el-menu-item>
             </template>
           </template>
@@ -94,6 +94,19 @@
 /deep/ aside .el-menu-item.is-active  ,
 /deep/ .el-menu-item.is-active:hover{
   background: rgb(12, 2, 2);
+  font-size: 22px;
+}
+
+
+
+/deep/ .el-menu-item *{
+  padding: 0 43px;
+  font-size: 20px;
+}
+
+/deep/  .el-menu-item .iconfont      {
+    display: block;
+    width: 121px;
 }
 </style>>
 

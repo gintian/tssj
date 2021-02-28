@@ -29,10 +29,10 @@ Vue.prototype.service=service
 
 
 import 'element-ui/lib/theme-chalk/index.css'
-// import '@/assets/iconfont.css'
 import '@/assets/css/style.css'
 import element from './element/index'
 Vue.use(element);
+
 
 import BaiduMap from 'vue-baidu-map'
 Vue.use(BaiduMap, {

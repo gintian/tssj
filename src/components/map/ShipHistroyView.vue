@@ -19,7 +19,7 @@
 <!--            </div>-->
         <el-date-picker
                 v-model="timeVal"
-                type="daterange"
+                type="datetimerange"
                 size="small"
                 align="right"
                 unlink-panels
@@ -28,8 +28,9 @@
                 end-placeholder="结束日期"
                 :picker-options="pickerOptions"
                 value-format="timestamp"
-                :default-time="['00:00:00', '23:59:59']"
+                
         >
+        <!-- :default-time="['00:00:00', '23:59:59']" -->
         </el-date-picker>
                     <div style="text-align: right;">
                           <el-button size='mini' @click="no">取消</el-button>
@@ -113,7 +114,7 @@ export default {
     position: relative;
     padding-top: 40px;
     box-shadow: 2px 2px 5px #777;
-    width: 350px;
+    width: 435px;
 }
 .main .top{
     height: 30px;

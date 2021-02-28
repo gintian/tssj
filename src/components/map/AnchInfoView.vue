@@ -21,39 +21,11 @@
             </div>
         </div>
         <div class="down">
-            <!--<el-button type="primary" @click="info" style="margin-left: 10px;margin-top: 5px;"  size="mini" icon="el-icon-warning-outline">信息</el-button>-->
-<!--            <el-button type="primary" @click="info"  style="margin-left: 0px;margin-top: 5px;"  size="mini" icon="el-icon-view">显示区域</el-button>-->
-<!--            <span style="display: inline-block;padding:0 10px">显示</span>-->
-<!--            <el-switch-->
-<!--                    v-model="switchs"-->
-<!--                    active-color="#13ce66"-->
-<!--                    @change="showAnchArea"-->
-<!--            >-->
-<!--            </el-switch>-->
-
             <el-button type="primary" @click="showAnchArea"  style="margin-left: 5px;margin-top: 5px;"  size="mini"  icon="el-icon-view" v-show="!tabObj.showed">显示</el-button>
             <el-button type="primary" @click="showAnchArea"  style="margin-left: 5px;margin-top: 5px;"  size="mini"  icon="el-icon-view" v-show="tabObj.showed">隐藏</el-button>
             <!-- <el-button type="primary" @click="focus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-off" v-show="!tabObj.isFocus">关注</el-button>
             <el-button type="primary" @click="disFocus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-on" v-show="tabObj.isFocus">取关</el-button> -->
         </div>
-        <el-dialog
-                :modal="false"
-                title="备注"
-                :visible.sync="dialogVisible"
-                width="30%"
-                :show-close="false"
-        >
-            <el-input
-                    type="textarea"
-                    :rows="2"
-                    placeholder="请输入内容"
-                    v-model="description">
-            </el-input>
-            <span slot="footer" class="dialog-footer">
-   <el-button @click="dialogVisible=false">取 消</el-button>
-    <el-button type="primary" @click="subFocus">确 定</el-button>
-  </span>
-        </el-dialog>
     </div>
 </template>
 <script>
@@ -140,28 +112,6 @@ export default {
           // }
           // console.log(this.switchs)
       },
-      subFocus(){
-        // console.log(this.tabObj)
-        this.dialogVisible=false
-        this.$set(this.tabObj,'isFocus',true)
-        this.$emit('isFocus',{description:this.description,focus:false,targetType:4,targetSign:this.tabObj.id})
-      },
-      focus(){
-        // console.log(this.tabObj.isFocus)
-        this.dialogVisible=true
-        // if(this.tabObj.isFocus===true){
-        // }else{
-        //   this.$emit('isFocus',{description:this.description,focus:true,targetType:4,targetSign:this.tabObj.id})
-        // }
-        // this.$emit('isFocus',this.focus)
-
-      },
-      disFocus(){
-
-        this.$set(this.tabObj,'isFocus',false)
-        this.$emit('isFocus',{description:this.description,focus:true,targetType:4,targetSign:this.tabObj.id})
-      },
-
     }
 }
 </script>
@@ -189,10 +139,5 @@ export default {
 .down{
     margin-left: 5%;
     padding: 5px;
-   /* display: grid;*/
-   /* grid-template-columns: repeat(2,40.5%);*/
-   /*!* grid-template-rows: 50% 50%;*!*/
-   /* grid-row-gap: 1%;*/
-   /* grid-column-gap: 1%;*/
 }
 </style>

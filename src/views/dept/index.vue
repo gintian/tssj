@@ -8,7 +8,7 @@
             </el-button>
           <div class="select_query">
             <el-input v-model="listQuery.name" placeholder="输入姓名/账号/手机号" style="width: 200px;" class="filter-item"   @input="query()"/>
-            <el-button class="filter-item" type="primary" icon="el-icon-search" @click="query()" >
+            <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getList()" >
               搜索
             </el-button>   
           </div>
@@ -54,7 +54,7 @@
 
     <el-table-column  prop="enable"  label="是否允许登录"  align="center">
       <template slot-scope="scope">
-            <span v-if="scope.row.enable == true" style="color:#34AA44;" @click="allowLogin(scope.row)">是</span>
+            <span v-if="scope.row.enable == true" style="color:#34AA44;" @click="allowLogin(scope.row)">否</span>
             <span v-if="scope.row.enable == false"  style="color:#F85A5A;" >否</span>
       </template>
     </el-table-column>
@@ -93,10 +93,10 @@
               <el-input v-model="addsForm.password" />
             </el-form-item>
            <el-form-item label="分组">
-              <el-radio-group v-model="addsForm.group">
-                <el-radio label="查看者"></el-radio>
-                <el-radio label="编辑者"></el-radio>
-                <el-radio label="管理员"></el-radio>
+              <el-radio-group v-model="add" @change="change">
+                <el-radio label="查看者" ></el-radio>
+                <el-radio label="编辑者" ></el-radio>
+                <el-radio label="管理员" ></el-radio>
               </el-radio-group>
           </el-form-item>
       </el-form>
@@ -130,7 +130,7 @@
               <el-input v-model="temp.email" />
             </el-form-item>
            <el-form-item label="分组">
-              <el-radio-group v-model="temp.group">
+              <el-radio-group v-model="update" @change="changeu">
                 <el-radio label="查看者"></el-radio>
                 <el-radio label="编辑者"></el-radio>
                 <el-radio label="管理员"></el-radio>
@@ -146,21 +146,6 @@
         </el-button>
       </div>
     </el-dialog> 
-
-    <!-- 删除弹层功能 -->
-    <!-- <el-dialog  :visible.sync="dialogDelVisible"  custom-class="deleteDialog"   width="200px">
-      <p>确定删除？</p>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogDelVisible = false">
-          取消
-        </el-button>
-        <el-button type="primary" @click="delData()">
-          删除
-        </el-button>
-      </div>
-    </el-dialog> -->
-
-
     <!-- 分页 -->
     <el-pagination
       @size-change="handleSizeChange"
@@ -175,6 +160,7 @@
 </template>
 
 <script>
+import { sha512 } from 'js-sha512'
 export default {
   name: 'ComplexTable',
   data() {
@@ -190,6 +176,8 @@ export default {
       dialogDelVisible:false, //删除弹层显示与隐藏
       dialogFormVisible:false, //编辑弹层显示与隐藏
       dialogFormVisible1:false, //新增弹层显示与隐藏
+      add:'',
+      update:"",
       addsForm:{   //新增数据
         realname:'',
         username:'',
@@ -207,14 +195,36 @@ export default {
         telphone:'',
         password:''
       },
-     
+     repassword:'' ,//接受密码
+     reid:''
     }
   },
   filters:{},
   created() {
     this.getList();
+    
   },
   methods: {
+    change(val){
+      console.log("val",val)
+      if(val=="查看者"){
+        this.addsForm.group='0'
+      }else if(val=='编辑者'){
+        this.addsForm.group='1'
+      }else if(val=="管理员"){
+        this.addsForm.group='2'
+      }
+    },
+    changeu(val){
+      console.log("val",val)
+      if(val=="查看者"){
+        this.temp.group='0'
+      }else if(val=='编辑者'){
+        this.temp.group='1'
+      }else if(val=="管理员"){
+        this.temp.group='2'
+      }
+    },
      // 修改table header的背景色
         tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
           if (rowIndex === 0) {
@@ -222,15 +232,17 @@ export default {
           }
         }, 
     getList(){  //获取数据
-         this.service.get( '/user/page', {
-          pageNumber: this.listQuery.pageNo,
+    console.log(this.listQuery)
+         this.service.get( '/user/page' ,{
+          params:{
+           pageNumber: this.listQuery.pageNo,
           pageSize: this.listQuery.pageSize,
-          name: this.listQuery.name
+          name: this.listQuery.name}
            }).then(req => {
           console.log("用户数据",req)
-          this.tableData = req.data.page.list
-           this.total = req.data.page.totalRow //总条数
-          this.pages = req.data.page.totalPage;  //总页数
+          this.tableData = req.page.list
+           this.total = req.page.totalRow //总条数
+          this.pages = req.page.totalPage;  //总页数
         })
        
     },
@@ -238,8 +250,7 @@ export default {
     query(){ //按名称查询
       this.getList();
     },
-    handleSubmit(row){ 
-    },
+    
     //当前条数变化
     handleSizeChange(val=this.listQuery.pageSize ){
       this.listQuery.pageSize = val;
@@ -250,44 +261,46 @@ export default {
       this.listQuery.pageNo = val;
       this.getList();
     },
-    //删除弹层
-    handleDel(row){
-      this.temp = {...row};
-      this.dialogDelVisible = true; //弹层显示
-    },
-    //删除提交
-    handleClickDelete(row)/* 删除 */ {
-        console.log(row)
-        this.service.post('/delete', {
-          id: row.id
-        }).then(req => {
-          // this.tableData = req.data.list;
-          this.getList()
-          console.log('success')
-        }).catch(err => {
-          this.getList()
-          //  return false;
-        })
-      },
+  
     // 重置密码
       reset(row){
+        // console.log(row)
+        this.reid=row.id
+         this.repassword=row.password
           this.$confirm('是否重置密码？', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消', type: 'warning' })
           .then(() => { 
-            this.service.post('/user/changePassword?id='+this.temp.id+'&&password='+sha512(this.temp.password)).then((response) => {
+            this.service.post('/user/changePassword',{
+              id:this.reid,
+              password:sha512(this.repassword)
+            }).then((response) => {
               console.log('重置密码',response)
-              this.$message.success('成功设置密码' + '!');this.getList()})
-              .catch((response) => {
-                this.$message.error('设置失败!');
-              });
-          }) .catch(() => {
+
+
+              this.$message.success('成功设置密码' + '!');
+              this.getList()})
+            .catch((response) => {
+              this.$message.error('设置失败!');
+            });
+            
+          }) 
+          .catch(() => {
           this.$message.info('已取消操作!');
         });
       },
      //编辑弹层
     handleUpdate(index,row){
       this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
+
+      if(this.temp.group=='0'){
+        this.update = "查看者"
+      }else if(this.temp.group=='1'){
+       this.update = "编辑者"
+      }else if(this.temp.group=='2'){
+       this.update = "管理员"
+      }
+      
       this.dialogFormVisible = true; //弹层显示
     },
     // 添加新用户
@@ -297,25 +310,14 @@ export default {
     },
 
     AddData(){
+      // console.log("this.addsForm",this.addsForm)
         let userList=this.addsForm;  
         let {realname,username,email,group,telphone,password} = userList;
-        //判断数据是否为空
-        if(realname==''||username==''||email==''||group==''||telphone==''||password==''){
-          this.$message.error('新增内容每一项都不准为空')
-        }else{
-        //每一条都不为空时才向后台发送http请求
           this.service.post('/user/save',this.addsForm).then(res => {
-            let {errCode,errMsg} = res.data;
-            if(!errCode==1){
-              this.$set(this.addsForm,{});
-              this.getList();   //重新渲染数据列表
-              this.dialogFormVisible1 = false;
-            }else{
-              this.$message.error(errMsg);  //弹出后台返回错误
-            }
-          }, response => {
-          });
-        }
+          //  console.log("新增的用户S数据",res)
+          this.getList(); 
+          this.dialogFormVisible1 = false;}
+          );
     },
     //编辑提交
     updateData(){
@@ -331,16 +333,19 @@ export default {
         ).then(req => {
           console.log("编辑用户信息",req)
           this.getList();
+          this.dialogFormVisible = false;
       })
     },
     // 是否允许登录
-    allowLogin(){
+    allowLogin(row){
+      // console.log(row)
+        this.reid=row.id
     this.$confirm('是否不允许登录？', {
             confirmButtonText: '确定',
             cancelButtonText: '取消', type: 'warning' })
     .then(() => { 
-      this.service.get('/user/changeEnable?id='+this.temp.id).then((response) => {
-        this.$message.success('成功设置为允许登录' + '!');this.getList()})
+      this.service.get('/user/changeEnable?id='+this.reid).then((response) => {
+        this.$message.success('成功设置为不允许登录' + '!');this.getList()})
         .catch((response) => {
           this.$message.error('设置失败!');
         });
@@ -373,7 +378,6 @@ export default {
 }
 .container-title .filter-item{
   margin:0;
-border: 1px solid #0078FF;
 }
 /* 操作部分 */
   .btn-upt{   

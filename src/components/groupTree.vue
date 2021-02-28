@@ -8,6 +8,7 @@
                 </el-input>
 
                 <span @click="openDrawView" class="selectAdd">+</span></div>
+                <!-- <el-button style="height:32px;">导入</el-button> -->
         </div>
         <el-tree
                 :data="groupData"
@@ -859,16 +860,22 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+    /deep/ .el-input{
+    //   font-size: 14px;
+    // display: inline-block;
+    }
     /deep/.el-input__inner{
         background: none;
     }
     /deep/.el-tree{
         background: none!important;
-        color: white;
+        // color: white;
+        color: #eeeeee;
     }
     .custom-tree-container{
-        color: white;
+        // color: white;
+        color: #eeeeee;
     }
     /deep/.el-tree-node:hover>.el-tree-node__content{
         background: none;
@@ -897,10 +904,14 @@
         margin-bottom: 1rem;
         height: 30px;
     }
+    .custom-tree-container /deep/  .tree-block{
+          display: flex;
+    justify-content: space-between;
+
+    }
 
     .custom-tree-container /deep/ .tree_filter .el-input {
-        width: 92%;
-        height: 100%;
+        height: 32px;
     }
 
     .custom-tree-container /deep/ .tree_filter .el-input .el-input__inner {
@@ -910,15 +921,18 @@
     }
 
     .custom-tree-container /deep/ .selectAdd {
-        /*border-radius: 4px;*/
-        text-align: center;
-        margin-left: -1px;
-        width: 1.4rem;
-        display: inline-block;
-        height: 100%;
-        line-height: 192%;
-        border: 1px solid #DCDFE6;
-        cursor: pointer;
+        
+    text-align: center;
+    margin-left: -1px;
+    width: 3.2rem;
+    display: inline-block;
+    height: 33px;
+    line-height: 186%;
+    border: 1px solid #DCDFE6;
+    cursor: pointer;
+    color: #999999;
+    font-size: 16px;
+    font-weight: 900;
 
     }
 

@@ -83,137 +83,186 @@ actions = () => {
   const actionFunCmyPolyline = function(obj) {
 
     return (e) => {
-      // let arr = []
-      // // console.log(e)
-      // // if (e.showed) {
-      // e.points.forEach(point => {
-      //   let bd09Arr = wgs84ToBD(point.lon, point.lat)
-      //   arr.push(new BMap.Point(bd09Arr[0], bd09Arr[1]))
-      // })
-      // let polyline = new BMap.Polyline(arr, { strokeColor: '#d8587c', strokeWeight: 2, strokeOpacity: 1 })   //创建折线
-      // polyline.idName = e.id + ',' + e.name
-      // polyline.imei = obj.name
-      // polyline.addEventListener('click', () => console.log(e))
-      // this.map.addOverlay(polyline)          //增加折线
-      //
-      // let region = []
-      // e.region.forEach(point => {
-      //   let bd09Arr = wgs84ToBD(point.lon, point.lat)
-      //   region.push(new BMap.Point(bd09Arr[0], bd09Arr[1]))
-      // })
-      // var polygon = new BMap.Polygon(region, {
-      //   strokeColor: '#d80d3f',
-      //   strokeWeight: 2,
-      //   strokeOpacity: 0.8,
-      //   fillColor: 'white',
-      //   strokeStyle: 'dashed',
-      //   fillOpacity: 0.1
-      // })
-      // polygon.addEventListener('click', () => obj.clickFun.bind(this)(e))
-      // polygon.imei = obj.name
-      // this.map.addOverlay(polygon)
-
-
     }
-    // }
 
   }
   return new Map([
-    [/^false_船舶目标$/, function() {
-
-      this.isNormalShip = false
-      this.isAbnormalShip = false
-      this.shipMin5 = false//五分钟以内
-      this.shipMin530 = false//五分钟到三十分钟
-      this.shipMin30 = false//三十分钟以上
-      this.shipRadar = false//雷达目标
-      this.shipAis = false//Ais目标
-      this.shipFusion = false//融合目标
-      this.ciLayer.clearLayers()
-
+   
+    [/^false_船舶类型$/, function() {
+      this.bulkShip = true  //散货船
+      this.containerShip = true  //集装箱船
+      this.tanker = true  //油轮
+      this.tug = true//拖轮
+      this.fishingBoat = true//渔船
+      this.passengerShip = true//客船
+      actionFunBmySendShipData.bind(this)()()
       return {}
 
     }],
-    [/^true_船舶目标$/, function() {
+    [/^true_船舶类型$/, function() {
+      this.bulkShip = true  //散货船
+      this.containerShip = true  //集装箱船
+      this.tanker = true  //油轮
+      this.tug = true//拖轮
+      this.fishingBoat = true//渔船
+      this.passengerShip = true//客船
+      actionFunBmySendShipData.bind(this)()()
+      return {}
 
-      this.isNormalShip = true
-      this.isAbnormalShip = true
+    }],
+    [/^false_出现时间$/, function() {
       this.shipMin5 = true//五分钟以内
-      this.shipMin530 = true//五分钟到三十分钟
-      this.shipMin30 = true//三十分钟以上
-      this.shipRadar = true//雷达目标
-      this.shipAis = true//Ais目标
-      this.shipFusion = true//融合目标
+      this.shipMin10 = true//五分钟到十分钟
+      this.shipMin15 = true//十分钟到十五分钟
+      this.shipMin20 = true//十五分钟到二十分钟
+      this.shipMin24 = true//二十分钟到二十四分钟
       actionFunBmySendShipData.bind(this)()()
-
       return {}
 
     }],
-    [/^true_正常船只$/, function() {
-
-      this.isNormalShip = true
+    [/^true_出现时间$/, function() {
+      this.shipMin5 = true//五分钟以内
+      this.shipMin10 = true//五分钟到十分钟
+      this.shipMin15 = true//十分钟到十五分钟
+      this.shipMin20 = true//十五分钟到二十分钟
+      this.shipMin24 = true//二十分钟到二十四分钟
       actionFunBmySendShipData.bind(this)()()
-
       return {}
 
     }],
-    [/^true_异常船只$/, function() {
-
-      this.isAbnormalShip = true
-
+    [/^false_区域$/, function() {
+      this.area1 = true //区域一
+      this.area2 = true //区域二
+      this.area3 = true //区域三
+      this.area4 = true //区域四
+      this.area5 = true //区域五
       actionFunBmySendShipData.bind(this)()()
-
       return {}
 
+    }],
+    [/^true_区域$/, function() {
+      this.area1 = true //区域一
+      this.area2 = true //区域二
+      this.area3 = true //区域三
+      this.area4 = true //区域四
+      this.area5 = true //区域五
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+
+    }],
+    [/^true_散货船$/, function() {
+      this.bulkShip = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^true_集装箱船$/, function() {
+      this.containerShip = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^true_油轮$/, function() {
+      this.tanker = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^true_拖轮$/, function() {
+      this.tug = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^true_渔船$/, function() {
+      this.fishingBoat = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^true_客船$/, function() {
+      this.passengerShip = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
     }],
     [/^true_5min以内$/, function() {
-
       this.shipMin5 = true
-
-      actionFunBmySendShipData.bind(this)()()
-
-      return {}
-
-    }],
-    [/^true_5-30 min$/, function() {
-      this.shipMin530 = true
       actionFunBmySendShipData.bind(this)()()
       return {}
-
     }],
-    [/^true_30min以上$/, function() {
-      this.shipMin30 = true
+    [/^true_5-10 min$/, function() {
+      this.shipMin10 = true
       actionFunBmySendShipData.bind(this)()()
       return {}
-
     }],
-    [/^true_雷达目标$/, function() {
-      this.shipRadar = true
+    [/^true_10-15 min$/, function() {
+      this.shipMin15 = true
       actionFunBmySendShipData.bind(this)()()
       return {}
-
     }],
-    [/^true_融合目标$/, function() {
-      this.shipFusion = true
+    [/^true_15-20 min$/, function() {
+      this.shipMin20 = true
       actionFunBmySendShipData.bind(this)()()
       return {}
-
     }],
-    [/^true_AIS 目标$/, function() {
-      this.shipAis = true
+    [/^true_20-24 min$/, function() {
+      this.shipMin24 = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+   
+    [/^true_区域一$/, function() {
+      this.area1 = true
       actionFunBmySendShipData.bind(this)()()
       return {}
 
     }],
-    [/^false_正常船只$/, function() {
+    [/^true_区域二$/, function() {
+      this.area2 = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
 
-      this.isNormalShip = false
+    }],
+    [/^true_区域三$/, function() {
+      this.area3 = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+
+    }],
+    [/^true_区域四$/, function() {
+      this.area4 = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+
+    }],
+    [/^true_区域五$/, function() {
+      this.area5 = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+
+    }],
+    [/^false_散货船$/, function() {
+      this.bulkShip = false
       actionFunBmySendShipData.bind(this)()()
       return {}
     }],
-    [/^false_异常船只$/, function() {
-
-      this.isAbnormalShip = false
+    [/^false_集装箱船$/, function() {
+      this.containerShip = false
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^false_油轮$/, function() {
+      this.tanker = false
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^false_拖轮$/, function() {
+      this.tug = false
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^false_渔船$/, function() {
+      this.fishingBoat = false
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^false_客船$/, function() {
+      this.passengerShip = false
       actionFunBmySendShipData.bind(this)()()
       return {}
     }],
@@ -223,47 +272,63 @@ actions = () => {
       return {}
 
     }],
-    [/^false_5-30 min$/, function() {
-      this.shipMin530 = false
+    [/^false_5-10 min$/, function() {
+      this.shipMin10 = false
       actionFunBmySendShipData.bind(this)()()
       return {}
 
     }],
-    [/^false_30min以上$/, function() {
-      this.shipMin30 = false
+    
+    [/^false_10-15 min$/, function() {
+      this.shipMin15 = false
       actionFunBmySendShipData.bind(this)()()
       return {}
 
     }],
-    [/^false_雷达目标$/, function() {
-      this.shipRadar = false
+    
+    [/^false_15-20 min$/, function() {
+      this.shipMin20 = false
       actionFunBmySendShipData.bind(this)()()
       return {}
 
     }],
-    [/^false_融合目标$/, function() {
-      this.shipFusion = false
+    [/^false_20-24 min$/, function() {
+      this.shipMin24 = false
       actionFunBmySendShipData.bind(this)()()
       return {}
 
     }],
-    [/^false_AIS 目标$/, function() {
-      this.shipAis = false
+    [/^false_区域一$/, function() {
+      this.area1 = false
       actionFunBmySendShipData.bind(this)()()
       return {}
 
     }],
-    [/^true_资源站$/, function() {
-      // return {
-      //   url: '/station/findAll',
-      //   actionFun: (obj)=>{
-      //       console.log()
-      //       // let bd09Arr = wgs84ToBD(i.longitude, i.latitude)
-      //       // this.map.addOverlay(addStationDom(this.$refs['stationMarker' + i.id][0], i.scope)(bd09Arr[0], bd09Arr[1])('综合观测站'))
-      //   }
-      // }
+    [/^false_区域二$/, function() {
+      this.area2 = false
+      actionFunBmySendShipData.bind(this)()()
+      return {}
 
     }],
+    [/^false_区域三$/, function() {
+      this.area3 = false
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+
+    }],
+    [/^false_区域四$/, function() {
+      this.area4 = false
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+
+    }],
+    [/^false_区域五$/, function() {
+      this.area5 = false
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+
+    }],
+    
     [/^true_雷达old$/, function() {
       let obj = {
         clickFun: function(e) {
@@ -372,29 +437,7 @@ actions = () => {
         actionFun: actionFunAmyMarker.bind(this)(obj)
       }
     }],
-    [/^true_视频监控站old$/, function() {
-      return {}
-      // return {
-      //     url: '/camera/findAll',
-      //     actionFun: actionFunAmyMarker.bind(this)({
-      //         height: 15,
-      //         width: 9,
-      //         img: '/mapSigns/system5.png',
-      //         clickFun: function(e) {
-      //             console.log(e)
-      //             this.removeMapDom('CameraVideoView')
-      //             this.service.post('/camera/view', {
-      //                 id: e.id
-      //             })
-      //               .then(res => {
-      //                   console.log(res)
-      //                   this.cameraInfoData = [res.data]
-      //                   this.map.addControl(mapComopentFun(this.$refs.CameraVideoView))
-      //               })
-      //         }
-      //     })
-      // }
-    }],
+    
     [/^true_海底光缆old$/, function() {
       return {
         url: '/seaLine/findAll',

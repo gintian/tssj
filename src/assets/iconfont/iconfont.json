@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "799386",
+      "name": "告警",
+      "font_class": "gaojing",
+      "unicode": "e6b8",
+      "unicode_decimal": 59064
+    },
+    {
+      "icon_id": "4814669",
+      "name": "操作系统",
+      "font_class": "caozuoxitong",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    },
+    {
+      "icon_id": "15015693",
+      "name": "业务",
+      "font_class": "yewu",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "15827979",
+      "name": "雷达图",
+      "font_class": "leidatu",
+      "unicode": "e6f9",
+      "unicode_decimal": 59129
+    },
+    {
+      "icon_id": "18169971",
+      "name": "基站信号,信号塔,发射信号",
+      "font_class": "base-signal-full",
+      "unicode": "e958",
+      "unicode_decimal": 59736
+    },
+    {
+      "icon_id": "18170943",
+      "name": "地图锚,勾,船锚",
+      "font_class": "anchor-full",
+      "unicode": "e9f4",
+      "unicode_decimal": 59892
+    },
+    {
+      "icon_id": "19640760",
+      "name": "码头",
+      "font_class": "matou",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
       "icon_id": "1425911",
       "name": "展开",
       "font_class": "zhankai",

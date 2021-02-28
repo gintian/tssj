@@ -153,23 +153,6 @@ const map = {
       console.log('地图级数改变结束！')
       this.mapZoom = this.map.getZoom()
     })
-    //   this.map.on('zoomstart',  debounce(()=>{
-    //     // console.log('地图级数改变！')
-    //     this.showPointCollectionImg=false
-    //     this.map.removeLayer(this.ciLayer)
-    //     this.ciLayer = L.canvasIconLayer({}).addTo(this.map)
-    //   },300))
-    //   this.map.on('zoomend', debounce(()=>{
-    //     console.log('地图级数改变！')
-    //     this.isZoom=true
-    //     if (this.map.getZoom() < this.maxMapZoom) {
-    //       this.addShipPointCollection(this.map.getSize())
-    //     }else{
-    //       this.loadAreaShip(1)
-    //     }
-    //     // this.map.scrollWheelZoom.disable();
-    //     // this.map.dragging.disable();
-    // },300))
   },
   //切换地图类型组件
   buttonGroupClickItem({ type }) {
@@ -436,37 +419,7 @@ const menu = {
       //   })
     })
   },
-  // 统计九宫格船只数量 密度
-  shipCount() {
-    let swne = this.getMapBounds()
-    if (this.map_zoom < this.maxMapZoom) {
-      this.$message.error('地图等级必须大于11级！')
-    } else {
-      if (this.areaShipData.length > 0) {
-        this.showShipCount = true
-        this.service.post('/ship/shipDensity', {
-          'neLat': swne['neLat'],
-          'swLat': swne['swLat'],
-          'swLon': swne['swLon'],
-          'neLon': swne['neLon']
-        }).then(res => {
-          console.log(res)
-          for (let i of res.data) {
-            i.columns.ais = parseFloat((i.columns.AisShip / i.columns.total * 100).toFixed(2))
-            i.columns.anm = parseFloat((i.columns.abnormal / i.columns.total * 100).toFixed(2))
-            i.columns.fusion = parseFloat((i.columns.fusionShip / i.columns.total * 100).toFixed(2))
-            i.columns.nm = parseFloat((i.columns.normal / i.columns.total * 100).toFixed(2))
-            i.columns.radar = parseFloat((i.columns.radarShip / i.columns.total * 100).toFixed(2))
-          }
-          this.shipCountData = res.data
-        })
-      } else {
-        this.$message.error('等待船舶数据加载！')
-      }
-
-    }
-
-  },
+ 
   // 统计区域内船只数量 统计
   shipAreaCount() {
 
@@ -671,17 +624,23 @@ const marker = {
           }
         })
     }
-    this.service.post('/anchorage/findAll', {
-      'isfocus': this.focusButton
+    this.service.post('/anchorage/areaList', {
+      // 'isfocus': this.focusButton
     }).then(res => {
+      console.log("锚地信息",res.data)
       for (let e of res.data) {
         let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
         let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets/mapSigns/base8.png'))('锚地')
         ((event) => {
-          this.service.post('/anchorage/view', {
-            id: e.id
+          //锚地信息框
+          this.service.post('/anchorage/areaList', {
+
+            // maxLat:this.maxLat,
+            // maxLon:this.maxLon,
+            // minLat:this.minLat,
+            // minLon:this.minLon
           }).then(res => {
-            // console.log(res.data)
+            console.log("锚地信息",res.data)
             let a = Object.entries(this.showInfo)
             a.forEach(e => {
               this.showInfo[e[0]] = false
@@ -1120,32 +1079,65 @@ const ship={
 
       })
   },
+  // 船舶信息信息框的船舶详情
   shipDetail(data){
     console.log('shipDetail',data)
     // this.removeMapDom('ShipDetail')
-    this.service.post('/ship/shipArchives', {
-      mmsi: data
+    this.service.get('/ship/view', {
+     params:{mmsi: data} 
     }).then(res => {
       console.log(res)
-      this.dialogInfo.shipDetail = res.data
+      this.dialogInfo.shipDetail = res.ais
       this.showInfo.shipDetail=true
     })
   },
+  datetoString(date,fmt) {
+    var o = {
+      'M+': date.getMonth() + 1,
+      'd+': date.getDate(),
+      'h+': date.getHours(),
+      'm+': date.getMinutes(),
+      's+': date.getSeconds(),
+      'q+': Math.floor((date.getMonth() + 3) / 3),
+      'S': date.getMilliseconds()
+    }
+    if (/(y+)/.test(fmt)) {
+      fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+    }
+    for (var k in o) {
+      if (new RegExp('(' + k + ')').test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+      }
+    }
+    return fmt
+  },
+  // 船舶信息信息框的历史轨迹
   setShipHistory(e) {
-    // console.log(e)
-    //console.log(this.shipDatePicker).
+    console.log('历史轨迹',e)
+    //console.log(this.shipDatePicker)
     if (e === null) {
       return
     }
     this.animateLayer.clearLayers()
-    this.service.post('/ship/shipHistory', {
-      beginTime: e[0],
-      endTime: e[1],
-      mmsi: this.dialogInfo.ship.mmsi
-
+    // console.log("取整",parseInt(e))
+    datetoString(new Date(e), 'yyyy-MM-dd h:m:s');
+      // var d = new Date(e * 1000);    //根据时间戳生成时间对象
+      // var date = (d.getFullYear()) + "-" + 
+      //           (d.getMonth() + 1) + "-" +
+      //           (d.getDate()) + " " + 
+      //           (d.getHours()) + ":" + 
+      //           (d.getMinutes()) + ":" + 
+      //           (d.getSeconds());
+     console.log('data',date);
+    this.service.get('/ship/shipHistory', {
+      params:{
+        beginTime: date[0],
+        endTime: date[1],
+        mmsi: this.dialogInfo.ship.mmsi
+      }
+      
     })
       .then(res => {
-
         console.log(res)
         if (res.data.length < 1) {
           this.$message.warning('暂无轨迹');

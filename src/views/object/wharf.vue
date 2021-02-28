@@ -149,6 +149,7 @@ export default {
           showMap:false,
           disabled:false
         },
+        delid:'',
       mapData:[],
       tableData: [], //表格展示的数据
       pages:1, //总页数
@@ -190,12 +191,13 @@ export default {
 
     getList(){  //获取数据
          this.service.get( '/pier/page',{
-             pageNumber: this.listQuery.pageNo,
-              pageSize: this.listQuery.pageSize,
-              name: this.listQuery.name
+              params:{
+           pageNumber: this.listQuery.pageNo,
+          pageSize: this.listQuery.pageSize,
+          name: this.listQuery.name}
          }).then(req => {
           console.log("码头数据",req)
-          this.tableData = req.data.page.list
+          this.tableData = req.page.list
         }) 
     },
      handleClickView(row) {
@@ -212,12 +214,12 @@ export default {
       require.ensure([], () => {
         // eslint-disable-next-line camelcase,global-require
         const { export_json_to_excel } = require('@/vandor/export2Excel.js');
-        const tHeader = ['考评单位名称', '得分']; // 表头
-        const filterVal = ['evaluationCompanyName', 'acquisitionScore']; // 值
+        const tHeader = ['序号', '名称','经度','纬度']; // 表头
+        const filterVal = ['id', 'name','lat','lon']; // 值
         const list = this.tableData;
         console.log('后端返回的数据', list);
         const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, '下载数据excel');
+        export_json_to_excel(tHeader, data, '码头数据excel');
       });
     },
     // 格式转换
@@ -243,11 +245,20 @@ export default {
     },
     //删除弹层
     handleDel(row){
+       this.delid=row.id
+       console.log("这行数据的id",this.delid)
       this.temp = {...row};
       this.dialogDelVisible = true; //弹层显示
     },
     //删除提交
-    delData(){},
+    delData(){
+      this.service.get( '/pier/delete?id='+this.delid,{     
+         }).then(req => {
+          console.log("删除码头数据",req)
+          this.getList();
+          this.dialogDelVisible = false;
+        }) 
+    },
      //编辑弹层
     handleUpdate(index,row){
      this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
@@ -260,24 +271,11 @@ export default {
      AddData(){
         let userList=this.addsForm;  
         let {name,lat,lon} = userList;
-        //判断数据是否为空
-        if(name==''||lat==''||lon==''){
-          this.$message.error('新增内容每一项都不准为空')
-        }else{
-        //每一条都不为空时才向后台发送http请求
           this.service.post('/pier/save',this.addsForm).then(res => {
             console.log("新增的码头数据",res)
-            let {errCode,errMsg} = res.data;
-            if(!errCode==1){
-              this.$set(this.addsForm,{});
-              this.getList();   //重新渲染数据列表
-              this.dialogFormVisible1 = false;
-            }else{
-              this.$message.error(errMsg);  //弹出后台返回错误
-            }
-          }, response => {
-          });
-        }
+            this.getList(); 
+          this.dialogFormVisible1 = false;}
+          );
     },
     //编辑提交
     updateData(){
@@ -289,6 +287,7 @@ export default {
        }).then(req => {
           console.log("编辑码头信息",req)
           this.getList();
+          this.dialogFormVisible = false;
       })
     }
   }

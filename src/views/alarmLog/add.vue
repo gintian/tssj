@@ -133,8 +133,8 @@ export default {
         },
         getType(){
           this.service.get('/enum/solLevel').then(res=>{
-            // console.log("系统操作日志枚举",res)
-             this.options=res.data.list
+            console.log("系统操作日志枚举",res)
+             this.options=res.list
             //  console.log("数据",this.options)
           })
         },
@@ -147,10 +147,10 @@ export default {
           +this.listQuery.beginTime+'&&endTime='
           +this.listQuery.endTime
         ).then(req => {
-          // console.log("系统操作日志数据",req)
-          this.list = req.data.page.list
-          this.total = req.data.page.totalRow //总条数
-          this.pages = req.data.page.totalPage;  //总页数
+          console.log("系统操作日志数据",req)
+          this.list = req.page.list
+          this.total = req.page.totalRow //总条数
+          this.pages = req.page.totalPage;  //总页数
         })
     },
     query(){ //查询

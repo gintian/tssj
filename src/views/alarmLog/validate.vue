@@ -113,8 +113,8 @@ export default {
         ).then(req => {
           console.log("13212132",req)
           this.list = req.list
-          this.total = req.data.page.totalRow //总条数
-          this.pages = req.data.page.totalPage;  //总页数
+          this.total = req.page.totalRow //总条数
+          this.pages = req.page.totalPage;  //总页数
         })
     },
     query(){ //按名称查询

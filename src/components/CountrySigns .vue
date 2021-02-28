@@ -1,20 +1,22 @@
 <template>
     <div id="countrySigns" >
         <div class="left">
-            <div class="signParent" v-for="(item,index) in mapSigns" v-if="index<3">
+            <div class="signParent" >
                 <button  class="signTitle" @click="dialogVisible = true">   
-                      <img :src="item.img" alt="" @click="showChild(item.id)">
+                      <img src="../assets/images/country.png" alt="" @click="showChild(item)">
                 </button>
                  <el-dialog
                         :visible.sync="dialogVisible"
                         width="23%"
                         :append-to-body="true">
-                         <ul class="signChild" v-if="item.showChild" >
-                              <li class="signChildContent" v-for="(child,index) in item.children">
-                                  <!-- <img :src='child.img' alt=""> -->
-                                  <p >{{child.label}}</p>
-                              </li>
-                          </ul>
+                        <el-tree
+                          :props="props"
+                          :load="loadNode"
+                          highlight-current
+                          lazy
+                          show-checkbox
+                          @check-change="handleCheckChange">
+                        </el-tree>
                 </el-dialog>
             </div>
         </div>
@@ -27,58 +29,89 @@
     data() {
       return {
         dialogVisible:false,
-        mapSigns: [
-         {
-             label: '', 
-             img:require('../assets/bu1.png'), 
-             icon: 'caret-up', showChild: false, id:2,
-            children: [{ img: require('../assets/mapSigns/1.png'), label: '延迟≤5分钟' },
-              { img: require('../assets/mapSigns/2.png'), label: '5分钟≤延迟≤30分钟' },
-              { img: require('../assets/mapSigns/3.png'), label: '30分钟≤延迟≤2小时' },
-              { img: require('../assets/mapSigns/aim01.png'), label: '雷达目标' },
-              { img: require('../assets/mapSigns/aim02.png'), label: '融合目标' },
-              { img: require('../assets/mapSigns/aim03.png'), label: '异常目标' },
-              { img: require('../assets/mapSigns/02.png'), label: '码头' },
-              { img: require('../assets/mapSigns/03.png'), label: '锚地' },
-              { img: require('../assets/mapSigns/ais.png'), label: 'AIS' },
-              { img: require('../assets/mapSigns/01.png'), label: '雷达' }
-            ]
-          }]
-      }
+        //  labelCheckedList:[], //接收被勾选的
+        props: {
+          label: 'name',
+          children: 'zones'
+        },
+        count: 1,
+        flag:'日本' , //国家名称
+        shipType:'其他'  //船舶类型
+      };
     },
     methods: {
-      showChild(id) {
-        
-        for (let i of this.mapSigns) {
-          if (i.id === id) {
-            if (i.showChild) {
-              i.showChild = false
-              // i.icon = 'caret-up'
-            } else {
-              i.showChild = true
-              // i.icon = 'sort-down'
-            }
-          }
+       showChild(item) {
+         dialogVisible=true
+       
+      },
+      handleCheckChange(data, checked, indeterminate) {
+        console.log(data, checked, indeterminate);
+      },
+      handleNodeClick(data) {
+        console.log(data);
+      },
+      loadNode(node, resolve) {
+        // 传入查询到的国家
+        if (node.level === 0) {
+          return resolve([{ name: 'region1' }, { name: 'region2' }]);
         }
+        if (node.level > 3) return resolve([]);
+        // 查询到的国家中是否存在船只类型
         
-          // this.service.get('/ship/flag').then(res=>{
-          //   console.log(res.data)
+        //  this.service.get('/ship/shipType',{
+        //       params:{
+        //         flag:this.flag
+        //       }
+        //   }).then(res=>{
+        //     console.log('国家中的船舶类型',res)
+        //     // resolve(res.flag.shipType)
+        //   })
+        // 船只类型中的船只信息
+          var hasChild;
+        if (node.data.name === 'region1') {
+          hasChild = true;
+        } else if (node.data.name === 'region2') {
+          hasChild = false;
+        } else {
+          hasChild = Math.random() > 0.5;
+        }
+        setTimeout(() => {
+          // this.service.get('/ship/shipList',{
+          //     params:{
+          //       flag:this.flag,
+          //       shipType:this.shipType
+          //     }
+          // }).then(res=>{
+          //   console.log('国家中船舶类型中的船只信息',res)
           // })
+
+          var data;
+          if (hasChild) {
+            data = [{
+              name: '类型：' + this.count++
+            }, {
+              name: '类型：' + this.count++
+            }];
+          } else {
+            data = [];
+          }
+
+          resolve(data);
+
+          
+        }, 500);
+
 
 
       }
+    
     }
   }
 </script>
 
 <style scoped lang="less">//图例样式
 #countrySigns{
-  .signParent{
 
-  }
-  .signTitle{
-
-  }
   .signTitle img{
     position: absolute;
     top: 20%; 
@@ -99,7 +132,8 @@
             }
           }
           .el-dialog__body{
-            height: 180px;
+            // height: 180px;
+            height: 100%;
             color: black;
             .signChild {
                 display: grid;

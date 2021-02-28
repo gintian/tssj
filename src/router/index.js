@@ -4,7 +4,6 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import map from '../views/home/Map'
 
-import store from '../store/index'
 import LeftNav from '@/components/nav/leftNav.vue'
 
 import Radar from  '@/views/object/radar'  //目标管理
@@ -82,7 +81,7 @@ let router = new VueRouter({
           component: LeftNav,
           name: 'enterpriseList',
           leaf: true, // 只有一个节点
-          iconCls: 'iconfont icon-indent', // 图标样式class
+          iconCls: 'iconfont icon-yewu', // 图标样式class
           menuShow: true,
           children: [
             { path: '/alarmLog/list', component: EnterpriseList, name: '业务告警日志', menuShow: true },
@@ -93,7 +92,7 @@ let router = new VueRouter({
           component: LeftNav,
           name: 'enterpriseAdd',
           leaf: true, // 只有一个节点
-          iconCls: 'el-icon-caret-down',
+          iconCls: 'iconfont  icon-caozuoxitong',
           menuShow: true,
           children: [
             { path: '/alarmLog/add', component: EnterpriseAdd, name: '系统操作日志', menuShow: true }
@@ -105,7 +104,7 @@ let router = new VueRouter({
           component: LeftNav,
           name: 'enterpriseValidate',
           leaf: true, // 只有一个节点
-          iconCls: 'el-icon-outdent',
+          iconCls: 'iconfont  icon-gaojing',
           menuShow: true,
           children: [
             { path: '/alarmLog/validate', component: EnterpriseValidate, name: '系统告警日志', menuShow: true }
@@ -122,26 +121,37 @@ let router = new VueRouter({
       redirect: '/object/list',
       menuShow: true,
       children: [
-                {
+                  {
+                    path: '/Radar',
+                    component: LeftNav,
+                    name: 'Radar',
+                    leaf: true, // 只有一个节点
+                    iconCls: 'iconfont icon-leidatu',
+                    menuShow: true,
+                    children: [
+                      { path: '/object/radar', component: Radar, name: '雷达', menuShow: true },
+                    ]
+                  },
+                  {
                   path: '/AIS',
                   component: LeftNav,
                   name: 'AIS',
                   leaf: true, // 只有一个节点
-                  iconCls: '../assets/object/ais.png', // 图标样式class
+                  iconCls: 'iconfont icon-base-signal-full', // 图标样式class
                   menuShow: true,
                   children: [
-                    { path: '/object/list', component: AIS, name: 'ais', menuShow: true },
+                    { path: '/object/list', component: AIS, name: 'AIS', menuShow: true },
                   ]
-                },
+                 },
+                
                 {
-                  path: '/Radar',
+                  path: '/Anchorage',
                   component: LeftNav,
-                  name: 'Radar',
                   leaf: true, // 只有一个节点
-                  iconCls: '../assets/object/radar.png',
+                  iconCls: 'iconfont icon-anchor-full',
                   menuShow: true,
                   children: [
-                    { path: '/object/radar', component: Radar, name: '雷达', menuShow: true },
+                    { path: '/object/Anchorage', component: Anchorage, name: '锚地', menuShow: true }
                   ]
                 },
                 
@@ -149,22 +159,13 @@ let router = new VueRouter({
                   path: '/Wharf',
                   component: LeftNav,
                   leaf: true, // 只有一个节点
-                  iconCls: '../assets/object/wharf.png',
+                  iconCls: 'iconfont icon-matou',
                   menuShow: true,
                   children: [
                     { path: '/object/wharf', component: Wharf, name: '码头', menuShow: true },
                   ]
                 },
-                {
-                  path: '/Anchorage',
-                  component: LeftNav,
-                  leaf: true, // 只有一个节点
-                  iconCls: '../assets/object/anchorage.png',
-                  menuShow: true,
-                  children: [
-                    { path: '/object/Anchorage', component: Anchorage, name: '锚地', menuShow: true }
-                  ]
-                },
+               
           ]
     },
 

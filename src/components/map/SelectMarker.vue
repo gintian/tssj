@@ -58,7 +58,7 @@
           {
             name:'出现时间',
             is:true,
-            children:[{name:'00：00-5:00',is:true},{name:'50：00-10:00',is:true},{name:'10：00-15:00',is:true},{name:'15：00-20:00',is:true},{name:'20：00-24:00',is:true},{name:'自定义时长'}]
+            children:[{name:'00：00-5:00',is:true},{name:'5：00-10:00',is:true},{name:'10：00-15:00',is:true},{name:'15：00-20:00',is:true},{name:'20：00-24:00',is:true},{name:'自定义时长'}]
           },
           {
             name:'区域',

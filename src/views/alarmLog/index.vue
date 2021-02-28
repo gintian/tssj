@@ -99,9 +99,9 @@ export default {
        +this.listQuery.level
        ).then(req => {
           console.log("业务告警日志数据",req)
-          this.list = req.data.page.list
-          this.total = req.data.page.totalRow //总条数
-          this.pages = req.data.page.totalPage;  //总页数
+          this.list = req.page.list
+          this.total = req.page.totalRow //总条数
+          this.pages = req.page.totalPage;  //总页数
         })
     },
     query(){ //按名称查询

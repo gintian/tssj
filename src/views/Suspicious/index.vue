@@ -60,13 +60,13 @@
 
     <el-table-column
       prop="creat_time" 
-      label="开始时间" >
+      label="时间" >
     </el-table-column>
 
-    <el-table-column
+    <!-- <el-table-column
       prop="end_time" 
       label="结束时间" >
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column label="查看轨迹" >
       <template slot-scope="scope">
         <el-button
@@ -101,7 +101,7 @@
      <el-dialog title="添加可疑事件" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
       <el-form ref="updateForm"  :model="addsForm" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
-          <el-form-item label="ID" prop="id" >
+          <el-form-item label="ID" prop="id"  >
               <el-input v-model="addsForm.id" />
             </el-form-item>
             <el-form-item label="船名/MMSI" prop="mmsi">
@@ -113,12 +113,12 @@
             <el-form-item label="异常原因" prop="reason">
             <el-input v-model.number="addsForm.reason" />
           </el-form-item>
-          <el-form-item label="开始时间" prop="address1">
-            <el-date-picker type="datetime" v-model="addsForm.birthday" />
+          <el-form-item label="时间" prop="creat_time">
+            <el-date-picker type="datetime" v-model="addsForm.creat_time" />
           </el-form-item>
-           <el-form-item label="结束时间" prop="birthday">
-            <el-date-picker type="datetime" v-model="addsForm.birthday" />
-          </el-form-item>
+           <!-- <el-form-item label="结束时间" prop="creat_time">
+            <el-date-picker type="datetime" v-model="addsForm.creat_time" />
+          </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible1 = false">
@@ -163,6 +163,7 @@ export default {
         type:'' //异常类型
       },
        addsForm:{   //新增数据
+        id:'',
         creat_time:'',
         lat:'',
         lon:'',
@@ -173,11 +174,7 @@ export default {
       },
       dialogFormVisible:false, //编辑弹层显示与隐藏
       dialogFormVisible1:false, //新增弹层显示与隐藏
-      temp:{
-        id:'',
-        name:'',
-        birthday:'',
-      },
+      
       Business_exception:null,
     }
   },
@@ -188,6 +185,9 @@ export default {
     this.statistical();
     },
   methods: {
+    query(){ //按名称查询
+      this.getList();
+    },
      // 修改table header的背景色
         tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
           if (rowIndex === 0) {
@@ -197,27 +197,22 @@ export default {
        statistical(){
          this.service.get('/criminal/statistical',).then(res=>{
            console.log("统计获取数据",res)
-           this.oneType=res.data.oneType,
+           this.oneType=res.oneType,
             // console.log("统计获取数据",res.oneType)
-           this.twoType=res.data.twoType
+           this.twoType=res.twoType
          })
        },
        getList(){  //获取数据
         this.service.get( '/criminal/page', {
-          pageNumber: this.listQuery.pageNumber,
-          pageSize: this.listQuery.pageSize,
-          type: this.listQuery.type,
-          beginTime:this.listQuery.beginTime
-           })
-        .then(req => {
+          params:{
+             pageNumber: this.listQuery.pageNumber,
+              pageSize: this.listQuery.pageSize,
+              type: this.listQuery.type,
+              beginTime:this.listQuery.beginTime
+          } }).then(req => {
           console.log("可疑事件的数据",req)
-          this.tableData = req.data.page.list
-        })
-       
-    },
-    
-    query(){ //按名称查询
-      this.getList();
+          this.tableData = req.page.list
+        })      
     },
     
     //当前条数变化
@@ -230,12 +225,6 @@ export default {
       this.listQuery.pageNo = val;
       this.getList();
     },
-    //删除弹层
-    handleDel(row){
-      this.temp = {...row};
-      this.dialogDelVisible = true; //弹层显示
-    },
-   
      //详情弹层
     eventUpdate(index,row){
       //this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
@@ -249,26 +238,12 @@ export default {
      AddData(){
         let userList=this.addsForm;  
         let {creat_time,mmsi,lat,lon,reason,ship_name,ship_type} = userList;
-        //判断数据是否为空
-        if(creat_time==''||mmsi==''||lat==''||lon==''||reason==''||ship_name==''||ship_type==''){
-          this.$message.error('新增内容每一项都不准为空')
-        }else{
-        //每一条都不为空时才向后台发送http请求
           this.service.post('/criminal/save',this.addsForm).then(res => {
-            console.log("新增的AIS数据",res)
-            let {errCode,errMsg} = res.data;
-            if(!errCode==1){
-              this.$set(this.addsForm,{});
-              this.getList();   //重新渲染数据列表
-              this.dialogFormVisible1 = false;
-            }else{
-              this.$message.error(errMsg);  //弹出后台返回错误
-            }
-          }, response => {
-          });
-        }
-    },
-    
+            console.log("新增的可疑事件数据",res)
+          this.getList(); 
+          this.dialogFormVisible1 = false;}
+          );
+     }
   }
 }
 </script>

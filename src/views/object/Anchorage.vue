@@ -26,13 +26,13 @@
       align="center"
       prop="name"
       label="名称">
-      <!-- fixed:值有（true,left,right）列是否固定在左侧或者右侧，true 表示固定在左侧 -->
-      <!-- column 的 key，如果需要使用 filter-change 事件，则需要此属性标识是哪个 column 的筛选条件 -->
     </el-table-column>
-    <el-table-column
-      prop="type"
-      label="锚地类型"
-      align="center">
+    <el-table-column prop="type"  label="锚地类型" align="center">
+      <template slot-scope="scope">
+            <span v-if="scope.row.type == 0">圆形</span>
+            <span v-if="scope.row.type == 1">矩形</span>
+            <span v-if="scope.row.type == 2">多边形</span>
+          </template>
     </el-table-column>
     <el-table-column  prop="radius"  label="区域"  align="center">
       <template slot-scope="scope">   
@@ -72,21 +72,24 @@
      <el-dialog title="添加锚地" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
       <el-form ref="updateForm"  :model="addsForm" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
-          <el-form-item label="名称" prop="name" >
+          <!-- <el-form-item label="名称" prop="name" >
               <el-input v-model="addsForm.name" />
-            </el-form-item>
-            <!-- <el-form-item label="类型" prop="type">
-              <el-input v-model="addsForm.type" />
             </el-form-item> -->
+            <el-form-item label="类型" prop="type">
+              <el-input v-model="addsForm.type" />
+            </el-form-item>
           <el-form-item label="经度" prop="lon">
               <el-input v-model="addsForm.lon" />
             </el-form-item>
             <el-form-item label="纬度" prop="lat">
             <el-input v-model="addsForm.lat" />
           </el-form-item>
-          <!-- <el-form-item label="区域" prop="points">
+          <el-form-item label="区域点集合（矩形/多边形时）" prop="points">
               <el-input v-model="addsForm.points" />
-            </el-form-item> -->
+            </el-form-item>
+            <el-form-item label="区域（为圆形时）" prop="radius">
+            <el-input v-model="addsForm.radius" />
+          </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible1 = false">
@@ -182,12 +185,12 @@ export default {
       dialogFormVisible:false, //编辑弹层显示与隐藏
       dialogFormVisible1:false, //新增弹层显示与隐藏
       addsForm:{   //新增数据
-        points:'',
-        name:'',
+        // points:'',
+        // name:'',
         lat:'', //维度
         lon:'', //经度
         type:'',  //类型
-        radius:'',
+        // radius:'',
       },
       temp:{  //编辑的表单字段
         id:'',
@@ -216,12 +219,13 @@ export default {
 
     getList(){  //获取数据
          this.service.get( '/anchorage/page',{
-             pageNumber: this.listQuery.pageNo,
-              pageSize: this.listQuery.pageSize,
-              name: this.listQuery.name
+              params:{
+                  pageNumber: this.listQuery.pageNo,
+                  pageSize: this.listQuery.pageSize,
+                  name: this.listQuery.name}
          }).then(req => {
           console.log("锚地数据",req)
-          this.tableData = req.data.page.list
+          this.tableData = req.page.list
         }) 
     },
      handleClickView(row) {
@@ -238,12 +242,12 @@ export default {
       require.ensure([], () => {
         // eslint-disable-next-line camelcase,global-require
         const { export_json_to_excel } = require('@/vandor/export2Excel.js');
-        const tHeader = ['考评单位名称', '得分']; // 表头
-        const filterVal = ['evaluationCompanyName', 'acquisitionScore']; // 值
+        const tHeader = ['序号', '名称','锚地类型','区域','经度','纬度']; // 表头
+        const filterVal = ['id', 'name','type','radius','lat','lon']; // 值
         const list = this.tableData;
         console.log('后端返回的数据', list);
         const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, '下载数据excel');
+        export_json_to_excel(tHeader, data, '锚地数据excel');
       });
     },
     // 格式转换
@@ -285,30 +289,17 @@ export default {
     },
      AddData(){
         let userList=this.addsForm;  
-        let {points,name,lat,lon,type} = userList;
-        //判断数据是否为空
-        if(points==''||name==''||lat==''||lon==''||type==''){
-          this.$message.error('新增内容每一项都不准为空')
-        }else{
-        //每一条都不为空时才向后台发送http请求
+        let {lat,lon,type,points,radius} = userList;
           this.service.post('/anchorage/save',this.addsForm).then(res => {
             console.log("新增的锚地数据",res)
-            let {errCode,errMsg} = res.data;
-            if(!errCode==1){
-              this.$set(this.addsForm,{});
-              this.getList();   //重新渲染数据列表
-              this.dialogFormVisible1 = false;
-            }else{
-              this.$message.error(errMsg);  //弹出后台返回错误
-            }
-          }, response => {
-          });
-        }
+             this.getList(); 
+          this.dialogFormVisible1 = false;}
+          ); 
     },
     //编辑提交
     updateData(){
        this.service.post('/anchorage/update',{
-         id:this.temp.id,
+          id:this.temp.id,
           lat:this.temp.lat,
           lon:this.temp.lon,
           type:this.temp.type,

@@ -9,7 +9,7 @@
         <h1  style="color: #fff;padding-left: 20px; font-weight: 100;"><span v-show="!$store.state.collapsed">态势数据关联分析平台</span></h1>
       </div>
       <div class="topbar-title">
-        <!-- 注意：这里就是topNavState作用之处，根据当前路由所在根路由的type值判断显示不同顶部导航菜单 -->
+        <!-- 注意：topNavState：根据当前路由所在根路由的type值判断显示不同顶部导航菜单 -->
         <el-row v-show="$store.state.topNavState==='home'">
           <el-col :span="24">
             <el-menu :default-active="defaultActiveIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
@@ -117,7 +117,7 @@ import '@/assets/iconfont/iconfont.css'
         // }).catch(() => {});
 
         this.service.get('/user/logout').then(res=>{
-          this.$router.push({ name: 'Login' })
+          this.$router.push({ path: '/' })
         })
       }
     },
