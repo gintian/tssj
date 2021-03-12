@@ -27,6 +27,11 @@
       prop="name"
       label="名称">
     </el-table-column>
+     <el-table-column
+      align="center"
+      prop="describe"
+      label="描述">
+    </el-table-column>
     <el-table-column prop="type"  label="锚地类型" align="center">
       <template slot-scope="scope">
             <span v-if="scope.row.type == 0">圆形</span>
@@ -86,9 +91,13 @@
           </el-form-item>
           <el-form-item label="区域点集合（矩形/多边形时）" prop="points">
               <el-input v-model="addsForm.points" />
-            </el-form-item>
+          </el-form-item>
             <el-form-item label="区域（为圆形时）" prop="radius">
             <el-input v-model="addsForm.radius" />
+          </el-form-item>
+
+            <el-form-item label="描述" prop="describe">
+            <el-input v-model="addsForm.describe" />
           </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -114,8 +123,11 @@
           <el-form-item label="经度" prop="lon">
               <el-input v-model="temp.lon" />
             </el-form-item>
-            <el-form-item label="纬度" prop="lat">
+          <el-form-item label="纬度" prop="lat">
             <el-input v-model="temp.lat" />
+          </el-form-item>
+            <el-form-item label="描述" prop="describe">
+            <el-input v-model="temp.describe" />
           </el-form-item>
           <!-- <el-form-item label="区域" prop="points">
               <el-input v-model="temp.points" />
@@ -190,6 +202,7 @@ export default {
         lat:'', //维度
         lon:'', //经度
         type:'',  //类型
+        describe:""
         // radius:'',
       },
       temp:{  //编辑的表单字段
@@ -200,6 +213,7 @@ export default {
         lon:'', //经度
         type:'',  //类型
         radius:'',
+         describe:""
       },
       Business_exception:null,
       //  visible: false,
@@ -289,7 +303,7 @@ export default {
     },
      AddData(){
         let userList=this.addsForm;  
-        let {lat,lon,type,points,radius} = userList;
+        let {lat,lon,type,points,radius,describe} = userList;
           this.service.post('/anchorage/save',this.addsForm).then(res => {
             console.log("新增的锚地数据",res)
              this.getList(); 
@@ -303,6 +317,7 @@ export default {
           lat:this.temp.lat,
           lon:this.temp.lon,
           type:this.temp.type,
+          describe:this.temp.describe
        }).then(req => {
           console.log("编辑锚地信息",req)
           this.getList();

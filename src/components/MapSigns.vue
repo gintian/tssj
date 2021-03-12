@@ -1,22 +1,37 @@
 <template>
     <div id="mapSigns" >
         <div class="left">
-            <div class="signParent" v-for="(item,index) in mapSigns" v-if="index<3">
+            <div class="signParent" v-for="(item,index) in mapSigns"  :key="index">
                 <button  class="signTitle" @click="dialogVisible = true">   
                       <img :src="item.img" alt="" @click="showChild(item.id)">
                 </button>
                  <el-dialog
-                        title="图例信息"
+                        title="图例"
                         :visible.sync="dialogVisible"
                         width="23%"
                         :append-to-body="true">
-                          <!-- <p>{{item.label}}</p> -->
-                         <div class="signChild" v-if="item.showChild" >
-                              <div class="signChildContent" v-for="(child,index) in item.children">
+                          <h4>基础设施</h4>
+                         <div class="signChild" >
+                              <div class="signChildContent" v-for="(child,index) in item.children1" :key="index+'1'">
                                   <img :src='child.img' alt="">
                                   <p >{{child.label}}</p>
                               </div>
-                          </div>
+                           </div>
+                              <h4>船舶目标</h4>
+                               <div class="signChild" >
+                                  <div class="signChildContent" v-for="(child,index) in item.children2" :key="index+'2'">
+                                      <img :src='child.img' alt="">
+                                      <p >{{child.label}}</p>
+                                  </div>
+                              </div>
+                              <h4>重点目标</h4>
+                               <div class="signChild" >
+                                  <div class="signChildContent" v-for="(child,index) in item.children3" :key="index+'3'">
+                                      <img :src='child.img' alt=""  style="width: 20px; height: 20px;">
+                                      <p >{{child.label}}</p>
+                                  </div>
+                              </div>
+                         
                 </el-dialog>
             </div>
         </div>
@@ -29,53 +44,40 @@
     data() {
       return {
         dialogVisible:false,
+        item:'',
         mapSigns: [
-        //   {
-        //   label: '统计', 
-        //   img:require('../assets/Statistics.png'), 
-        //   icon: 'caret-up', showChild: false, id: 1,
-        //   children: [{ img: require('../assets/mapSigns/base1.png'), label: '海防直升机停机坪' },
-        //     { img: require('../assets/mapSigns/base2.png'), label: '海防执勤码头' },
-        //     { img: require('../assets/mapSigns/base3.png'), label: '海防执勤道路' },
-        //     { img: require('../assets/mapSigns/base4.png'), label: '铁塔' },
-        //     { img: require('../assets/mapSigns/base5.png'), label: '海底光缆' },
-        //     { img: require('../assets/mapSigns/base6.png'), label: '港区' },
-        //     { img: require('../assets/mapSigns/base7.png'), label: '码头泊位' },
-        //     { img: require('../assets/mapSigns/base8.png'), label: '锚地' }]
-        // },
-          
-        //   {
-        //     label: '计算', 
-        //     img:require('../assets/calculation.png'), 
-        //     icon: 'caret-up', showChild: false, id: 3,
-        //     children: [{ img: require('../assets/mapSigns/organization1.png'), label: '海军' },
-        //       { img: require('../assets/mapSigns/organization2.png'), label: '陆军海防部队' },
-        //       { img: require('../assets/mapSigns/organization3.png'), label: '军分区' },
-        //       { img: require('../assets/mapSigns/organization4.png'), label: '海警局' },
-        //       { img: require('../assets/mapSigns/organization5.png'), label: '公安局' },
-        //       { img: require('../assets/mapSigns/organization6.png'), label: '海事局' },
-        //       { img: require('../assets/mapSigns/organization7.png'), label: '海洋与渔业局' },
-        //       { img: require('../assets/mapSigns/organization8.png'), label: '军民融合办' },
-        //       { img: require('../assets/mapSigns/organization9.png'), label: '海关' },
-        //       { img: require('../assets/mapSigns/organization10.png'), label: '边检' },
-        //       ]
-        //   },
          {
-             label: '图例', 
              img:require('../assets/example.png'), 
-             icon: 'caret-up', showChild: false, id:2,
-            children: [{ img: require('../assets/mapSigns/1.png'), label: '延迟≤5分钟' },
-              { img: require('../assets/mapSigns/2.png'), label: '5分钟≤延迟≤30分钟' },
-              { img: require('../assets/mapSigns/3.png'), label: '30分钟≤延迟≤2小时' },
-              { img: require('../assets/mapSigns/aim01.png'), label: '雷达目标' },
-              { img: require('../assets/mapSigns/aim02.png'), label: '融合目标' },
-              { img: require('../assets/mapSigns/aim03.png'), label: '异常目标' },
+            children1: [
               { img: require('../assets/mapSigns/02.png'), label: '码头' },
               { img: require('../assets/mapSigns/03.png'), label: '锚地' },
               { img: require('../assets/mapSigns/ais.png'), label: 'AIS' },
-              { img: require('../assets/mapSigns/01.png'), label: '雷达' }
-            ]
-          }]
+              { img: require('../assets/mapSigns/01.png'), label: '雷达' }, 
+            ],
+             children2: [
+              { img: require('../assets/mapSigns/aim01.png'), label: '雷达目标' },
+              { img: require('../assets/mapSigns/aim02.png'), label: '融合目标' },
+              { img: require('../assets/mapSigns/kc.png'), label: '客船' },
+              { img: require('../assets/mapSigns/hc.png'), label: '货船' },
+              { img: require('../assets/mapSigns/yl.png'), label: '油轮' },
+              { img: require('../assets/mapSigns/dangerbuk.png'), label: '危险货物' },
+              { img: require('../assets/mapSigns/another.png'), label: '其他' },  
+              { img: require('../assets/mapSigns/aim03.png'), label: '异常目标' },
+              { img: require('../assets/mapSigns/zf.png'), label: '执法船' }  
+            ],
+            children3: [
+              { img: require('../assets/mapSigns/11.png'), label: '陆军海防部队' },
+              { img: require('../assets/mapSigns/12.png'), label: '海军' },
+              { img: require('../assets/mapSigns/13.png'), label: '海警局' },
+              { img: require('../assets/mapSigns/14.png'), label: '军分区' },
+              { img: require('../assets/mapSigns/15.png'), label: '海事局' },
+              { img: require('../assets/mapSigns/16.png'), label: '公安局' },
+              { img: require('../assets/mapSigns/17.png'), label: '军民融合办' },  
+              { img: require('../assets/mapSigns/18.png'), label: '海洋与渔业局' },
+              { img: require('../assets/mapSigns/19.png'), label: '边检' }  
+            ],
+          }
+          ]
       }
     },
     methods: {
@@ -100,16 +102,28 @@
 <style scoped lang="less">//图例样式
      // 弹出框
         /deep/.el-dialog{
+            position: absolute;
+                right: 7%;
+                top: 23%;
           .el-dialog__header{   
             background: rgb(39, 112, 212);
             .el-dialog__title{
                 color: white;
             }
+              .el-dialog__close{
+                  color: white;
+                }
           }
           .el-dialog__body{
-            height: 200px;
+            padding: 0;
             color: black;
+            h4{
+                margin-bottom: 10px;
+                background: #d0e8ec;
+                    padding: 14px;
+            }
             .signChild {
+                    padding: 6px 21px;
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                     .signChildContent {

@@ -8,6 +8,8 @@
                  <el-dialog
                         :visible.sync="dialogVisible"
                         width="23%"
+                        top="8vh"
+                        custom-class="countrydialog"
                         :append-to-body="true">
                         <el-tree
                           :props="props"
@@ -29,19 +31,37 @@
     data() {
       return {
         dialogVisible:false,
-        //  labelCheckedList:[], //接收被勾选的
         props: {
           label: 'name',
-          children: 'zones'
+          children: 'zones',
+          isLeaf: 'leaf'
         },
         count: 1,
-        flag:'日本' , //国家名称
-        shipType:'其他'  //船舶类型
+        flag:'未知' , //国家名称
+        shipType:'其他',  //船舶类型
+        firstMenu:[],
       };
     },
+    mounted(){
+      this.loadData()
+    },
     methods: {
+      // 加载一级菜单数据
+      loadData(){
+            this.service.get('/ship/flag').then(res=>{
+            // console.log("查询到的国家列表",res)
+            //  console.log('node',res.flags)
+             if(res.error===0){      
+                res.flags.forEach( (item, index)=> {
+                this.firstMenu.push({ name: item.flag})
+                })
+             }else{
+                this.firstMenu.push( { name: '无' })           
+             }
+          })     
+      },
        showChild(item) {
-         dialogVisible=true
+         this.dialogVisible=true
        
       },
       handleCheckChange(data, checked, indeterminate) {
@@ -52,57 +72,43 @@
       },
       loadNode(node, resolve) {
         // 传入查询到的国家
-        if (node.level === 0) {
-          return resolve([{ name: 'region1' }, { name: 'region2' }]);
+        if (node.level === 0) {      
+         return resolve(this.firstMenu);
         }
-        if (node.level > 3) return resolve([]);
-        // 查询到的国家中是否存在船只类型
-        
-        //  this.service.get('/ship/shipType',{
-        //       params:{
-        //         flag:this.flag
-        //       }
-        //   }).then(res=>{
-        //     console.log('国家中的船舶类型',res)
-        //     // resolve(res.flag.shipType)
-        //   })
-        // 船只类型中的船只信息
-          var hasChild;
-        if (node.data.name === 'region1') {
-          hasChild = true;
-        } else if (node.data.name === 'region2') {
-          hasChild = false;
-        } else {
-          hasChild = Math.random() > 0.5;
+        if(node.level === 1) {
+           // 查询到的国家中是否存在船只类型   
+         this.service.get('/ship/shipType',{
+              params:{
+                flag:this.flag
+              }
+          }).then(res=>{
+            let shipType=[]
+             res.flags.map(f => {
+               shipType.push({name:f.shipType})
+            })
+              resolve(shipType)
+            // console.log('国家中的船舶类型',res)
+          })
         }
-        setTimeout(() => {
-          // this.service.get('/ship/shipList',{
-          //     params:{
-          //       flag:this.flag,
-          //       shipType:this.shipType
-          //     }
-          // }).then(res=>{
-          //   console.log('国家中船舶类型中的船只信息',res)
-          // })
-
-          var data;
-          if (hasChild) {
-            data = [{
-              name: '类型：' + this.count++
-            }, {
-              name: '类型：' + this.count++
-            }];
-          } else {
-            data = [];
-          }
-
-          resolve(data);
-
+        else if (node.level ===2) {
+           this.service.get('/ship/shipList',{
+              params:{
+                flag:this.flag,
+                shipType:this.shipType
+              }
+          }).then(res=>{
+             let shipList=[]  
+             res.shipList.map(f => {
+               shipList.push({name:f.mmsi, leaf: true})
+            })
+              resolve(shipList)
+            // console.log('船舶类型中的船舶信息',res)  
+          })
           
-        }, 500);
-
-
-
+        }else{
+          return resolve([]);
+        }
+     
       }
     
     }
@@ -118,22 +124,32 @@
     left: 20%;
   }
 }
-
+// 树形内容滚动条
+/deep/.el-tree-node>.el-tree-node__children {
+        /* overflow: hidden; */
+        background-color: transparent;
+        overflow: auto;
+        height: 600px;
+    }
      // 弹出框
-        /deep/.el-dialog{
-               margin-top: 16vh;
-                  width: 23%;
+        /deep/.countrydialog{
+               margin-top: 8vh;
+                  width: 20%;
                   position: absolute;
                   left: 38px;
           .el-dialog__header{   
             background: rgb(39, 112, 212);
+            padding: 39px 20px 10px;
             .el-dialog__title{
                 // color: white;
             }
+          .el-dialog__headerbtn .el-dialog__close {
+                 color: #ffffff;
+            }
           }
           .el-dialog__body{
-            // height: 180px;
-            height: 100%;
+            height: 755px;
+            overflow: auto;
             color: black;
             .signChild {
                 display: grid;
@@ -151,4 +167,5 @@
                 } 
             }
         }  
+
 </style>

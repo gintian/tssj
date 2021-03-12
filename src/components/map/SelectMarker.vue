@@ -1,7 +1,8 @@
 <template>
     <div id="selectShipDom">
-        <div class="title">
-            <h4>筛船信息 </h4>
+        <div class="title" @click="selecarea()" >
+            <h4  @click="selecship()">筛船信息 </h4>
+             <!-- <h4  @click="selecarea()">信息 </h4> -->
             <i class="el-icon-close" @click="$emit('hide')"></i>
         </div>
         <div class="content" style="overflow: auto;height: calc(100% - 40px)">
@@ -9,7 +10,7 @@
                 <p style="line-height: 20px"> 
                 <!-- 父级标题 -->
                     {{item.name}}
-                    <i class="el-icon-view" style="font-size: 16px;color: #ffffff;vertical-align: middle;cursor: pointer" v-show="item.is" @click="selectAll(item)"></i>
+                    <i class="el-icon-view" style="font-size: 16px;vertical-align: middle;cursor: pointer" v-show="item.is" @click="selectAll(item)"></i>
                     <font-awesome-icon :icon="['far','eye-slash']" style="font-size: 14px;color: red;vertical-align: middle;cursor: pointer" @click="selectAll(item)"  v-show="!item.is"/>
                 </p>
                 <!-- 父级里的子内容 -->
@@ -48,30 +49,58 @@
 
     data(){
       return{
-        // showAll:true,
         base:[
           {
             name:'船舶类型',
             is:true,
-            children:[{name:'散货船',is:true},{name:'集装箱船',is:true},{name:'油轮',is:true},{name:'拖轮',is:true},{name:'渔船',is:true},{name:'客船',is:true},{name:'其他',is:true}]
+            parShip:true,
+            children:[]
           },
           {
             name:'出现时间',
             is:true,
-            children:[{name:'00：00-5:00',is:true},{name:'5：00-10:00',is:true},{name:'10：00-15:00',is:true},{name:'15：00-20:00',is:true},{name:'20：00-24:00',is:true},{name:'自定义时长'}]
+            parTime:true,
+            children:[{name:'00:00-05:00',is:true,appear_time:true,index:1},{name:'05:00-10:00',is:true,appear_time:true,index:2},
+            {name:'10:00-15:00',is:true,appear_time:true,index:3},{name:'15:00-20:00',is:true,appear_time:true,index:4},
+            {name:'20:00-24:00',is:true,appear_time:true,index:5}]
           },
           {
             name:'区域',
             is:true,
-            children:[{name:'区域一',is:true},{name:'区域二',is:true},{name:'区域三',is:true},{name:'区域四',is:true},{name:'区域五',is:true},{name:'自定义区域'},]
+            parArea:true,
+            children:[]
           },
         ],
       }
     },
+    mounted(){
+      this.loadShip()
+      this.selecarea()
+    },
     methods:{
+      loadShip(){
+           this.service.get('/ship/shipType',{parmas:{
+        }}).then(res=>{
+          // console.log("shipflag",res)
+          for(let i of res.flags){
+            this.base[0].children.push({name:i.shipType,is:true,ship:true})
+          }
+        })
+      },
+      selecarea(){
+           this.service.get('/water/allList',{parmas:{
+        }}).then(res=>{
+          // console.log("allList",res)
+          // console.log('this.base[1]',this.base[1])//出现时间
+          // console.log('this.base[2]',this.base[2])//出现区域
+          for(let i of res.list){
+            this.base[2].children.push({name:i.name,is:true,selectarea:true,id:i.id})
+          }
+        })
+      },
       clickShip(i){
         i.is=!i.is
-        console.log("选中点击",i)
+        // console.log("选中点击",i)
         this.$emit('selectMarker',i)
       },
       selectAll(v){

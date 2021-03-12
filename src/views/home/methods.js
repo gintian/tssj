@@ -21,6 +21,7 @@ const map = {
       })
     this.map = L.map('map', {
       crs: crs,
+      // crs: L.CRS.EPSG3857,
       //不添加属性说明控件
       attributionControl: false,
       //显示中心
@@ -50,7 +51,23 @@ const map = {
       'Saturate:440%',
       'sepia:0%'
     ]
-    //  L.tileLayer('http://218.205.125.142:8001/{z}/{x}/{y}.png').addTo(this.map)//服务器上的离线地图
+    //离线地图+天地卫星图+天地海图
+    // this.baseLayer = L.tileLayer('http://218.205.125.142:8001/{z}/{x}/{y}.png').addTo(this.map)//服务器上的离线地图
+    // this.sateLayer =L.tileLayer.chinaProvider(
+    //   'TianDiTu.Satellite.Map',
+    //   {
+    //     key: '5bc35f0a4fce14db0a93e3407ab5c17e',
+    //     maxZoom:18,
+    //     minZoom:5,
+    //   })
+
+      // this.seaLayer =L.tileLayer.chinaProvider(
+    //   'TianDiTu.Normal.Map',
+    //   {
+    //     key: '5bc35f0a4fce14db0a93e3407ab5c17e',
+    //     maxZoom:18,
+    //     minZoom:5,
+    //   })
     this.baseLayer = L.tileLayer.colorFilter('http://online{s}.map.bdimg.com/tile/?qt=tile&x={x}&y={y}&z={z}&styles=pl&udt=20150518', {
       maxZoom: 18,
       minZoom: 3,
@@ -64,6 +81,7 @@ const map = {
       // subdomains: [0,1,2],
       tms: true
     })
+    
     //高德地图
     this.seaLayer =  L.tileLayer.chinaProvider('GaoDe.Satellite.Map', {//海图的API
       maxZoom: 18,
@@ -88,12 +106,6 @@ const map = {
     this.ciLayer = L.canvasIconLayer({}).addTo(this.map)
     this.mapEvent()
   },
-  //统计国家数
-  // flag(){
-  //   this.service.get('/ship/flag').then(res=>{
-  //     console.log("查询到的国家列表",res)
-  //   })
-  // },
   //地图事件
   mapEvent() {
     function debounce(fn, wait) {
@@ -116,7 +128,8 @@ const map = {
         this.addShipPointCollection(this.map.getSize())
         this.loadAreaShip(0)
       } else {
-        this.loadAreaShip(1)
+        console.log(this.shipselect)
+        this.loadAreaShip(1,[],this.shipselect,[])
       }
       let swne = this.getMapBounds()
       let d = {
@@ -130,15 +143,15 @@ const map = {
         action: 'myfly',
         data: d
       })
-      console.log(this.websock2.readyState)
+      // console.log('websock2',this.websock2.readyState)
       // console.log(this.$store.getters.user.data.id)
       // console.log('发送数据', data)
-      if(this.websock2.readyState===1){
+      // if(this.websock2.readyState===1){
 
-        this.websocketsend2(data)
-      }else{
-        this.initWebSocket()
-      }
+      //   this.websocketsend2(data)
+      // }else{
+      //   this.initWebSocket()
+      // }
     }
     this.map.on('moveend', debounce(() => {
       end()
@@ -171,125 +184,23 @@ const map = {
 
   }
 }
-const station = {
-  loadStationMarker() {
-    this.service.post('/station/findAll', {
-      isfocus: this.focusButton
-    }).then(res => {//加载资源站
-      console.log( "加载资源站",res)
-      for (let i of res.data) {
-        if (i.showed) {
-          // console.log(i)
-          let color = '#1f4e72'
-          if (i.isFocus) {
-            color = '#cbcfa3'
-          }
-          let bd09Arr = wgs84ToBD(i.longitude, i.latitude)
-          let circle = L.circle([bd09Arr[1], bd09Arr[0]], {
-            //圆半径
-            radius: i.scope * 1852,
-            //颜色
-            color: 'rgba(17,73,114,0.3)',
-            //填充色
-            fillColor: color,
-            //填充色透明度
-            fillOpacity: 0.1
-          }).addTo(this.stationLayers)
-            .on('dblclick', (event) => {
-            // this.stationID=e.target.detail.id
 
-            this.service.post('/station/detail', {
-              id: i.id
-            }).then(res => {
-              // let a = Object.entries(this.showInfo)
-              // a.forEach(e => {
-              //   this.showInfo[e[0]] = false
-              // })
-              this.showInfo.station = true
-              this.dialogInfo.stationInfo = res.data
-            })
-            // console.log(i)
-            // console.log(this.stationCheck,e.target.detail.id)
-            if (this.stationCheck.ais)            {
-              const loadInfo = e => {
-                this.service.post('/ais/view', {
-                  id: e.id
-                }).then(res => {
-                  console.log(res)
-                  this.showInfo.ais = true
-                  this.dialogInfo.ais = res.data.columns
-
-                })
-              }
-              this.service.post('/ais/findAll', {
-                stationId: event.target.detail.id
-              }).then(res => {
-                console.log(res.data)
-                res.data.forEach(e => {
-
-                  loadInfo(e)
-                  let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
-                  let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets/mapSigns/system3.png'), e.pAngle)('AIS基站')
-                  ((ev) => {loadInfo(e)})
-                  marker.addTo(this.stationLayerGroup)
-                })
-              })
-            }
-            if (this.stationCheck.camera) {
-              const loadInfo = e => {
-                this.service.post('/camera/view', {
-                  id: e.id
-                })
-                  .then(res => {
-                    // console.log(res)
-                    this.dialogInfo.camera = [res.data]
-                    this.showInfo.camera = true
-                  })
-              }
-              this.service.post('/camera/findAll', {
-                stationId: event.target.detail.id
-              }).then(res => {
-                console.log(res.data)
-                this.dialogInfo.camera = res.data
-                this.showInfo.camera = true
-                res.data.forEach(e => {
-
-                  let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
-                  let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 10, require('../../assets/mapSigns/system4.png'), e.pAngle)('视频监控站')
-                  ((ev) => {loadInfo(e)})
-                  marker.addTo(this.stationLayerGroup)
-                })
-              })
-            }
-
-            if (this.stationCheck.radar) {
-              this.websocketsend(JSON.stringify({
-                action: 'allRadar',
-                data: { isshow: 1, attributionid: event.target.detail.id, uid: this.$store.getters.user.data.id }
-              }))
-
-            }
-          })
-          circle.signal = '综合观测站'
-          circle.detail = i
-
-        }
-      }
-    })
-  }
-}
 // 下拉菜单
 const menu = {
   // 无下拉框按钮 点击触发
   dropdownButton(val) {
     console.log("点击数据",val)
     const map = {
-      '态势': () => {
-        this.websocketsend(JSON.stringify({
-          action: 'allRadar',
-          data: { isshow: 1, uid: this.$store.getters.user.data.id }
-        }))
-      }, '测距': (checked) => {
+      // '态势': () => {
+      //   this.websocketsend(JSON.stringify({
+      //     action: 'allRadar',
+      //     data: { isshow: 1, uid: this.$store.getters.user.data.id }
+      //   }))
+      // }, 
+      '目标': () => {
+        this.showObjectSelect=true},
+      '测距': (checked) => {
+        
         if (checked) {
           this.measureRuler = new L.Control.LinearMeasurement({
             unitSystem: 'metric',
@@ -297,31 +208,41 @@ const menu = {
             type: 'line',
             display: 'none'
           })
-          this.map.addControl(this.measureRuler)
+          var  math1=this.map.addControl(this.measureRuler)
+          // this.ruler2=math1.LatLng()
+          console.log("math1",math1._animateToCenter.lat)
+
           this.measureRuler.initRuler()
+          // var  math=Math.asin( this.map.addControl(this.measureRuler))
+          // console.log("math",math)
         } else {
           this.measureRuler.resetRuler(true)
         }
-      }, '海域': () => {
+      }, '区域': () => {
         this.showGroupView=true
+        this.areadefineLayer.clearLayers()
       }, '打印': () => {
         window.print()
       },
       '复位': () => {
         location.reload()//页面刷新
       }, '图层': () => {
+        this.showlayerSelect = true
+      }, '筛船': () => {
         this.showSelectMarker = true
-      }, '关注': () => {
+      },'导入': () => {
+        this.showimportexcel = true
+      },
+       '关注': () => {
         let m
         this.focusButton= !this.focusButton
         this.showInfo.focus=true
         this.radarLayer.clearLayers()
         this.focusShipLayer.clearLayers()
         this.stationLayers.clearLayers()
-        // this.seaLineLayer.clearLayers()
         this.seaLineLayer.clearLayers()
         this.loadStationMarker()
-        this.loadSeaLineLayer()
+        // this.loadSeaLineLayer()
         this.map.setView([30.37892927824675,122.19491755725795], 10);
         this.markerLayersGroup.eachLayer(item=>{
           // console.log(item,this.focusButton)
@@ -333,13 +254,13 @@ const menu = {
           }
         })
 
-        // console.log(this.markerLayersGroup.item)
+        console.log(this.markerLayersGroup.item)
         this.service.get('/project/focusType',).then(res=>{
           console.log(res.data)
           m=res.data
           m.splice(8,1)
         })
-        // m.splice(8,1)
+        m.splice(8,1)
         this.service.post('/focus/findAll',{}).then(res=>{
           // console.log(res.data)
           this.dialogInfo.focus=[]
@@ -353,8 +274,6 @@ const menu = {
               }
             }
           }
-          // this.focusList=res.data
-          // console.log( this.dialogInfo.focus)
         })
       }, 
       '统计': (check) => {
@@ -367,62 +286,157 @@ const menu = {
     }
     map[val.title](val.clicked)
   },
-  // 图层功能
+  // 筛船功能
   selectMarker(val) {
-    console.log(val)
-    // console.log(this.stationCheck)
-    if (val.prop) this.stationCheck[val.prop] = val.is
-    // if(val.name==='海防单位'&&val.is===true){
-    //   for(let i=1;i<11;i++){
-    //     console.log(this['orgLayer'+i])
-    //     this.departmentLayers.addLayer(this['orgLayer'+i])
-    //   }
-    //   return
+    console.log("sele",val,this.shipselect,this.areaselect)
+    // 船舶类型筛选
+    if(val.parShip){
+      if(val.is){
+        val.children.forEach(e=>{
+          this.shipselect.push(e.name)
+        })
+        // this.shipselect=["散货船", "集装箱船", "油轮", "客船", "渔船", "拖轮","其他"]
+        console.log('拼接的',this.shipselect)
+        this.loadAreaShip(1,[],this.shipselect,[])
+      }else{
+        this.shipselect=[]
+        console.log('拼接的',this.shipselect)
+        this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
+      }
+    }
+    if(val.ship){
+      // console.log('val.ship',val.ship)
+      if(val.is){
+        this.shipselect.push(val.name)
+        // console.log('拼接的',this.shipselect)
+        this.loadAreaShip(1,[],this.shipselect,[])
+      }else{
+        this.shipselect.splice(this.shipselect.findIndex((item)=>{return item===val.name}),1);
+        // console.log('拼接的', this.shipselect)
+        this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
+      }
+      // if(val.name=='散货船'&&!val.is){
+      //   // console.log(12313)
+      //   st='散货船'
+      //   this.loadAreaShip(1,'',st,'')
+      // }
+    }
+   
+    // if(val.appear_time){
+      // console.log('val.appear_time',val.appear_time)
+      // if(val.is&&val.appear_time){
+      //   var   at=this.timeselect.concat(val.name)
+      //   // console.log('拼接的',at)
+      //   this.loadAreaShip(1,'',timeselect,'')
+      // }else{
+      //   this.timeselect.replace(val.name,'')
+      //   this.loadAreaShip(1,timeselect,'','')
+      // }
     // }
+     // 出现时间筛选
+      if(val.parTime){
+        if(val.is){
+          val.children.forEach(e=>{
+            let maxtime,mintime
+            mintime=e.name.split('-')[0].replace('：','')
+            maxtime=e.name.split('-')[1].replace(':','')
+            // console.log(mintime,maxtime,'1111111111111111111111111111111111111111111111111111')
+            this.timeselect.push({mintime:mintime,maxtime:maxtime})
+          })
+          // console.log('拼接的',this.timeselect)
+          this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
+        }else{
+          this.timeselect=[]
+          // console.log('拼接的',this.timeselect)
+          this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
+        }
+      }
+      if(val.appear_time){
+        console.log('val.appear_time',val.appear_time)
+        if(val.is){
+          let maxtime,mintime
+          mintime=val.name.split('-')[0].replace(':','')
+          maxtime=val.name.split('-')[1].replace(':','')
+          // console.log(mintime,maxtime,'1111111111111111111111111111111111111111111111111111')
+          this.timeselect.push({mintime:mintime,maxtime:maxtime,index:val.index})
+          // console.log('拼接的',this.timeselect)
+          this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
+        }else{  
+         
+          this.timeselect.splice(this.timeselect.findIndex((item)=>{return item.index===val.index}),1);
+          // console.log('拼接的', this.timeselect)
+          this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
+        }
+      }
+    //  区域筛选
+    if(val.parArea){
+      if(val.is){
+        val.children.forEach(e=>{
+          this.areaselect.push(e.name)
+        })
+        // console.log('拼接的',this.areaselect)
+        this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
+      }else{
+        this.areaselect=[]
+        // console.log('拼接的',this.areaselect)
+        this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
+      }
+    }
+      if(val.selectarea){
+        //  console.log('val.selectarea',val.selectarea)
+        if(val.is){
+          this.areaselect.push(val.id)
+          // console.log('拼接的',this.areaselect)
+          this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
+        }else{
+          this.areaselect.splice(this.areaselect.findIndex((item)=>{return item===val.id}),1);
+          // console.log('拼接的', this.areaselect)
+          this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
+        }
+      }
+      // console.log('val.selectarea',val.selectarea)
+      // if(val.is&&val.selectarea){
+      //   var   at=this.areaselect.concat(val.name)
+      //   console.log('拼接的',at)
+      //   this.loadAreaShip(1,'',areaselect,'')
+      // }else{
+      //   this.areaselect.replace(val.name,'')
+      //   this.loadAreaShip(1,'','',areaselect)
+      // }
+    
+  },
+  // 目标筛选
+  ObjectSelect(val) {
+    // console.log('目标',val)
+    this.clickedMarker = val
+    if(val.name=='异常目标'){
+      this.isAbnormalShip=val.is
+    }
+    if(val.name=='AIS目标'){
+      this.shipAis=val.is
+    }
+    if(val.name=='雷达目标'){
+      this.shipRadar=val.is
+    }
+    if(val.name=='融合目标'){
+      this.shipFusion=val.is
+    }
+   this.loadAreaShip(1,'',this.shipselect.toString(),'')
+  },
+  // 图层筛选
+  layerSelect(val) {
+    console.log("图层",val)
     this.clickedMarker = val
     let action = [...actions.bind(this)()].filter(([key, value]) => (key.test(`${val.is}_${val.name}`)))
     action.forEach(([key, resValue]) => {
       console.log(key, resValue)
-      // return
       let func = resValue.bind(this)()
-      //
-      // this.clickedMarker=val
-      if (!func.url) return
-      // let swne =this.getMapBounds();
-      // this.service[val.ishttpGET?'get':'post']( func.url, {
-      //   'swLon': swne['swLon'],
-      //   'swLat': swne['swLat'],
-      //   'neLon': swne['neLon'],
-      //   'neLat': swne['neLat'],
-      //   'isfocus':this.focusButton
-      // })
-      //   .then(res=>{
-      //     // console.log('res',res)
-      //     if(val.name==='通信铁塔'){
-      //       let markers=[],style=[];
-      //       res.data.forEach(e => {
-      //         markers.push( value.actionFun.bind(this)(e))
-      //
-      //       })
-      //
-      //       this.markerCluster = new BMapLib.MarkerClusterer(this.map, {markers:markers,maxZoom:14,gridSize:120});
-      //       this.markerCluster.setStyles([{url:require('../../assets/mapicon/tower/1.png'),size: new BMap.Size(45,45),textColor:'#fff',textSize:14},
-      //         {url:require('../../assets/mapicon/tower/2.png'),size: new BMap.Size(40,40),textColor:'#fff',textSize:12},
-      //         {url:require('../../assets/mapicon/tower/3.png'),size: new BMap.Size(35,35),textColor:'#fff',textSize:12},
-      //       ])
-      //     }else{
-      //       res.data.forEach(e => {
-      //         func.actionFun.bind(this)(e);
-      //       })
-      //     }
-      //
-      //   })
-    })
+      if (!func.url) return 
+    }) 
   },
  
   // 统计区域内船只数量 统计
   shipAreaCount() {
-
     if (this.map_zoom < this.maxMapZoom) {
       this.$message.error('地图等级必须大于11级！')
     } else {
@@ -445,12 +459,18 @@ const menu = {
           let swArr = bd09towgs84(point[0][0], point[0][1])
           console.log(neArr, swArr)
           let swne = this.getMapBounds()
-          this.service.post('/ship/shipStatistical', {
-            'neLat': neArr[1],
-            'swLat': swArr[1],
-            'swLon': swArr[0],
-            'neLon': neArr[0]
-          }).then(res => {
+          let d = {
+            'maxLat': swne['neLat'],
+            'minLat': swne['swLat'],
+            'minLon': swne['swLon'],
+            'maxLon': swne['neLon'],
+            'times':[],
+            'types':[],
+            "waters":[],
+          }
+        this.service.post('/ship/statistical',{
+          ...d
+        }).then(res => {
             // console.log(res)
             let obj = res.data.columns
             if (obj.total === 0) {
@@ -550,203 +570,330 @@ const marker = {
   },
   // 被动保障类基础设施初始化数据
   loadDefaultMarker() {
-    this.loadSeaLineLayer()
-    let url = [
-      // {
-      //   url:'/anchorage/findAll',
-      //   signal:'锚地',
-      //   name:'anchorage',
-      //   click:true,
-      //   http:'post',
-      //   img:'/mapSigns/base8.png'
-      // },
-      {
-        url: '/port/findAll',
-        signal: '港区',
-        name: 'port',
-        click: true,
-        http: 'post',
-        img: '/mapSigns/base6.png'
-      },
-      {
-        url: '/berth/findAll',
-        signal: '码头泊位',
-        click: true,
-        name: 'berth',
-        http: 'post',
-        img: '/mapSigns/base7.png'
-      },
-      {
-        url: '/apron/findAll',
-        signal: '停机坪',
-        click: false,
-        http: 'get',
-        img: '/mapSigns/base1.png'
-      }
-    ]
-    for (let i of url) {
-      this.service[i.http](i.url, {
-        'isfocus': this.focusButton
-      })
-        .then(res => {
-          console.log(res,i.url)
-          for (let e of res.data) {
-            let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
-            let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets' + i.img))(i.signal)(() => {
+    // this.loadSeaLineLayer()
+    // let url = [
+    //   {
+    //     url:'/anchorage/findAll',
+    //     signal:'锚地',
+    //     name:'anchorage',
+    //     click:true,
+    //     http:'post',
+    //     img:'/mapSigns/base8.png'
+    //   },
+    //   {
+    //     url: '/port/findAll',
+    //     signal: '港区',
+    //     name: 'port',
+    //     click: true,
+    //     http: 'post',
+    //     img: '/mapSigns/base6.png'
+    //   },
+    //   {
+    //     url: '/pier/allList',
+    //     signal: '码头泊位',
+    //     click: true,
+    //     name: 'berth',
+    //     http: 'post',
+    //     img: '/mapSigns/02.png'
+    //   },
+    //   {
+    //     url: '/apron/findAll',
+    //     signal: '停机坪',
+    //     click: false,
+    //     http: 'get',
+    //     img: '/mapSigns/base1.png'
+    //   }
+    // ]
+    // for (let i of url) {
+    //   this.service[i.http](i.url, {
+    //     // 'isfocus': this.focusButton
+    //   })
+    //     .then(res => {
+    //       console.log(res,i.url)
+    //       for (let e of res.data) {
+    //         let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+    //         let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets' + i.img))(i.signal)(() => {
+    //         })
+    //         marker.isFocus = false
+
+    //         // 是否允许点击
+    //         if (i.click) {
+    //           marker.addTo(this.markerLayersGroup).on('click', (event) => {
+    //             // console.log(event)
+    //             this.service.post('/' + i.name + '/view', {
+    //               id: e.id
+    //             }).then(res => {
+    //               console.log(res.data)
+    //               let a = Object.entries(this.showInfo)
+    //               a.forEach(e => {
+    //                 this.showInfo[e[0]] = false
+    //               })
+    //               // this.showInfo=new Map(a)
+    //               this.showInfo[i.name] = true
+    //               this.dialogInfo[i.name] = res.data.columns
+    //             })
+    //           })
+    //         }
+
+    //         if (e.isFocus) {
+    //           // let marker= this.createMarker(bd09Arr[1],bd09Arr[0],15,15,require('../../assets' +i.img))(i.signal)(()=>{})
+    //           marker.isFocus = true
+    //           // marker.addTo(this.markerLayersGroup)
+    //         } else {
+    //         }
+    //       }
+    //     })
+    // }
+        // ais
+        this.service.get('/ais/allList', {
+          // 'isfocus': this.focusButton
+        }).then(res => {
+          console.log("区域内ais信息",res)
+          for (let e of res.list) {
+            let bd09Arr = wgs84ToBD(e.lon, e.lat)
+            let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/ais.png'))('ais')
+            ((event) => {
+              //ais信息框
+              this.service.get('/ais/view', {
+                params:{
+                  id:e.id
+                }
+              }).then(res => {
+                console.log("ais详细信息",res)
+                let a = Object.entries(this.showInfo)  //返回一个键值对数组
+                a.forEach(e => {
+                  this.showInfo[e[0]] = false
+                })
+                this.showInfo.ais = true
+                if (this.hasLayer(this.map, 'ais' + e.id).length > 0) {
+                  res.ais.showed = true
+                } else {
+                  res.ais.showed = false
+                }
+    
+                this.dialogInfo.ais = res.ais
+              })
             })
             marker.isFocus = false
-
-            //是否允许点击
-            if (i.click) {
-              marker.addTo(this.markerLayersGroup).on('click', (event) => {
-                // console.log(event)
-                this.service.post('/' + i.name + '/view', {
-                  id: e.id
-                }).then(res => {
-                  console.log(res.data)
-                  let a = Object.entries(this.showInfo)
-                  a.forEach(e => {
-                    this.showInfo[e[0]] = false
-                  })
-                  // this.showInfo=new Map(a)
-                  this.showInfo[i.name] = true
-                  this.dialogInfo[i.name] = res.data.columns
-                })
-              })
-            }
-
+            marker.addTo(this.markerLayersGroup)
             if (e.isFocus) {
-              // let marker= this.createMarker(bd09Arr[1],bd09Arr[0],15,15,require('../../assets' +i.img))(i.signal)(()=>{})
               marker.isFocus = true
-              // marker.addTo(this.markerLayersGroup)
-            } else {
             }
           }
         })
-    }
-    this.service.post('/anchorage/areaList', {
+    // 雷达
+    this.service.get('/radar/allList', {
       // 'isfocus': this.focusButton
     }).then(res => {
-      console.log("锚地信息",res.data)
-      for (let e of res.data) {
-        let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
-        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets/mapSigns/base8.png'))('锚地')
+      // console.log("区域内雷达信息",res)
+      for (let e of res.list) {
+        let bd09Arr = wgs84ToBD(e.lon, e.lat)
+        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/01.png'))('雷达')
+        ((event) => {
+          //雷达信息框
+          // console.log("雷达信息",e)
+          this.service.get('/radar/view', {
+            params:{
+              id:e.id
+            }
+          }).then(res => {
+            // console.log("雷达详细信息",res)
+            let a = Object.entries(this.showInfo)
+            a.forEach(e => {
+              this.showInfo[e[0]] = false
+            })
+            this.showInfo.radar = true
+            if (this.hasLayer(this.map, 'radar' + e.id).length > 0) {
+              res.radar.showed = true
+            } else {
+              res.radar.showed = false
+            }
+
+            this.dialogInfo.radar = res.radar
+          })
+        })
+        // marker.isFocus = false
+        marker.addTo(this.markerLayersGroup)
+        // if (e.isFocus) {
+        //   marker.isFocus = true
+        // }
+      }
+    })
+    // 锚地
+    this.service.get('/anchorage/allList', {
+      // 'isfocus': this.focusButton
+    }).then(res => {
+      // console.log("区域内锚地信息",res)
+      for (let e of res.list) {
+        let bd09Arr = wgs84ToBD(e.lon, e.lat)
+        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/03.png'))('锚地')
         ((event) => {
           //锚地信息框
-          this.service.post('/anchorage/areaList', {
-
-            // maxLat:this.maxLat,
-            // maxLon:this.maxLon,
-            // minLat:this.minLat,
-            // minLon:this.minLon
+          this.service.get('/anchorage/view', {
+            params:{
+              id:e.id
+            }
           }).then(res => {
-            console.log("锚地信息",res.data)
+            // console.log("锚地详细信息",res)
             let a = Object.entries(this.showInfo)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
             this.showInfo.anchorage = true
             if (this.hasLayer(this.map, 'anchorage' + e.id).length > 0) {
-              res.data.showed = true
+              res.anchorage.showed = true
             } else {
-              res.data.showed = false
+              res.anchorage.showed = false
             }
 
-            this.dialogInfo.anchorage = res.data
+            this.dialogInfo.anchorage = res.anchorage
           })
         })
-        marker.isFocus = false
+        // marker.isFocus = false
         marker.addTo(this.markerLayersGroup)
-        if (e.isFocus) {
-          marker.isFocus = true
-        }
+        // if (e.isFocus) {
+        //   marker.isFocus = true
+        // }
       }
     })
-    this.service.get('/road/findAllDetail').then(res => {
-      for (let i of res.data) {
-        // console.log(i)
-        let p = []
-        i.points.forEach(e => {
-          let bd09Arr = wgs84ToBD(e.lon, e.lat)
-          p.push([bd09Arr[1], bd09Arr[0]])
+    // 码头
+    this.service.get('/pier/allList'/*, {
+      // 'isfocus': this.focusButton
+    }*/).then(res => {
+      // console.log("区域内码头信息",res)
+      for (let e of res.list) {
+        let bd09Arr = wgs84ToBD(e.lon, e.lat)
+        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/02.png'))('码头')
+        ((event) => {
+          //码头信息框
+          // console.log("码头信息",e)
+          this.service.get('/pier/view', {
+            params:{
+              id:e.id
+            }
+          }).then(res => {
+            // console.log("码头详细信息",res)
+            let a = Object.entries(this.showInfo)
+            // console.log('码头的',a)
+            a.forEach(e => {
+              this.showInfo[e[0]] = false
+            })
+            this.showInfo.berth = true
+            if (this.hasLayer(this.map, 'berth' + e.id).length > 0) {
+              res.pier.showed = true
+            } else {
+              res.pier.showed = false
+            }
+            this.dialogInfo.berth = res.pier
+            // console.log('this.dialogInfo.berth',this.dialogInfo.berth)
+          })
+             //码头的统计时间
+            this.service.get('/pier/portShip',{
+                 params:{id:e.id}
+                 }).then(res=>{
+             console.log("码头统计时间",res)
+             // this.namelist=res.result
+           }) 
+       
         })
-        let arrow = L.polyline(p, {
-          //颜色
-          color: 'red'
-        }).addTo(this.roadLayer)
-
+        // marker.isFocus = false
+        marker.addTo(this.markerLayersGroup)
+        // if (e.isFocus) {
+        //   marker.isFocus = true
+        // }
       }
     })
+    this.service.get('/org/allList').then(res => {
+      console.log("组织机构",res)
+      for (let i of res.list) {
+        console.log("组织机构选项",i)
+        let p = []
+        // i.points.forEach(e => {
+        //   let bd09Arr = wgs84ToBD(e.lon, e.lat)
+        //   p.push([bd09Arr[1], bd09Arr[0]])
+        // })
+        // let arrow = L.polyline(p, {
+        //   //颜色
+        //   color: 'red'
+        // }).addTo(this.markerLayersGroup)
+      }
+    })
+    //     this.service.get('/org/allList',{
+    //       params:{}
+    //       }).then(res=>{
+    //     console.log("组织机构",res)
+    //   // this.typelist=res.result
+    // })
   },
   //leaflet 折线 没有设置透明度属性 只能删除重新绘制
-  loadSeaLineLayer(){
-    this.service.post('/seaLine/findAll', {
-      'isfocus':this.focusButton
-    }).then(res => {
-      for (let i of res.data) {
-        // console.log(i)
-        let p = [], r = []
-        i.points.forEach(e => {
-          let bd09Arr = wgs84ToBD(e.lon, e.lat)
-          p.push([bd09Arr[1], bd09Arr[0]])
-        })
-        i.region.forEach(e => {
-          // r.push([e.lat, e.lon])
-          let bd09Arr = wgs84ToBD(e.lon, e.lat)
-          r.push([parseFloat(bd09Arr[1].toFixed(6)), parseFloat(bd09Arr[0].toFixed(6))])
-        })
-        r.push(r[0])
-        let arrow = L.polyline(p, {
-          //颜色
-          color: 'rgba(255,137,135,0.62)'
-        }).addTo(this.seaLineLayer)
-        arrow.signal=i
-        arrow.isFocus=i.isFocus
+  // loadSeaLineLayer(){
+  //   this.service.post('/seaLine/findAll', {
+  //     'isfocus':this.focusButton
+  //   }).then(res => {
+  //     for (let i of res.data) {
+  //       // console.log(i)
+  //       let p = [], r = []
+  //       i.points.forEach(e => {
+  //         let bd09Arr = wgs84ToBD(e.lon, e.lat)
+  //         p.push([bd09Arr[1], bd09Arr[0]])
+  //       })
+  //       i.region.forEach(e => {
+  //         // r.push([e.lat, e.lon])
+  //         let bd09Arr = wgs84ToBD(e.lon, e.lat)
+  //         r.push([parseFloat(bd09Arr[1].toFixed(6)), parseFloat(bd09Arr[0].toFixed(6))])
+  //       })
+  //       r.push(r[0])
+  //       let arrow = L.polyline(p, {
+  //         //颜色
+  //         color: 'rgba(255,137,135,0.62)'
+  //       }).addTo(this.seaLineLayer)
+  //       arrow.signal=i
+  //       arrow.isFocus=i.isFocus
 
-        arrow.on('click', (e) => {
-          let a = Object.entries(this.showInfo)
-          a.forEach(e => {
-            this.showInfo[e[0]] = false
-          })
-          // console.log(i)
-          this.showInfo.seaLine = true
-          this.dialogInfo.seaLine = i
-        })
+  //       arrow.on('click', (e) => {
+  //         let a = Object.entries(this.showInfo)
+  //         a.forEach(e => {
+  //           this.showInfo[e[0]] = false
+  //         })
+  //         // console.log(i)
+  //         this.showInfo.seaLine = true
+  //         this.dialogInfo.seaLine = i
+  //       })
 
-        var pd = L.polylineDecorator(r, {
-          //添加模式
-          patterns: [{
-            //模式符号的偏移位置
-            offset: 0,
-            //模式符号的重复间隔
-            repeat: 10,
-            //符号实例
-            symbol: L.Symbol.dash({
-              //符号大小
-              pixelSize: 5,
-              pathOptions: {
-                //颜色
-                color: '#d42727',
-                //线宽
-                weight: 1,
-                //透明度
-                opacity: 1
-              }
+  //       var pd = L.polylineDecorator(r, {
+  //         //添加模式
+  //         patterns: [{
+  //           //模式符号的偏移位置
+  //           offset: 0,
+  //           //模式符号的重复间隔
+  //           repeat: 10,
+  //           //符号实例
+  //           symbol: L.Symbol.dash({
+  //             //符号大小
+  //             pixelSize: 5,
+  //             pathOptions: {
+  //               //颜色
+  //               color: '#d42727',
+  //               //线宽
+  //               weight: 1,
+  //               //透明度
+  //               opacity: 1
+  //             }
 
-            })
-          }]
-        }).addTo(this.seaLineLayer)
-        pd.signal=i
-        pd.isFocus=i.isFocus
-      }
-    })
-  },
+  //           })
+  //         }]
+  //       }).addTo(this.seaLineLayer)
+  //       pd.signal=i
+  //       pd.isFocus=i.isFocus
+  //     }
+  //   })
+  // },
   // 锚地消息框 点击事件
   showAnchArea(data) {
     // console.log(data)
     if (data) {
       // console.log(this.hasLayer(this.map,'anchorage'+this.dialogInfo.anchorage.id))
-      // 0:圆形  2:矩形 1:多边形
+      // 0:圆形  1:矩形 2:多边形
       const map = {
         0: (waters) => {
           // console.log(waters)
@@ -763,7 +910,7 @@ const marker = {
           }).addTo(this.map)
           circle.signal = 'anchorage' + this.dialogInfo.anchorage.id
         },
-        1: (waters) => {
+        2: (waters) => {
           // console.log(waters)
           let points = []
           waters.points.forEach(e => {
@@ -776,7 +923,7 @@ const marker = {
           }).addTo(this.map)
           polygon.signal = 'anchorage' + this.dialogInfo.anchorage.id
         },
-        2: (waters) => {
+        1: (waters) => {
           console.log(waters)
           let points = []
           let p1 = wgs84ToBD(waters.lon1, waters.lat1)
@@ -790,11 +937,12 @@ const marker = {
       }
       const m = {
         '0': 'circle',
-        '1': 'polygon',
-        '2': 'rectangle'
+        '1': 'rectangle',
+        '2': 'polygon',
       }
+
       // map[this.dialogInfo.anchorage.waters.type](this.dialogInfo.anchorage.waters)
-      this.createPolygon(m[this.dialogInfo.anchorage.waters.type],this.dialogInfo.anchorage.waters,'anchorage' + this.dialogInfo.anchorage.id,
+      this.createPolygon(m[this.dialogInfo.anchorage.type],this.dialogInfo.anchorage,'anchorage' + this.dialogInfo.anchorage.id,
         {  //颜色
           color: 'rgba(222,29,55,0.84)',
           //填充色
@@ -808,57 +956,132 @@ const marker = {
     }
   },
   // 信息框关注按钮
-  infoViewFocus(data) {
+  cancelFocus(data){
     console.log(data)
+    // this.service.get('/ship/cancelFocus',
+    // {
+    //   parmas:{
+    //      mmsi: data.mmsi
+    //   }
+    // }).then(res=>{
+    //   console.log("关注接口",res)
+    //   if (res.error === 0) {
+    //         this.$message.success('取消关注成功！')
+    //       }
+    // })
+  },
+
+  infoViewFocus(data) {
+    console.log('infoViewFocus',data)
     if (!data.focus) {
-      console.log('关注', data)
-      this.service.post('/focus/add', {
-        targetSign: data.targetSign,
-        description: data.description,
-        targetType: data.targetType
-      }).then(res => {
+      console.log('关注', data.mmsi)
+        this.service.get('/ship/focus',
+          {
+            parmas:{
+               mmsi: data.mmsi
+            }
+          }).then(res=>{
+            console.log("关注接口",res)
+            if (res.error === 0) {
+               this.$message.success('关注成功！')
+            }
+          })
+      // this.service.post('/focus/add', {
+      //   targetSign: data.targetSign,
+      //   description: data.description,
+      //   targetType: data.targetType
+      // }).then(res => {
 
-        console.log(res)
-      })
-    } else {
-      console.log('取消')
-      this.service.post('/focus/deleteBySignAndType', {
-        targetSign: data.targetSign,
-        targetType: data.targetType
-      }).then(res => {
-
-        console.log(res)
-        if (res.code === 0) {
-          this.$message.success('成功')
+      //   console.log(res)
+      // })
+    }
+     else {
+      // console.log('取消')
+      // this.service.post('/focus/deleteBySignAndType', {
+      //   targetSign: data.targetSign,
+      //   targetType: data.targetType
+      // }).then(res => {
+      //   console.log(res)
+      //   if (res.code === 0) {
+      //     this.$message.success('成功')
+      //   }
+      // })
+      this.service.get('/ship/cancelFocus',
+      {
+        parmas:{
+           mmsi: data.mmsi
         }
+      }).then(res=>{
+        console.log("关注接口",res)
+        if (res.error === 0) {
+              this.$message.success('取消关注成功！')
+            }
       })
     }
   },
   //雷达船舶信息框
   radarShipView() {
-    this.websocketsend(JSON.stringify({ action: 'radarShip', data: { radarid: this.dialogInfo.radar.id } }))
-    let a = Object.entries(this.showInfo)
-    a.forEach(e => {
-      this.showInfo[e[0]] = false
-    })
-    this.showInfo.radarShip = true
+    // this.websocketsend(JSON.stringify({ action: 'radarShip', data: { radarid: this.dialogInfo.radar.id } }))
+    // let a = Object.entries(this.showInfo)
+    // a.forEach(e => {
+    //   this.showInfo[e[0]] = false
+    // })
+    // this.showInfo.radarShip = true
+  
   },
   //ais船舶信息框
   aisShipView(){
-    // console.log(this.dialogInfo.aisInfo)
-    this.service.post('/ship/aisShip', {
-      id: this.dialogInfo.ais.id,
-      limit: 6,
-      page: 1
-    })
-      .then(req => {
-        // let arr = [req.data[0],req.data[1],req.data[2],req.data[3],req.data[4]]
-        this.dialogInfo.aisShipTable = req.data
-        this.dialogInfo.aisShipTable.id = this.dialogInfo.ais.id
-        // this.AisDataTabTotal = req.data.totalRow
-        this.showInfo.aisShip=true
-        console.log('ais',req)
-      })
+    console.log("aisInfo",this.dialogInfo.aisInfo)
+    // this.service.post('/ship/aisShip', {
+    //   id: this.dialogInfo.ais.id,
+    //   limit: 6,
+    //   page: 1
+    // })
+    //   .then(req => {
+    //     // let arr = [req.data[0],req.data[1],req.data[2],req.data[3],req.data[4]]
+    //     this.dialogInfo.aisShipTable = req.data
+    //     this.dialogInfo.aisShipTable.id = this.dialogInfo.ais.id
+    //     // this.AisDataTabTotal = req.data.totalRow
+    //     this.showInfo.aisShip=true
+    //     console.log('ais',req)
+    //   })
+    //  this.service.get('/ais/allList', {
+    //   // 'isfocus': this.focusButton
+    // }).then(res => {
+    //   console.log("ais信息",res)
+    //   for (let e of res.ais) {
+    //     let bd09Arr = wgs84ToBD(e.lon, e.lat)
+    //     let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets/mapSigns/ais.png'))('ais')
+    //     ((event) => {
+    //       //雷达信息框
+    //       // console.log("雷达信息",e)
+    //       this.service.get('/ais/view', {
+    //         params:{
+    //           id:e.id
+    //         }
+    //       }).then(res => {
+    //         console.log("ais详细信息",res)
+    //         let a = Object.entries(this.showInfo)  //返回一个键值对数组
+    //         a.forEach(e => {
+    //           this.showInfo[e[0]] = false
+    //         })
+    //         this.showInfo.ais = true
+    //         if (this.hasLayer(this.map, 'ais' + e.id).length > 0) {
+    //           res.ais.showed = true
+    //         } else {
+    //           res.ais.showed = false
+    //         }
+
+    //         this.dialogInfo.ais = res.ais
+    //       })
+    //     })
+    //     marker.isFocus = false
+    //     marker.addTo(this.markerLayersGroup)
+    //     if (e.isFocus) {
+    //       marker.isFocus = true
+    //     }
+    //   }
+    // })
   },
   //摄像头放大缩小
   enlargeVideo(){
@@ -882,45 +1105,45 @@ const leftDrawer={
   },
 
   loadLeftDrawerData1(){
-    this.service.get('/project/crimal').then(res => {
-      // console.log(res)
-      this.leftDrawerData.row2=res.data
-    })
+    // this.service.get('/project/crimal').then(res => {
+    //   // console.log(res)
+    //   this.leftDrawerData.row2=res.data
+    // })
   },
   loadLeftDrawerData2(){
 
-    this.service.get('/project/mystatistics').then(res=>{
-      // console.log(res)
-      this.leftDrawerData.row4=res.data
-    })
+    // this.service.get('/project/mystatistics').then(res=>{
+    //   // console.log(res)
+    //   this.leftDrawerData.row4=res.data
+    // })
   },
   loadLeftDrawerStation1(){
-    this.service.post('/station/findPage', {
-      condition: this.leftDrawerData.station1.name,
-      limit: 7,
-      page: this.leftDrawerData.station1.page,
-    }).then(res => {
-      // console.log('station',res)
+    // this.service.post('/station/findPage', {
+    //   condition: this.leftDrawerData.station1.name,
+    //   limit: 7,
+    //   page: this.leftDrawerData.station1.page,
+    // }).then(res => {
+    //   // console.log('station',res)
 
-      this.leftDrawerData.station1.list=res.data.list
-      // this.leftDrawerData.station1.page=res.data.pageNumber
-      this.leftDrawerData.station1.total=res.data.totalRow
-      this.leftDrawerData.station1={...this.leftDrawerData.station1}
-    })
+    //   this.leftDrawerData.station1.list=res.data.list
+    //   // this.leftDrawerData.station1.page=res.data.pageNumber
+    //   this.leftDrawerData.station1.total=res.data.totalRow
+    //   this.leftDrawerData.station1={...this.leftDrawerData.station1}
+    // })
   },
   loadLeftDrawerStation2(){
-    this.service.post('/apron/findPage', {
-      condition: this.leftDrawerData.station2.name,
-      limit: 7,
-      page: this.leftDrawerData.station2.page,
-    }).then(res => {
-      // console.log('station',res)
+    // this.service.post('/apron/findPage', {
+    //   condition: this.leftDrawerData.station2.name,
+    //   limit: 7,
+    //   page: this.leftDrawerData.station2.page,
+    // }).then(res => {
+    //   // console.log('station',res)
 
-      this.leftDrawerData.station2.list=res.data.list
-      // this.leftDrawerData.station1.page=res.data.pageNumber
-      this.leftDrawerData.station2.total=res.data.totalRow
-      this.leftDrawerData.station2={...this.leftDrawerData.station2}
-    })
+    //   this.leftDrawerData.station2.list=res.data.list
+    //   // this.leftDrawerData.station1.page=res.data.pageNumber
+    //   this.leftDrawerData.station2.total=res.data.totalRow
+    //   this.leftDrawerData.station2={...this.leftDrawerData.station2}
+    // })
   },
 
 
@@ -933,6 +1156,7 @@ const leftDrawer={
     this.loadLeftDrawerStation2()
     // console.log(name)
   },
+  // 左侧抽屉
   LeftDrawerStationChange1(page){
     this.leftDrawerData.station1.page=page
     this.loadLeftDrawerStation1()
@@ -941,19 +1165,17 @@ const leftDrawer={
     this.showDailyEvent=true
     let beginTime=e+' 00:00',endTime=e+' 23:59'
     // console.log(new Date(beginTime).getTime(),new Date(endTime).getTime())
-    this.service.post('/criminal/pageAllOfShip',{
-      limit:3,
-      page:this.dailyEventPage,
-      type:0,
-      beginTime:new Date(beginTime).getTime(),
-      endTime:new Date(endTime).getTime(),
-    }).then(res=>{
-
-      // console.log(res)
-
-      this.dailyEventList=res.data
-      this.dailyEventList.today=e
-    })
+    // this.service.post('/criminal/pageAllOfShip',{
+    //   limit:3,
+    //   page:this.dailyEventPage,
+    //   type:0,
+    //   beginTime:new Date(beginTime).getTime(),
+    //   endTime:new Date(endTime).getTime(),
+    // }).then(res=>{
+    //   // console.log(res)
+    //   this.dailyEventList=res.data
+    //   this.dailyEventList.today=e
+    // })
   },
   leftDrawerSelectShip(e){
     // console.log('shipType',e)
@@ -1014,8 +1236,10 @@ const leftDrawer={
         res.data.forEach(e => {
           let bd09Arr = wgs84ToBD(parseFloat(e.lon), parseFloat(e.lat))
           points.push([bd09Arr[1], bd09Arr[0]])
-          duration.push(800)
+          duration.push(800*i)
+
         })
+        console.log("duration",duration)
         L.marker(points[0], {
           icon:L.icon({
             iconUrl: require('../../assets/history/start.png'),
@@ -1059,121 +1283,223 @@ const ship={
       return
     }
     console.log(this.dialogInfo.ship)
-    this.service.post('/ship/shipTrack', {
-      mmsi: this.dialogInfo.ship.mmsi,
-      radarId: this.dialogInfo.ship.radarid,
-      targetId: this.dialogInfo.ship.targetid,
-      urlType: this.dialogInfo.ship.urltype
-    })
-      .then(res => {
-
-        console.log(res)
-        this.service.post('/camera/findAll', {
-          stationId: this.dialogInfo.ship.attributionid
-        }).then(res => {
-          res.data.forEach((value) => {
-            this.dialogInfo.camera = [...res.data]
-            this.showInfo.camera=true
-          })
-        })
-
-      })
+    // this.service.post('/ship/shipTrack', {
+    //   mmsi: this.dialogInfo.ship.mmsi,
+    //   radarId: this.dialogInfo.ship.radarid,
+    //   targetId: this.dialogInfo.ship.targetid,
+    //   urlType: this.dialogInfo.ship.urltype
+    // })
+    //   .then(res => {
+    //     console.log(res)
+    //     this.service.post('/camera/findAll', {
+    //       stationId: this.dialogInfo.ship.attributionid
+    //     }).then(res => {
+    //       res.data.forEach((value) => {
+    //         this.dialogInfo.camera = [...res.data]
+    //         this.showInfo.camera=true
+    //       })
+    //     })
+    //   })
   },
-  // 船舶信息信息框的船舶详情
+  // 船舶详细信息框的船舶详情
   shipDetail(data){
     console.log('shipDetail',data)
     // this.removeMapDom('ShipDetail')
-    this.service.get('/ship/view', {
+    // this.service.get('/ship/view', {
+    //  params:{mmsi: data} 
+    // }).then(res => {
+    //   console.log(res)
+    //   this.dialogInfo.shipDetail = res.ais
+    //   this.showInfo.shipDetail=true
+    // })
+     this.service.get('/ship/archives', {
      params:{mmsi: data} 
     }).then(res => {
-      console.log(res)
+      console.log("船舶详细信息",res)
       this.dialogInfo.shipDetail = res.ais
       this.showInfo.shipDetail=true
     })
+
   },
-  datetoString(date,fmt) {
-    var o = {
-      'M+': date.getMonth() + 1,
-      'd+': date.getDate(),
-      'h+': date.getHours(),
-      'm+': date.getMinutes(),
-      's+': date.getSeconds(),
-      'q+': Math.floor((date.getMonth() + 3) / 3),
-      'S': date.getMilliseconds()
-    }
-    if (/(y+)/.test(fmt)) {
-      fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
-    }
-    for (var k in o) {
-      if (new RegExp('(' + k + ')').test(fmt)) {
-        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
-      }
-    }
-    return fmt
-  },
-  // 船舶信息信息框的历史轨迹
-  setShipHistory(e) {
-    console.log('历史轨迹',e)
-    //console.log(this.shipDatePicker)
+  // 船舶详细信息框的历史轨迹
+  setShipHistory(e) {      
+    // console.log('历史轨迹时间戳',e)
+    console.log(this.dialogInfo.ship)
     if (e === null) {
       return
     }
     this.animateLayer.clearLayers()
-    // console.log("取整",parseInt(e))
-    datetoString(new Date(e), 'yyyy-MM-dd h:m:s');
-      // var d = new Date(e * 1000);    //根据时间戳生成时间对象
+    // datetoString(new Date(e), 'yyyy-MM-dd h:m:s');
+      // var d = new Date(e);    
       // var date = (d.getFullYear()) + "-" + 
-      //           (d.getMonth() + 1) + "-" +
+      //           // (d.getMonth() + 1) + "-" +
+      //           (d.getMonth()+1 < 10 ? '0'+(d.getMonth()+1) : d.getMonth()+1)+ "-" +
       //           (d.getDate()) + " " + 
       //           (d.getHours()) + ":" + 
       //           (d.getMinutes()) + ":" + 
       //           (d.getSeconds());
-     console.log('data',date);
-    this.service.get('/ship/shipHistory', {
-      params:{
-        beginTime: date[0],
-        endTime: date[1],
-        mmsi: this.dialogInfo.ship.mmsi
-      }
-      
-    })
-      .then(res => {
-        console.log(res)
-        if (res.data.length < 1) {
-          this.$message.warning('暂无轨迹');
-        }else{
-          let points = [],duration=[]
-          res.data.forEach(e => {
-            let bd09Arr = wgs84ToBD(parseFloat(e.lon), parseFloat(e.lat))
-            points.push([bd09Arr[1], bd09Arr[0]])
-            duration.push(800)
-          })
-          L.marker(points[0], {
-            icon:L.icon({
-              iconUrl: require('../../assets/history/start.png'),
-              iconSize: [30,44],
-              iconAnchor: [15,22]
+      var date1 = (new Date(e[0]).toLocaleDateString().replace(/\//g,'-')+' '+new Date(e[0]).toTimeString().split(' ')[0])
+      var date2 = (new Date(e[1]).toLocaleDateString().replace(/\//g,'-')+' '+new Date(e[1]).toTimeString().split(' ')[0])
+      //  console.log('data',date1,date2);
+      if(this.dialogInfo.ship.targettype===3){
+
+        this.service.get('/radar/radarHistory', {
+          params:{
+            station:this.dialogInfo.ship.radarid,
+            targetid:this.dialogInfo.ship.targetid
+            // beginTime: date1,
+            // endTime: date2,
+            // mmsi: this.dialogInfo.ship.mmsi
+          }   
+        })
+          .then(res => {
+            console.log('shipHistory',res)
+            if (res.list.length < 1) {
+              this.$message.warning('暂无轨迹');
+            }else{
+              var points = [],duration=[],bd09Arr=[]
+            res.list.forEach(e => {
+               bd09Arr = wgs84ToBD(parseFloat(e.lon), parseFloat(e.lat))
+              // console.log('bd09Arr',bd09Arr)
+              var po=points.push([bd09Arr[1], bd09Arr[0]])
+                // console.log("points",po)
+              duration.push(800)
             })
-          }).addTo(this.animateLayer);
-          L.marker(points[points.length-1], {
-            icon:L.icon({
-              iconUrl: require('../../assets/history/end.png'),
-              iconSize: [30,44],
-              iconAnchor: [15,22]
-            })
-          }).addTo(this.animateLayer);
-          var polyline = L.polyline(points, { color: 'red' }).addTo(this.animateLayer);
-          var myMovingMarker = L.Marker.movingMarker(points,
-            duration,{
+           L.marker(points[0], {
               icon:L.icon({
-                iconUrl: require('../../assets/history/ship.png'),
-                iconSize: [40,44],
-                iconAnchor: [20,22]
+                iconUrl: require('../../assets/history/start.png'),
+                iconSize: [30,44],
+                iconAnchor: [15,22],
+                shadowSize: [41, 41]
               })
             }).addTo(this.animateLayer);
-          myMovingMarker.start();
-        }
+            
+            // marker1.enableTemporaryHighlight();   //临时调用高亮显示
+            L.marker(points[points.length-1], {
+              icon:L.icon({
+                iconUrl: require('../../assets/history/end.png'),
+                iconSize: [30,44],
+                iconAnchor: [15,22],
+                shadowSize: [41, 41]
+              })
+            },{highlight: 'permanent'}).addTo(this.animateLayer);
+            var polyline = L.polyline(points, { color: 'red' }).addTo(this.animateLayer);
+
+            points.forEach(item=>{
+              console.log('item',item)
+
+              item[0]=item[0]*1000000
+              item[1]=item[1]*1000000
+              console.log('item1',item)
+              item[0]=item[0]-item[0]%1
+              item[1]=item[1]-item[1]%1
+              console.log('item2',item)
+              item[0]=item[0]/1000000
+              item[1]=item[1]/1000000
+              console.log('item3',item)
+
+              let c=L.circle(item, {radius: 50,color:'green',fillColor:'greeb'}).addTo(this.animateLayer);
+              var p1 = L.popup("<l-popup :content='profile1-1+'</l-popup>")
+              .setContent(()=>{
+                return `<p>经纬度为：${item}</p>`
+              })
+              c.bindPopup(p1,{minWidth:100,maxHeight:200}).openPopup() 
+            })
+            
+            this.myMovingMarker = L.Marker.movingMarker(points,
+              duration,{
+                icon:L.icon({
+                  iconUrl: require('../../assets/history/ship.png'),
+                  iconSize: [40,44],
+                  iconAnchor: [20,22]
+                })
+              }).addTo(this.animateLayer);
+                this.myMovingMarker.start();
+            }
+          })
+
+      }else{
+        this.service.get('/ship/shipHistory', {
+        params:{
+          beginTime: date1,
+          endTime: date2,
+          mmsi: this.dialogInfo.ship.mmsi
+        }   
       })
+        .then(res => {
+          console.log('shipHistory',res)
+          if (res.list.length < 1) {
+            this.$message.warning('暂无轨迹');
+          }else{
+            var points = [],duration=[],bd09Arr=[]
+            res.list.forEach(e => {
+               bd09Arr = wgs84ToBD(parseFloat(e.lon), parseFloat(e.lat))
+              // console.log('bd09Arr',bd09Arr)
+              var po=points.push([bd09Arr[1], bd09Arr[0]])
+                // console.log("points",po)
+              duration.push(800)
+            })
+           var marker1= L.marker(points[0], {
+              icon:L.icon({
+                iconUrl: require('../../assets/history/start.png'),
+                iconSize: [30,44],
+                iconAnchor: [15,22],
+                shadowSize: [41, 41]
+              })
+            }).addTo(this.animateLayer);
+            
+            // marker1.enableTemporaryHighlight();   //临时调用高亮显示
+            var marker2= L.marker(points[points.length-1], {
+              icon:L.icon({
+                iconUrl: require('../../assets/history/end.png'),
+                iconSize: [30,44],
+                iconAnchor: [15,22],
+                shadowSize: [41, 41]
+              })
+            },{highlight: 'permanent'}).addTo(this.animateLayer);
+            var polyline = L.polyline(points, { color: 'red' }).addTo(this.animateLayer);
+
+            points.forEach(item=>{
+                console.log('item',item)
+                item[0]=item[0]*1000000
+                item[1]=item[1]*1000000
+                console.log('item1',item)
+                item[0]=item[0]-item[0]%1
+                item[1]=item[1]-item[1]%1
+                console.log('item2',item)
+                item[0]=item[0]/1000000
+                item[1]=item[1]/1000000
+                console.log('item3',item)
+                 //小数点保留六位
+            //  if (item.indexOf('.') > 0) {　　　　　　　　
+            //      const longlatsplit = item.split('.');　　　　　　　
+            //      if (longlatsplit.length >= 2) {　　　　　　　　　　
+            //          return  parseFloat(longlatsplit[0] === "" ? 0 : longlatsplit[0]) + parseFloat("." + longlatsplit[1].slice(0, 6));　　　　　　　　
+            //       }　　　　　　
+            //   }
+                let c=L.circle(item, {radius: 50,color:'green',fillColor:'greeb'}).addTo(this.animateLayer);
+                var p1 = L.popup("<l-popup :content='profile1-1+'</l-popup>")
+                .setContent(()=>{
+                  return `<p>经纬度为：${item}</p>`
+                })
+                c.bindPopup(p1,{minWidth:100,maxHeight:200}).openPopup() 
+              })
+            
+            this.myMovingMarker = L.Marker.movingMarker(points,
+              duration,{
+                icon:L.icon({
+                  iconUrl: require('../../assets/history/ship.png'),
+                  iconSize: [40,44],
+                  iconAnchor: [20,22]
+                })
+              }).addTo(this.animateLayer);
+                this.myMovingMarker.start(); //开始 若已暂停则恢复
+                this.myMovingMarker.stop(); //手动停止  若在之后调用`start`，则标记将从起点再次开始折线。
+                this.myMovingMarker.pause();//暂停
+                this.myMovingMarker.resume();//重置  恢复动画
+          }
+        })
+      }
   },
 }
 // 海域功能
@@ -1188,24 +1514,33 @@ const area={
     // console.log('1231313')
     if (this.showOrHide ==='1') {
       console.log('显示所有')
-      this.$refs.groupTree.showAllArea(this.areaData, this.watersLevel)
+      // this.$refs.groupTree.showAllArea(this.areaData, this.watersLevel)
+      console.log('areaData',this.areaData)
       for (let i of this.areaData) {
         const m = {
           '0': 'circle',
-          '1': 'polygon',
-          '2': 'rectangle'
+          '2': 'polygon',
+          '1': 'rectangle'
         }
         let icon={
           1:' ⛒ ',
           2:' ★ ',
           3:' ✷ ',
         }
-        for (let x of this.watersLevel) {//设置文字内容
-          if (x.value === i.lever) i.typeLabel = icon[i.lever]+x.name
-        }
+        // for (let x of this.watersLevel) {//设置文字内容
+        //   if (x.value === i.lever) i.typeLabel = icon[i.lever]+x.name
+        // }
+        i.centerx=i.lon
+        i.centery=i.lat
+      if(i.type===1){
+        i.lat1=i.points[0].lat
+        i.lon1=i.points[0].lon
+        i.lat2=i.points[1].lat
+        i.lon2=i.points[1].lon
+      }
         // console.log(i)
         this.createPolygon(m[i.type], i,'area' +i.id,
-          this.areaTypeStyle[i.lever]
+          this.areaTypeStyle[i.level]
         )(wgs84ToBD).addTo(this.areaLayer);
       }
     } else {
@@ -1233,50 +1568,57 @@ const area={
       positions: [],
       groupId: undefined
     }
+    // this.drawData={
+    //   level: '',
+    //   name: '',
+    //   type: '',
+    //   lat: '',
+    //   lon: '',
+    //   radius: ''
+    // }
   },
   loadGroupData() {
 
-    this.service.get('/region/getGroupUid').then(res => {
-      // console.log(res.data)
-      this.groupData = JSON.parse(JSON.stringify(res.data))
+    this.service.get('/water/allList').then(res => {
+      console.log(res)
+      this.groupData = JSON.parse(JSON.stringify(res.list))
     })
-    this.service.get('/project/watersLevel').then(res => {
+    this.service.get('/enum/waterLevel').then(res => {
       // console.log(res.data)
       this.watersLevel = res.data
     })
-    this.service.get('/region/getAllByUid').then(res => {
-      // console.log(res.data)
-      let arr=[]
-      res.data.forEach(e=>{
-
-        if(!this.focusButton){
-
-          arr.push(e)
-          return true
-        }else{
-          if(e.isFocus){
-            arr.push(e)
-            return true
-          }
-          return false
-        }
-      })
-      console.log(arr)
-      this.areaData = arr
-      this.areaLength = this.areaData.length
+    this.service.get('/water/allList').then(res => {
+      console.log("全部区域个数",res)
+      // let arr=[]
+      // res.data.forEach(e=>{
+      //   if(!this.focusButton){
+      //     arr.push(e)
+      //     return true
+      //   }else{
+      //     if(e.isFocus){
+      //       arr.push(e)
+      //       return true
+      //     }
+      //     return false
+      //   }
+      // })
+      this.areaData = res.list
+      // this.areaLength = this.areaData.length
+      this.areaLength = res.list.length
+      // console.log('this.areaLength',this.areaLength)
       this.hideAllArea()
       this.showAllArea()
     })
   },
   // 拖拽 移动分组
   allowDrop(data)  {
-    this.service.post('/region/updateRegionGroup', {
-      'id': data.id,
-      'groupId': data.groupId
-    }).then(req => {
-      console.log(req)
+    // this.service.post('/region/updateRegionGroup', {
+    //   'id': data.id,
+    //   'groupId': data.groupId
+    // }).then(req => {
+    //   console.log(req)
 
-    })
+    // })
   },
 
   closeDraw() {
@@ -1294,6 +1636,14 @@ const area={
       positions: [],
       groupId: undefined
     }
+    // this.drawData={
+    //   level: '',
+    //   name: '',
+    //   type: '',
+    //   lat: '',
+    //   lon: '',
+    //   radius: ''
+    // }
     this.isDrawType = undefined
     this.showDrawView = false
     // this.map.clearOverlays(BMAP_DRAWING_CIRCLE)
@@ -1309,8 +1659,28 @@ const area={
           this.$message.error({ message: '请绘制图形', })
           return false
         } else {
-
+          let p=[]
+          this.drawData.positions.forEach((e,index)=>{
+            p.push({lat:e[1],lon:e[0],ordered:index})
+          })
+          console.log(this.drawData)
+          // newData.points=this.drawData.positions
+          this.service.post( '/water/save',{
+                  level: this.drawData.lever,
+                  type: this.isDrawType,
+                  lat:this.drawData.positions[0][1],
+                  lon:this.drawData.positions[0][0],
+                  radius:this.drawData.radius,
+                  points:p,
+                  name:this.drawData.name
+             }).then(res => {
+              console.log("导入的数据",res)
+              if(res.error===0){this.$message.success({ message: '成功', })}this.closeDraw()
+                this.loadGroupData();this.drawLayer.clearLayers()
+              // console.log("导入数据的状态",req.error)
+             })
           const map={
+      
             0:()=>{
               let arr = bd09towgs84(this.drawData.positions[0][0], this.drawData.positions[0][1])
               this.service.post('/region/addCircle', {
@@ -1321,6 +1691,13 @@ const area={
                 groupId: this.drawData.groupId,
                 radius: this.drawData.radius,
                 name: this.drawData.name
+              //  this.service.post( '/water/save',{
+              //     level: level,
+              //     type: type,
+              //     lat:lat,
+              //     lon:lon,
+              //     radius:radius,
+              //     points:points
               }).then(res => {if(res.code===0){this.$message.success({ message: '成功', })}this.closeDraw()
                 this.loadGroupData();this.drawLayer.clearLayers()})},
             1:()=>{
@@ -1344,7 +1721,6 @@ const area={
               }
             },
             2:()=>{
-
               let _this = this
               let points = []
               for (let i of this.drawData.positions) {
@@ -1365,7 +1741,7 @@ const area={
               })
             },
           }
-          map[this.isDrawType]()
+          // map[this.isDrawType]()
           console.log(this.isDrawType)
 
         }
@@ -1374,7 +1750,6 @@ const area={
         return false
       }
     })
-    // console.log(this.isDrawType )
   },
   //预览
   drawPreview(){
@@ -1383,7 +1758,6 @@ const area={
     this.drawLayer.clearLayers()//切换图形 删除之前的图形
 
     if(this.isDrawType===0){
-
     }
     const map={
       0:()=>{
@@ -1442,6 +1816,10 @@ const area={
     //   });
     // })
     this.drawLayer.clearLayers()
+    // this.drawLayer.
+
+
+
     if (id === 1) {//圆形
       this.map.pm.enableDraw('Circle', {
         snappable: true,
@@ -1508,39 +1886,31 @@ const area={
     }
   },
   removeArea(data)/*删除区域/分组*/ {
-
+    // 删除区域
     // console.log(data)
-
     if (data.type === 0) {
-      // console.log('删除区域')
       // this.$emit('removeArea',{id:data.id,tpye:1})
-      this.service.post('/region/deleteRegion', {
-        'id': data.id
+      this.service.get('/water/delete ', {
+        params:{'id': data.id}
       }).then(res => {
         this.loadGroupData()
-        console.log(res)
+        console.log('删除区域',res)
       })
     } else {
-      // console.log('删除分组')
-      // this.$emit('removeArea',{id:data.id,name: data.label,tpye:0})
-      this.service.post('/region/deleteGroup', {
-        'id': data.id,
-        'name': data.label
-      }).then(res => {
-        this.loadGroupData()
-      })
+      // 删除分组
+      
+      // this.service.post('/region/deleteGroup', {
+      //   'id': data.id,
+      //   'name': data.label
+      // }).then(res => {
+      //   this.loadGroupData()
+      // })
     }
-
-    // this.loadGroupData()
-    // let length=this.areaData.length
-    // length--;
-    // return length
   },
 }
 export default {
   ...map,
   ...menu,
-  ...station,
   ...marker,
   ...leftDrawer,
   ...ship,

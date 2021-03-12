@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     dropdownDivClick(val)/* 点击下拉框 下面的按钮 */ {
-      // console.log(val)
+      console.log('dropdownDivClick',val)
       //this.$$refs[val.id].background = rgb(38, 98, 128);
       if(!val['is']){
         val['is'] = true;
@@ -77,12 +77,9 @@ export default {
     },
     iconClick(e) {
       // console.log(this.item)
-      // console.log(e)
-      // e.currentTarget.style.background='#eee'
+      // console.log('e',e)
       if(this.dropdownData.length !== 0) return;
       if(this.item.id===2){
-        // e.currentTarget.style.backgroundColor='#eee'
-        // console.log( e.currentTarget.style.backgroundColor)
         if( e.currentTarget.style.backgroundColor===''){
           e.currentTarget.style.backgroundColor='#eee'
           this.$emit('iconClick',{...this.item,clicked:true});
@@ -99,7 +96,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .dropdown{
     position: relative;
@@ -109,8 +105,6 @@ export default {
 .dropbtn {
     /* background-color: #61BAD8; */
     color: #222;
-    /*padding: 16px;
-    font-size: 16px;*/
     border: none;
     cursor: pointer;
     width: 38px;

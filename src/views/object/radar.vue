@@ -221,7 +221,7 @@ export default {
         band:''
       },
       Business_exception:null,
-      //  visible: false,
+      update:''
     }
   },
   filters:{},
@@ -315,9 +315,9 @@ export default {
      //编辑弹层
     handleUpdate(index,row){
      this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
-       if(this.temp.status=true){
+       if(this.temp.status==true){
         this.update = "正常"
-      }else if(this.temp.status=false){
+      }else if(this.temp.status==false){
        this.update = "异常"
       }
       this.dialogFormVisible = true; //弹层显示

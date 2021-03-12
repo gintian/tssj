@@ -6,20 +6,46 @@
 // } from './mapComponentFactory'
 import { bd09towgs84, wgs84ToBD } from '../../utils/coordinateConvert'
 
+// export function exportMethod(data) {
+//   axios({
+//     method: data.method,
+//     url: `${data.url}${data.params ? '?' + data.params : ''}`,
+//     responseType: 'blob'
+//   }).then((res) => {
+//     const link = document.createElement('a')
+//     let blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
+//     link.style.display = 'none'
+//     link.href = URL.createObjectURL(blob)
+//
+//     // link.download = res.headers['content-disposition'] //下载后文件名
+//     link.download = data.fileName //下载的文件名
+//     document.body.appendChild(link)
+//     link.click()
+//     document.body.removeChild(link)
+//   }).catch(error => {
+//     this.$Notice.error({
+//       title: '错误',
+//       desc: '网络连接错误'
+//     })
+//     console.log(error)
+//   })
+// }
+
 export let actions
 actions = () => {
-  const groupMap={
-    '海军':1,
-    '陆军海防部队':2,
-    '军分区':3,
-    '海警局':4,
-    '公安局':5,
-    '海事局':6,
-    '海洋与渔业局':7,
-    '军民融合办':8,
-    '海关':9,
-    '边检':10,
-  }
+  // const groupMap={
+  //   '海军':1,
+  //   '陆军海防部队':2,
+  //   '军分区':3,
+  //   '海警局':4,
+  //   '公安局':5,
+  //   '海事局':6,
+  //   '海洋与渔业局':7,
+  //   '军民融合办':8,
+  //   '海关':9,
+  //   '边检':10,
+  // }
+ 
   const actionFunAmyMarker = function(obj) {
 
     return (e) => {
@@ -89,12 +115,12 @@ actions = () => {
   return new Map([
    
     [/^false_船舶类型$/, function() {
-      this.bulkShip = true  //散货船
-      this.containerShip = true  //集装箱船
-      this.tanker = true  //油轮
-      this.tug = true//拖轮
-      this.fishingBoat = true//渔船
-      this.passengerShip = true//客船
+      this.bulkShip = false  //散货船
+      this.containerShip = false  //集装箱船
+      this.tanker = false  //油轮
+      this.tug = false//拖轮
+      this.fishingBoat = false//渔船
+      this.passengerShip = false//客船
       actionFunBmySendShipData.bind(this)()()
       return {}
 
@@ -111,11 +137,11 @@ actions = () => {
 
     }],
     [/^false_出现时间$/, function() {
-      this.shipMin5 = true//五分钟以内
-      this.shipMin10 = true//五分钟到十分钟
-      this.shipMin15 = true//十分钟到十五分钟
-      this.shipMin20 = true//十五分钟到二十分钟
-      this.shipMin24 = true//二十分钟到二十四分钟
+      this.shipMin5 = false//五分钟以内
+      this.shipMin10 = false//五分钟到十分钟
+      this.shipMin15 = false//十分钟到十五分钟
+      this.shipMin20 = false//十五分钟到二十分钟
+      this.shipMin24 = false//二十分钟到二十四分钟
       actionFunBmySendShipData.bind(this)()()
       return {}
 
@@ -329,215 +355,198 @@ actions = () => {
 
     }],
     
-    [/^true_雷达old$/, function() {
-      let obj = {
-        clickFun: function(e) {
-          // console.log(e)
-          this.removeMapDom('radarInfoView')
-          this.service.post('/radar/view', {
-            id: e.id
-          }).then(res => {
-            // console.log(res)
-            this.dialogInfo.radarInfo = res.data
-            this.map.addControl(mapComopentFun(this.$refs.radarInfoView))
-            this.$refs.pierInfoView.style.top = '10%'
-            this.$refs.pierInfoView.style.left = '20%'
-          })
-        }
+   
+   
 
-      }
-      return {
-        // url: '/radar/findAll',
-        // actionFun: actionFunCustomMarker.bind(this)(obj)
-      }
 
-    }],
-    [/^true_AIS基站old$/, function() {
+    // [/^false_雷达$/, function(){
+    //   this.radarLayer.clearLayers()
+    //   return{}
+    // }],
+    // [/^true_雷达$/, function(){
+    //   this.radarLayer.clearLayers()
+    //   return{}
+    // }],
+    // [/^false_ais$/, function(){
+    //   this.radarLayer.clearLayers()
+    //   return{}
+    // }],
+    // [/^true_雷达$/, function(){
+    //   this.radarLayer.clearLayers()
+    //   return{}
+    // }],
 
-      // this.clickItem.name='资源站'
-
-      let obj = {
-
-        size: 15,
-        img: '/mapSigns/system3.png',
-        clickFun: function(e) {
-
-          // console.log(e)
-          this.removeMapDom('aisInfoView')
-          this.service.post('/ais/view', {
-            id: e.id
-          }).then(res => {
-            console.log(res)
-            this.dialogInfo.aisInfo = res.data.columns
-            this.map.addControl(mapComopentFun(this.$refs.aisInfoView))
-            this.$refs.pierInfoView.style.top = '10%'
-            this.$refs.pierInfoView.style.left = '20%'
-          })
-        }
-
-      }
-
-      return {
-        // url: '/ais/findAll',
-        // actionFun: actionFunAmyMarker.bind(this)(obj)
-      }
-
-    }],
-    [/^true_主动探测类基础设施$/, function() {
-      this.stationLayerGroup.addLayer(this.stationLayers)
-      this.stationCheck.radar=true
-      this.stationCheck.ais=true
-      this.stationCheck.camera=true
-      return {}
-    }],
-    [/^false_主动探测类基础设施$/, function() {
-      this.stationLayerGroup.removeLayer(this.stationLayers)
-      this.radarLayer.clearLayers()
-      this.stationCheck.radar=false
-      this.stationCheck.ais=false
-      this.stationCheck.camera=false
-      this.stationLayerGroup.clearLayers()
-      return {}
-    }],
-
-    [/^false_综合观测站$/, function(){
-      this.stationLayerGroup.removeLayer(this.stationLayers)
-      return{}
-    }],
-    [/^true_综合观测站$/, function(){
-      this.stationLayerGroup.addLayer(this.stationLayers)
-      return{}
-    }],
-    [/^false_(AIS基站|视频监控站)$/, function() {
-    // console.log('12313132213')
-      this.stationLayerGroup.eachLayer(item=>{
-        if(item.signal===this.clickedMarker.name){
-          // item.setOpacity(1)
-          // console.log(item)
-          this.stationLayerGroup.removeLayer(item)
-        }
-      })
-      return{}
-    }],
-    [/^false_雷达$/, function(){
-      this.radarLayer.clearLayers()
-      return{}
-    }],
-      [/^true_光电$/, function() {
-
-      let obj = {
-        size: 15,
-        img: '/mapSigns/system4.png',
-        clickFun: function(e) {
-
-        }
-      }
-      return {
-        url: '/camera/findAll',
-        actionFun: actionFunAmyMarker.bind(this)(obj)
-      }
-    }],
+     
     
-    [/^true_海底光缆old$/, function() {
-      return {
-        url: '/seaLine/findAll',
-        actionFun: actionFunCmyPolyline.bind(this)({
-          size: 15,
-          name: '海底光缆',
-          img: '/mapSigns/base6.png',
-          clickFun: function(e) {
+   
+    [/^true_AIS目标$/, function() {
+      this.shipAis = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^true_雷达目标$/, function() {
+      this.shipRadar = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^true_融合目标$/, function() {
+      this.shipFusion = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^true_异常目标$/, function() {
+      this.isNormalShip = true
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+   
+    [/^false_AIS目标$/, function() {
+      this.shipAis = false
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^false_雷达目标$/, function() {
+      this.shipRadar = false
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^false_融合目标$/, function() {
+      this.shipFusion = false
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
+    [/^false_异常目标$/, function() {
+      this.isNormalShip = false
+      actionFunBmySendShipData.bind(this)()()
+      return {}
+    }],
 
-            console.log(e)
-            // this.removeMapDom('towerInfoView')
-            this.service.post('/seaLine/view', {
-              id: e.id
-            }).then(res => {
-              // console.log(res)
-              this.dialogInfo.seaLineInfo = res.data
-              this.map.addControl(mapComopentFun(this.$refs.seaLineInfoView))
-              this.$refs.pierInfoView.style.top = '10%'
-              this.$refs.pierInfoView.style.left = '20%'
-            })
+    // [/^true_ais$/, function() {
+    //   // this.ais = true
+    //   this.markerLayersGroup.eachLayer(item=>{
+    //     console.log("item",item)
+    //     if(item.signal===this.clickedMarker.name){
+    //       item.setOpacity(1)
+    //     }   
+    //   return {}
+    // }],
 
-          }
-        })
-      }
-    }],
-    [/^false_(海军|陆军海防部队|军分区|海警局|公安局|海事局|海洋与渔业局|军民融合办|海关|边检)/, function() {
-      //  console.log(this.clickedMarker.name,groupMap[this.clickedMarker.name])
-      // console.log(this.departmentLayers.getLayers(),this['orgLayer'+groupMap[this.clickedMarker.name]].getLayers())
-      this.departmentLayers.removeLayer(this['orgLayer' + groupMap[this.clickedMarker.name]])
-      // this.departmentLayers.rem
-      // this.hideOverlay(this.clickItem.name)
-      return {}
-    }],
-    [/^true_(海军|陆军海防部队|军分区|海警局|公安局|海事局|海洋与渔业局|军民融合办|海关|边检)/, function() {
-      // this.showOverlay(this.clickItem.name)
-      // console.log(this.clickedMarker.name)
-      this.departmentLayers.addLayer(this['orgLayer' + groupMap[this.clickedMarker.name]])
-      return {}
-    }],
-    [/^true_海防单位$/, function() {
-      for (let i = 1; i < 11; i++) {
-        // console.log(this['orgLayer'+i])
-        this.departmentLayers.addLayer(this['orgLayer' + i])
-      }
-      return {}
-    }],
-    [/^false_海防单位$/, function() {
-      this.departmentLayers.clearLayers()
-      return {}
-    }],
-    [/^true_被动保障类基础设施$/, function() {
+    // [/^true_雷达$/, function() {
+    //   // this.radar = true
+    //   console.log( " this.markerLayersGroup",this.markerLayersGroup)
+    //   this.markerLayersGroup.eachLayer(item=>{
+    //         console.log("item",item)
+    //         if(item.signal===this.clickedMarker.name){
+    //           item.setOpacity(1)
+    //         }
+    //       })
+    //   return {}   
+    // }],
+    [/^true_(锚地|码头|ais|雷达)$/, function() {
+      // this.peer = true
+      console.log( " this.markerLayersGroup",this.markerLayersGroup)
       this.markerLayersGroup.eachLayer(item=>{
-        // console.log(item)
-        if(item.signal){
+        if(item.signal===this.clickedMarker.name){
           item.setOpacity(1)
         }
       })
-      this.markerLayersGroup.addLayer(this.roadLayer)
-      this.markerLayersGroup.addLayer(this.seaLineLayer)
       return {}
     }],
-    [/^false_被动保障类基础设施$/, function() {
+  
+    // [/^false_ais$/, function() {
+    //   // this.ais = false
+    //   this.markerLayersGroup.eachLayer(item=>{
+    //     console.log("item",item)
+    //     if(item.signal===this.clickedMarker.name){
+    //       item.setOpacity(0)
+    //     }   
+    //   return {}
+    // }],
+
+    // [/^false_雷达$/, function() {
+    //   // this.radar = false
+    //   this.markerLayersGroup.eachLayer(item=>{
+    //         // console.log(item)
+    //         if(item.signal===this.clickedMarker.name){
+    //           item.setOpacity(0)
+    //           this.markerLayersGroup.removeLayer(this.roadLayer)
+    //         }
+    //       })
+    //   return {}
+    // }],
+ 
+    [/^false_(锚地|码头|ais|雷达)$/, function() {
+      // this.wharf = false
       this.markerLayersGroup.eachLayer(item=>{
-        // console.log(item)
-        if(item.signal){
+        if(item.signal===this.clickedMarker.name){
           item.setOpacity(0)
-        }else{
-          this.markerLayersGroup.removeLayer(this.roadLayer)
         }
       })
-      this.markerLayersGroup.removeLayer(this.roadLayer)
-      this.markerLayersGroup.removeLayer(this.seaLineLayer)
       return {}
     }],
-    [/^true_(停机坪|执勤道路|执勤码头|港区|锚地|码头泊位|海底光缆)/, function() {
+  
+    
+    // [/^true_海防单位$/, function() {
+    //   for (let i = 1; i < 11; i++) {
+    //     // console.log(this['orgLayer'+i])
+    //     this.departmentLayers.addLayer(this['orgLayer' + i])
+    //   }
+    //   return {}
+    // }],
+    // [/^false_海防单位$/, function() {
+    //   this.departmentLayers.clearLayers()
+    //   return {}
+    // }],
+    // [/^true_被动保障类基础设施$/, function() {
+    //   this.markerLayersGroup.eachLayer(item=>{
+    //     // console.log(item)
+    //     if(item.signal){
+    //       item.setOpacity(1)
+    //     }
+    //   })
+    //   this.markerLayersGroup.addLayer(this.roadLayer)
+    //   this.markerLayersGroup.addLayer(this.seaLineLayer)
+    //   return {}
+    // }],
+    // [/^false_被动保障类基础设施$/, function() {
+    //   this.markerLayersGroup.eachLayer(item=>{
+    //     // console.log(item)
+    //     if(item.signal){
+    //       item.setOpacity(0)
+    //     }else{
+    //       this.markerLayersGroup.removeLayer(this.roadLayer)
+    //     }
+    //   })
+    //   this.markerLayersGroup.removeLayer(this.roadLayer)
+    //   this.markerLayersGroup.removeLayer(this.seaLineLayer)
+    //   return {}
+    // }],
+    // [/^true_(停机坪|执勤道路|执勤码头|港区|锚地|码头泊位|海底光缆)/, function() {
 
-      if(this.clickedMarker.name==='执勤道路') this.markerLayersGroup.addLayer(this.roadLayer)
-      else if(this.clickedMarker.name==='海底光缆') this.markerLayersGroup.addLayer(this.seaLineLayer)
-      else{
-        this.markerLayersGroup.eachLayer(item=>{
-          if(item.signal===this.clickedMarker.name){
-            item.setOpacity(1)
-          }
-        })
-      }
-      return {}
-    }],
-    [/^false_(停机坪|执勤道路|执勤码头|港区|锚地|码头泊位|海底光缆)/, function() {
+    //   if(this.clickedMarker.name==='执勤道路') this.markerLayersGroup.addLayer(this.roadLayer)
+    //   else if(this.clickedMarker.name==='海底光缆') this.markerLayersGroup.addLayer(this.seaLineLayer)
+    //   else{
+    //     this.markerLayersGroup.eachLayer(item=>{
+    //       if(item.signal===this.clickedMarker.name){
+    //         item.setOpacity(1)
+    //       }
+    //     })
+    //   }
+    //   return {}
+    // }],
+    // [/^false_(停机坪|执勤道路|执勤码头|港区|锚地|码头泊位|海底光缆)/, function() {
 
-      if(this.clickedMarker.name==='执勤道路') this.markerLayersGroup.removeLayer(this.roadLayer)
-      else if(this.clickedMarker.name==='海底光缆') this.markerLayersGroup.removeLayer(this.seaLineLayer)
-      else{
-        this.markerLayersGroup.eachLayer(item=>{
-          // console.log(item)
-          if(item.signal===this.clickedMarker.name){
-            item.setOpacity(0)
-          }
-        })
-      }
-      return {}
-    }]
+    //   if(this.clickedMarker.name==='执勤道路') this.markerLayersGroup.removeLayer(this.roadLayer)
+    //   else if(this.clickedMarker.name==='海底光缆') this.markerLayersGroup.removeLayer(this.seaLineLayer)
+    //   else{
+    //     this.markerLayersGroup.eachLayer(item=>{
+    //       // console.log(item)
+    //       if(item.signal===this.clickedMarker.name){
+    //         item.setOpacity(0)
+    //       }
+    //     })
+    //   }
+    //   return {}
+    // }]
   ])
 }

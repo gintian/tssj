@@ -36,7 +36,7 @@ export  default {
     let bs = this.map.getBounds()   //获取可视区域
     let bssw = bs.getSouthWest()   //可视区域左下角
     let bsne = bs.getNorthEast()   //可视区域右上角
-    // console.log(bssw,bsne)
+    // console.log('可视区域',bssw,bsne)
     return {
       neLat: bsne.lat,
       swLat: bssw.lat,
@@ -60,11 +60,8 @@ export  default {
     })
     return (signal)=>{
       Marker.signal=signal;
-
       return fun =>{
-
         Marker.on("click", fun);
-
         return Marker;
       }
 
@@ -74,7 +71,7 @@ export  default {
   createPolygon(type,waters,signal,style){
     let map = {
       'circle': (wgs84ToBD) => {
-        // console.log(waters)
+        console.log('circle',waters)
         let bd09Arr = wgs84ToBD(waters.centerx, waters.centery)
         let circle = L.circle([bd09Arr[1], bd09Arr[0]], {
           //圆半径
@@ -85,7 +82,7 @@ export  default {
         return circle
       },
       'polygon': (wgs84ToBD) => {
-        // console.log(waters)
+        console.log('polygon',waters)
         let points = []
         waters.points.forEach(e => {
           let bd09Arr = wgs84ToBD(e.lon, e.lat)
@@ -98,7 +95,7 @@ export  default {
         return polygon
       },
       'rectangle': (wgs84ToBD) => {
-        console.log(waters)
+        console.log('rectangle',waters)
         let points = []
         let p1 = wgs84ToBD(waters.lon1, waters.lat1)
         let p2 = wgs84ToBD(waters.lon2, waters.lat2)

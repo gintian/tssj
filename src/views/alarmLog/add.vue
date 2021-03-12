@@ -205,8 +205,11 @@ border: 1px solid #0078FF;
           right: 18px;
           transition: all .3s;
           position: absolute;
-          top: 4px;
+          top: 8px;
       }
+     /deep/ .el-icon-arrow-up:before {
+       content: "";
+    }
 /deep/.el-input__inner{ 
 border: 1px solid #0075EE;
 }

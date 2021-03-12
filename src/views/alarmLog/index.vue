@@ -12,7 +12,7 @@
             <div class="event_nav_msg">
                   <h4 >开始时间：</h4>
                         <el-date-picker
-                          v-model="value1"
+                          v-model="time"
                           type="datetime"
                           placeholder="">
                         </el-date-picker>
@@ -20,7 +20,7 @@
             <div  class="event_nav_msg">
                   <h4 >结束时间：</h4>
                         <el-date-picker
-                          v-model="value2"
+                          v-model="time"
                           type="datetime"
                           placeholder="">
                         </el-date-picker>

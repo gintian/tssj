@@ -17,7 +17,7 @@ module.exports = {
       template: 'public/index.html',
       // 在 dist/index.html 的输出
       filename: 'index.html',
-      title: 'zhhf',
+      title: 'tshj',
     }
 
   },

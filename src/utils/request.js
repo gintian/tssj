@@ -30,12 +30,13 @@ service.interceptors.request.use(
       // config.data.param= config.params.data
       // config.params = ''
     }
+    
     // console.log(config)
     return config
   },
   error => {
     // Do something with request error
-    console.log("错误的传参") // for debug
+    // console.log("错误的传参") // for debug
     Promise.reject(error)
   }
 )
@@ -51,7 +52,7 @@ service.interceptors.response.use(
     if (data.error !== 0) {
       console.log(data)
       // if(status===500) 处理token过期等
-      Vue.prototype.$message({ message: data.data.message, type: 'error' });
+      Vue.prototype.$message({ message: data.message, type: 'error' });
       Promise.reject(data.msg);
       return data
 

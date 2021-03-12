@@ -26,10 +26,12 @@
       align="center"
       prop="name"
       label="名称">
-      <!-- fixed:值有（true,left,right）列是否固定在左侧或者右侧，true 表示固定在左侧 -->
-      <!-- column 的 key，如果需要使用 filter-change 事件，则需要此属性标识是哪个 column 的筛选条件 -->
     </el-table-column>
-    
+    <el-table-column
+      align="center"
+      prop="describe"
+      label="描述">
+    </el-table-column>
     
     <el-table-column prop="lat,lon" label="位置" align="center"  min-width="90%">
        <template slot-scope="scope">   
@@ -70,8 +72,11 @@
           <el-form-item label="经度" prop="lon">
               <el-input v-model="addsForm.lon" />
             </el-form-item>
-            <el-form-item label="纬度" prop="lat">
+          <el-form-item label="纬度" prop="lat">
             <el-input v-model="addsForm.lat" />
+          </el-form-item>
+          <el-form-item label="描述" prop="lat">
+            <el-input v-model="addsForm.describe" />
           </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -94,8 +99,11 @@
           <el-form-item label="经度" prop="lon">
               <el-input v-model="temp.lon" />
             </el-form-item>
-            <el-form-item label="纬度" prop="lat">
+          <el-form-item label="纬度" prop="lat">
             <el-input v-model="temp.lat" />
+          </el-form-item>
+          <el-form-item label="描述" prop="lat">
+            <el-input v-model="temp.describe" />
           </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -166,12 +174,14 @@ export default {
         name:'',
         lat:'',
         lon:'',
+        describe:''
       },
       temp:{  //编辑的表单字段
         id:'',
         name:'',
         lat:'',
         lon:'',
+        describe:''
       },
       Business_exception:null,
       //  visible: false,
@@ -246,7 +256,7 @@ export default {
     //删除弹层
     handleDel(row){
        this.delid=row.id
-       console.log("这行数据的id",this.delid)
+      //  console.log("这行数据的id",this.delid) 
       this.temp = {...row};
       this.dialogDelVisible = true; //弹层显示
     },
@@ -270,7 +280,7 @@ export default {
     },
      AddData(){
         let userList=this.addsForm;  
-        let {name,lat,lon} = userList;
+        let {name,lat,lon,describe} = userList;
           this.service.post('/pier/save',this.addsForm).then(res => {
             console.log("新增的码头数据",res)
             this.getList(); 
@@ -284,6 +294,7 @@ export default {
           name:this.temp.name,
           lat:this.temp.lat,
           lon:this.temp.lon,
+          describe:this.temp.describe,
        }).then(req => {
           console.log("编辑码头信息",req)
           this.getList();

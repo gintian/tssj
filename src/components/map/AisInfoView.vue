@@ -22,7 +22,7 @@
         </div>
         <div class="down">
             <!--<el-button type="primary" @click="info" style="margin-left: 10px;margin-top: 5px;"  size="mini" icon="el-icon-warning-outline">信息</el-button>-->
-            <el-button type="primary" @click="info"  style="margin-left: 0px;margin-top: 5px;"  size="mini" icon="el-icon-view">船舶列表</el-button>
+            <!-- <el-button type="primary" @click="info"  style="margin-left: 0px;margin-top: 5px;"  size="mini" icon="el-icon-view">船舶列表</el-button> -->
 <!--            <el-button type="primary" @click="focus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-off" v-show="!tabObj.isFocus">关注</el-button>-->
 <!--            <el-button type="primary" @click="disFocus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-on"  v-show="tabObj.isFocus">取关</el-button>-->
 <!--           <div>-->
@@ -77,21 +77,11 @@ export default {
         },
     },
     watch:{
-        /*shipTabObj :function(val) {
-            if(val.urltype === 2){
-                console.log(val)
-                this.ordArr = [
-                    { id:1, name:'MMSI' ,prop:'mmsi' },
-                    { id:2, name:'名称' ,prop:'name' },
-                    { id:3, name:'方位' ,prop:'azimuth' },
-                    { id:4, name:'距离' ,prop:'distance' },
-                    { id:5, name:'航向' ,prop:'course' },
-                    { id:6, name:'航速' ,prop:'speed' },
-                    { id:8, name:'经度' ,prop:'lon' },
-                    { id:9, name:'纬度' ,prop:'lat'},
-                ]
-            }
-        }*/
+      tabObj(val){
+        this.tabObj=val
+        // this.tabObj.showed=false
+        console.log('aisTabObj',this.tabObj)
+      }
     },
     mounted(){
         //console.log('shipTabObj',this.shipTabObj)
@@ -103,13 +93,13 @@ export default {
         return {
             ordArr:[
                 { id:0, name:'名称' ,prop:'name'},
-              { id:1, name:'所属观测站' ,prop:'attributionName'},
-                { id:2, name:'经度' ,prop:'longitude'},
-                { id:3, name:'纬度' ,prop:'latitude'},
-              { id:4, name:'设备编号' ,prop:'station'},
-              { id:5, name:'是否异常' ,prop:'statusString'},
-              { id:6, name:'是否使用' ,prop:'usedString'},
-              { id:7, name:'是否展示' ,prop:'showedString'}
+                { id:1, name:'编号' ,prop:'station'},
+                { id:2, name:'经度' ,prop:'lon'},
+                { id:3, name:'纬度' ,prop:'lat'},
+            //   { id:4, name:'设备编号' ,prop:'station'},
+            //   { id:5, name:'是否异常' ,prop:'statusString'},
+            //   { id:6, name:'是否使用' ,prop:'usedString'},
+            //   { id:7, name:'是否展示' ,prop:'showedString'}
             ],
             //urltypeArr
           dialogVisible:false,
@@ -173,16 +163,19 @@ export default {
     grid-template-rows: 15% 65% 20%;
     height: 210px;
     width: auto;
-    background: #305071;
+    /* background: #305071; */
+    background: white;
 }
 .title{
   text-align: right;
-  color: #ffffff;
+  /* color: #ffffff; */
   font-size: 14px;
   font-weight: 400;
+  color: black;
 }
 .value{
-  color: #e2e2e2;
+  /* color: #e2e2e2; */
+  color: black;
   font-size: 14px;
   font-weight: 400;
 }

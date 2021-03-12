@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div id="allmap"></div>
+        <div id="allmap" ref="allmap"></div>
         <p style="display: none">{{mapData}}</p>
     </div>
 </template>
@@ -60,13 +60,13 @@
         methods: {
             mapInit() {
                 // 百度地图API功能
-                this.map = new BMap.Map("allmap");    // 创建Map实例
-                this.map.centerAndZoom(new BMap.Point(122.02092469279008, 30.231412233427587), 13);  // 初始化地图,设置中心点坐标和地图级别
-              this.map.setMapStyleV2({
+                this.map = new window.BMap.Map(this.$refs.allmap,{enableMapClick:false}) // 创建Map实例
+                this.map.centerAndZoom(new window.BMap.Point(122.02092469279008, 30.231412233427587), 13);  // 初始化地图,设置中心点坐标和地图级别
+               this.map.setMapStyleV2({
                 styleId: '20cc61302c9ac0b284d3076e6647033a'
               });
                 //添加地图类型控件
-                this.map.addControl(new BMap.MapTypeControl({
+                this.map.addControl(new window.BMap.MapTypeControl({
                     mapTypes: [
                         BMAP_NORMAL_MAP,
                         BMAP_HYBRID_MAP
@@ -161,7 +161,7 @@
 
 <style scoped>
     #allmap {
-        width: 500px;
+        /* width: 500px; */
         height: 400px;
 
     }

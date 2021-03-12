@@ -1,34 +1,157 @@
 <template>
    <div id="home">
        <div id="map" ></div>
-        <!-- 折叠开关国家船舶信息显示-->
-            <div  id="countrySigns" style="position: absolute;top: 3%;z-index: 400;left: 2%;background: #0075EE;width:37px;height:30px;" v-drag>
-                <country-signs @flag='flag()'></country-signs>
+       <button @click="asdadsad" style="position: absolute;top: 0%;z-index: 400;right: 8px;width:23px;height:25px;">123</button>
+       <!-- 统计图标 -->
+            <button  class="signTitle" style="position: absolute;top: 59%;z-index: 400;right: 8px;width:23px;height:25px;" @click="showShipStatistics=!showShipStatistics">   
+                       <img src="../../assets/Statistics.png" alt="" >
+             </button>
+         <!-- 图例图标 -->
+            <!-- <button  class="signTitle" style="position: absolute;top: 62%;z-index: 400;right: 8px;width:23px;height:25px;" @click="showMapSign=!showMapSign">   
+                       <img src="../../assets/example.png" alt="" >
+             </button> -->
+             <!-- 轨迹线回放 -->
+             <div id="myMovingMarker" style=" position: absolute;left:10%; bottom:20%;z-index: 400;">
+                    <el-button type="warning" plain @click="myMovingMarker.start()">开始</el-button>
+                    <el-button type="primary" plain  @click="myMovingMarker.pause()">暂停</el-button>
+                    <el-button type="success" plain @click="myMovingMarker.stop()">停止</el-button>    
+                    <el-button type="danger" plain  @click="myMovingMarker.resume()">重置</el-button>
+             </div>
+        <!--    导入离线船只-->
+       <div  id="import" style=" position: absolute;right:6%; bottom:35%;z-index: 400;" v-drag  v-show="showimportexcel">
+          <importExcel  @hide='showimportexcel=false'  close-on-click-modal></importExcel>
+       </div>
+        <!-- 折叠开关国家船舶列表信息显示-->
+            <div  id="countrySigns" style="position: absolute;top: 3%;z-index: 400;left: 2%;background: #0075EE;width:37px;height:30px;" >
+                <country-signs ></country-signs>
             </div>
-        <!-- 搜索框 -->
-         <div class="query-input"  style="position: absolute;top: 3%;z-index: 400; right: 2%;">
-                <!-- <el-input  placeholder="请输入船舶名称或MMSI" style="width: 200px;" class="filter-item" 
-                @input="query()"/>
-                <el-button style="background:#0075EE;font-size:14px;width:6px;" type="primary" icon="el-icon-search" @click="query()" >
-                  搜索
-                </el-button> -->
-                <el-dropdown size="medium" split-button type="primary" trigger="click" >
-                    <i class="el-icon-search" style="margin-right:10px;"></i>高级搜索
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item  v-for="item in downMenuList"  :key="item.index" 
-                         @click.native="choosed(item.index)">{{item.name}}</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
+        <!-- 高级搜索框 -->
+         <div class="query-input"  style="position: absolute;top: 3%;z-index: 400; right: 2%;" >
+                <!-- <el-dropdown> -->
+                    <el-button type="primary" @click="choosed" >
+                            <i class="el-icon-search" style="margin-right:10px;"></i>高级搜索
+                    </el-button>
+                <!-- </el-dropdown> -->
+                <div   v-drag >
+                 <el-dialog
+                        :visible.sync="searchdialog"
+                        custom-class="signdialog"
+                        width="27%"
+                        :append-to-body="true">
+                         <div  >
+                              <div class="signChild" >
+                                  <button  @click="queryName">目标名称</button>
+                                  <input placeholder="请输入目标名称" asdadadav-model="objectname" >
+                              </div>
+                              <div class="signChild">
+                                  <button  @click="queryNumber">目标编号</button>
+                                  <input placeholder="请输入目标编号"  v-model="objectmmsi">                
+                              </div>
+                              <div class="signChild">
+                                  <button  @click="queryData">目标类型</button>
+                                  <el-select    v-model="oshipType" :popper-append-to-body="false">
+                                    <el-option  v-for="item in shipflag"    :key="item.id"  :value="item.shipType">
+                                        {{item.shipType}}
+                                    </el-option>
+                                </el-select>                      
+                              </div> 
+                              <div class="signChild">
+                                  <button  @click="queryTime">出现时间</button>
+                                    <span >开始</span>
+                                   <el-date-picker
+                                    v-model="beginTime"
+                                    type="date"
+                                    placeholder="选择日期">
+                                    </el-date-picker>
+                                     <span  style="border-left:none;">结束</span>
+                                   <el-date-picker
+                                    v-model="endTime"
+                                    type="date"
+                                    placeholder="选择日期">
+                                    </el-date-picker>      
+                              </div>
+                              <div class="signChild">
+                                  <button  @click="queryArea"  :data='objectArea'>出现区域</button>
+                                  <el-select   v-model="type" :popper-append-to-body="false">
+                                    <el-option   v-for="item in objectArea"    :key="item.id"  :value="item.name" :type="item.type">
+                                        {{item.name}}
+                                    </el-option>
+                                </el-select>                        
+                              </div>
+                          </div>
+                </el-dialog>
+                </div>
+                 <el-dialog
+                        :visible.sync="dialogVisible1"
+                        width="20%"
+                        custom-class="typedialog"
+                        :append-to-body="true">
+                       <h3>当前所填的目标名称，所对应的船舶有:</h3>
+                        <ul class="search-result-list" >    
+                            <li class="open-shipdialog"  v-for="item in namelist"    :key="item.id" >{{item}}</li>
+                        </ul>
+                 </el-dialog>
+                 <el-dialog
+                        :visible.sync="dialogVisible2"
+                        width="20%"
+                        custom-class="typedialog"
+                        :append-to-body="true">
+                        <h3>当前所填的目标编号，所对应的船舶有:</h3>
+                        <ul class="search-result-list" >    
+                            <li class="open-shipdialog"  v-for="item in mmsilist"    :key="item.id" >{{item}}</li>
+                        </ul>
+                 </el-dialog>
+                 <el-dialog
+                        :visible.sync="dialogVisible3"
+                        custom-class="typedialog"
+                        width="20%"
+                        :append-to-body="true">
+                         <!-- 当前所选的目标类型，所对应的船舶有{{typelist}} -->
+                        <!-- <p v-for="item in typelist"    :key="item"  >
+                           {{value}}
+                        </p> -->
+                         <h3>当前所选的目标类型，所对应的船舶有:</h3>
+                        <ul class="search-result-list" >    
+                            <li class="open-shipdialog"  v-for="item in typelist"    :key="item.id" >{{item}}</li>
+                        </ul>
+                 </el-dialog>
+                 <el-dialog
+                        :visible.sync="dialogVisible4"
+                        width="20%"
+                        custom-class="typedialog"
+                        :append-to-body="true">
+                        <h3>当前时间段内，所对应的船舶:</h3>
+                        <ul class="search-result-list" >    
+                            <li class="open-shipdialog"  v-for="item in timelist"    :key="item.id" >{{item}}</li>
+                        </ul>
+                 </el-dialog>
+                 <el-dialog
+                        :visible.sync="dialogVisible5"
+                        width="20%"
+                        custom-class="typedialog"
+                        :append-to-body="true">
+                        <h3>当前所选的目标区域，返回:</h3>
+                        <ul class="search-result-list" >    
+                            <li class="open-shipdialog"  v-for="item in arealist"    :key="item.id" >{{item}}</li>
+                        </ul>
+                 </el-dialog>
          </div>
+       
+       
+       
        <!--     海量点-->
        <img :src="pointCollectionImg" alt=""  style="position: fixed;left: 20px;top: 94px;z-index: 400;pointer-events: none;" v-show="showPointCollectionImg">
        <!--     地图类型切换-->
        <div class="ButtonGroupDiv"  style="position: absolute; right: 30px;bottom: 5%;z-index: 400;">
            <ButtonGroup item1Text='地图' item2Text='卫星图' item3Text='海图' @clickItem='buttonGroupClickItem'/>
        </div>
-       <!--      mapSigns 地图图例-->
-       <div  id="mapSigns" style=" position: absolute;right:8px; bottom:35%;z-index: 400;" v-drag>
-           <map-signs></map-signs>
+       <!--       地图图例-->
+       <div  id="mapSigns" style=" position: absolute;right:8px; bottom:35%;z-index: 400;" v-drag > 
+           <map-signs   ></map-signs>
+       </div>
+       <!--       统计-->
+       <div  id="Statistics" style=" position: absolute;left:4%; top:3%;z-index: 400;" v-drag  v-show="showShipStatistics">
+           <Statistics :shipList='shipStatistics' @hide='ShipStatistical'  close-on-click-modal></Statistics>
        </div>
        <!-- 放大缩小的按钮 -->
        <div  id="mapControl" style=" position: absolute;right: 10px; bottom:24%;z-index: 400;">
@@ -38,9 +161,17 @@
        <div style="right: 0%;  top: 9%;  position: absolute;  z-index: 400;  background: #FAFAFA;   border-radius: 10px 0px 0px 10px;" ref='dropdown'>
            <Dropdown v-for="(item,index) in dropdownTitleData" @iconClick='dropdownButton' :item='item' :key="index"
                      :title='item.title' :titleIcon='item.icon' :dropdownData='item.dropdownInfoData'
-                     @clickItem='' ref="dropDown"/>
+                     @clickItem=''  ref="dropDown"/>
        </div>
 
+        <!--      目标筛选选择-->
+       <div  id="selectMarker" style=" position: absolute;right: 3%; top:9%;z-index: 400"  v-drag v-show="showObjectSelect">
+           <ObjectSelect @ObjectSelect="ObjectSelect" @hide='showObjectSelect=false'  close-on-click-modal></ObjectSelect>
+       </div>
+       <!--      图层筛选选择-->
+       <div  id="selectMarker" style=" position: absolute;right: 3%; top:9%;z-index: 400"  v-drag v-show="showlayerSelect">
+           <layerSelect @layerSelect="layerSelect" @hide='showlayerSelect=false'  close-on-click-modal></layerSelect>
+       </div>
         <!--      图层（筛船）显示 覆盖物图层选择-->
        <div  id="selectMarker" style=" position: absolute;right: 5%; top:20%;z-index: 400;width: 350px"  v-drag v-show="showSelectMarker">
            <SelectMarker @selectMarker="selectMarker" @hide='showSelectMarker=false'  close-on-click-modal></SelectMarker>
@@ -51,6 +182,7 @@
            <ShipInfoView :shipTabObj='dialogInfo.ship'
                          @remove='showInfo.ship=false'
                          @isFocus="infoViewFocus"
+                         @is="cancelFocus"
                          @track='shipTrack'
                          @histroy='showInfo.shipHistory=true'
                          @shipDetail='shipDetail'
@@ -78,9 +210,9 @@
            <ShipCount @hide="showShipCount=false" v-model="shipCountData"></ShipCount>
        </div> -->
        <!--            船舶统计功能-->
-       <div  id="shipAreaCount"  style="width: 500px;height: 250px;position: absolute;right: 35%; top:10%;z-index: 400;" v-show="showShipAreaCount" >
+       <!-- <div  id="shipAreaCount"  style="width: 500px;height: 250px;position: absolute;right: 35%; top:10%;z-index: 400;" v-show="showShipAreaCount" >
            <ShipAreaCount @hide="showShipAreaCount=false,drawLayer.clearLayers()" v-model="shipAreaCountData"></ShipAreaCount>
-       </div>
+       </div> -->
 
        <!-- 锚地 信息框 -->
        <div  id='anchInfoView'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.anchorage">
@@ -89,7 +221,24 @@
                    titleName=''
                    @remove='showInfo.anchorage=false'
                    @showAnchArea='showAnchArea'
+                   @isFocus="infoViewFocus" 
+           />
+       </div>
+        <!-- radar 信息框 -->
+       <div  id='radarInfoView'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.radar">
+           <RadarInfoView
+                   :tabObj='dialogInfo.radar'
+                   titleName=''
+                   @remove='showInfo.radar=false'
                    @isFocus="infoViewFocus"
+           />
+       </div>
+       <!-- radar表格信息 -->
+       <div  class="radarShipDataInfo" style="height: auto;width: auto;position: absolute;left: 23%; top:10%;z-index: 500" v-drag @mouseover='' @mouseout="" v-show="showInfo.radarShip">
+           <RadarDataTabView
+                   :tableData='socketRadarShipData'
+                   :titleName='dialogInfo.radar.name'
+                   @remove='showInfo.radarShip=false'
            />
        </div>
        <!-- 码头泊位 信息框 -->
@@ -99,6 +248,7 @@
                    titleName=''
                    @remove='showInfo.berth=false'
                    @isFocus="infoViewFocus"
+                   
            />
        </div>
        <!-- 港区 信息框 -->
@@ -130,24 +280,7 @@
                    @isFocus="infoViewFocus"
            />
        </div>
-       <!-- radar 信息框 -->
-       <div  id='radarInfoView'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.radar">
-           <RadarInfoView
-                   :tabObj='dialogInfo.radar'
-                   titleName=''
-                   @remove='showInfo.radar=false'
-                   @info='radarShipView'
-                   @isFocus="infoViewFocus"
-           />
-       </div>
-       <!-- radar表格信息 -->
-       <div  class="radarShipDataInfo" style="height: auto;width: auto;position: absolute;left: 23%; top:10%;z-index: 500" v-drag @mouseover='' @mouseout="" v-show="showInfo.radarShip">
-           <RadarDataTabView
-                   :tableData='socketRadarShipData'
-                   :titleName='dialogInfo.radar.name'
-                   @remove='showInfo.radarShip=false'
-           />
-       </div>
+      
 
        <!-- Ais 信息框 -->
        <div  id='aisInfoView'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"  v-drag v-show="showInfo.ais">
@@ -181,9 +314,7 @@
                       style="position: absolute;top: 1px;right: 10px;color: #eee;">X
            </el-button>
        </div>
-
         <!-- 左侧抽屉 -->
-
        <!-- <div  id="leftDrawerView"  style="width: 440px;height: calc(100% - 121px);position: absolute;left:82px; top:95px;z-index: 400" :style="{width:showLeft?'440px':'20px'}" >
            <LeftDrawer ref="leftDrawer" :row1="leftDrawerData.row1" :row2="leftDrawerData.row2" :row3="leftDrawerData.row3" :row4="leftDrawerData.row4" v-on:showLeft="showLeft = $event"
                        :station1="leftDrawerData.station1" :station2="leftDrawerData.station2" @searchStation="loadLeftDrawerSearch"
@@ -201,8 +332,6 @@
        </div>
         <!--            区域分组显示-->
        <div id="groupView" ref='groupView' v-show="showGroupView" style="position: absolute;right: 10%; top:20%;z-index: 500" v-drag>
-
-
            <div class="groupViewTitle">
                <div>
                    <p>标绘区域</p>
@@ -210,22 +339,18 @@
                </div>
            </div>
            <div class="groupViewMain">
-
-               <div class="mainTitle"><p>全部区域设置 <span>{{areaLength}}个</span></p>
+               <div class="mainTitle" style="padding:15px;"><p>全部区域设置 <span>{{areaLength}}个</span></p>
                    <el-radio-group v-model="showOrHide" style="margin-top: -1rem;" @change="showAllArea">
                        <el-radio-button label="1">显示</el-radio-button>
                        <el-radio-button label="0">隐藏</el-radio-button>
                    </el-radio-group>
                </div>
-               <div class="line"></div>
-            
-               <div class="mainContent">
-
+               <div class="line"></div>         
+               <div class="mainContent" style="padding:15px;">
                    <group-tree @openDrawView="openDrawView" :map="map" :groupData="groupData" :areaLayer="areaLayer"
                                @allowDrop="" @updateGroupName=""
                                :areaData="areaData" ref="groupTree" @removeArea=''></group-tree>
                </div>
-
            </div>
        </div>
        <!--            区域绘制-->
@@ -312,7 +437,6 @@
                    </div>
                </el-form>
            </div>
-
        </div>
    </div>
 </template>
@@ -329,6 +453,9 @@
   import ButtonGroup from '../../components/ButtonGroup.vue'
   import MapControl from '../../components/map/MapControl'
   import SelectMarker from '../../components/map/SelectMarker'
+    import ObjectSelect from '../../components/map/ObjectSelect'  //目标筛选
+    import layerSelect from '../../components/map/layerSelect'  //图层筛选
+    import importExcel from '../../components/map/importExcel'// 导入离线船只数据
   import ShipCount from '../../components/map/ShipCount'
   import ShipAreaCount from '../../components/map/ShipAreaCount'
   import AnchInfoView from '../../components/map/AnchInfoView'
@@ -349,23 +476,24 @@
   import FocusDialog from '../../components/map/FocusDialog'
    import groupTree from '../../components/groupTree.vue'
   import MapSigns from '../../components/MapSigns.vue'
+  import Statistics from '../../components/Statistics.vue'
   import CountrySigns  from '../../components/CountrySigns .vue'
   import { wgs84ToBD } from '../../utils/coordinateConvert'
   import { formRules } from '../../utils/formRules'
   export default {
     name: 'Map',
     components: {
-      Dropdown, ButtonGroup,MapControl,SelectMarker,ShipCount,ShipAreaCount,AnchInfoView,PierInfoView,PortInfoView,SeaLineInfoView,StationInfoView,RadarInfoView,RadarDataTabView,
-      AisInfoView,AisDataTabView,VideoView,LeftDrawer,DailyEventDiag,ShipInfoView,ShipDetailView,ShipHistory,FocusDialog,groupTree,
+      Dropdown, ButtonGroup,MapControl,SelectMarker,ObjectSelect,layerSelect,ShipCount,ShipAreaCount,AnchInfoView,PierInfoView,PortInfoView,SeaLineInfoView,StationInfoView,RadarInfoView,RadarDataTabView,
+      AisInfoView,AisDataTabView,VideoView,LeftDrawer,DailyEventDiag,importExcel,ShipInfoView,Statistics,ShipDetailView,ShipHistory,FocusDialog,groupTree,
       'map-signs': MapSigns,
       'country-signs':CountrySigns 
     },
     data() {
-      return {
-          downMenuList:[{name:'目标名称',index:'0'},{name:'目标编号',index:'1'},
-          {name:'目标类型',index:'2'},{name:'出现时间',index:'3'},{name:'出现区域',index:'4'},],
+      return {   
         ...mapData,...mapSocket,
          formRules: formRules,
+         item:'',  
+        objectArea:''
       }
     },
     computed:{
@@ -377,18 +505,20 @@
     },
 
     mounted() {
-        
-      this.flag()
-    //   this.query()
+      this.objectType()
+      this.objectareaData()
+      this.org()
       this.mapInit()
       this.initWebSocket()
       this.map.setView([30.37892927824675,122.19491755725795], 10);
-      console.log(this.$store.getters.user.data)
+      console.log("user",this.$store.getters.user.data)
       this.loadGroupData()
 //       L.circle([31.421995400095337,122.84572901429688], { radius: 30000, color: 'red', fillColor: '#f03', fillOpacity: 1 }).addTo(this.map);
       this.stationLayerGroup= new L.FeatureGroup().addTo(this.map);
       this.leftDrawerShipTypeLayer= new L.FeatureGroup().addTo(this.map);
       this.drawLayer= new L.FeatureGroup().addTo(this.map);
+      this.areadefineLayer=new L.FeatureGroup().addTo(this.drawLayer);
+
       this.planeLayer= new L.FeatureGroup().addTo(this.map);
       this.animateLayer= new L.FeatureGroup().addTo(this.map);
       this.stationLayers = new L.FeatureGroup().addTo(this.stationLayerGroup);
@@ -398,60 +528,221 @@
       this.roadLayer = new L.FeatureGroup({}).addTo(this.markerLayersGroup);
       this.seaLineLayer = new L.FeatureGroup({}).addTo(this.markerLayersGroup);
       this.departmentLayers = new L.FeatureGroup().addTo(this.map);
+      this.areaLayer= new L.FeatureGroup().addTo(this.map);
       for(let i=1;i<11;i++){
         this['orgLayer'+i]=new L.FeatureGroup().addTo(this.departmentLayers)
       }
+      
       // this.map.on('click', function (e) {
       //   //获取点击位置的坐标
       //   var coordinate = [e.latlng.lat, e.latlng.lng];
       //   //弹框提示点击位置的坐标
       //   alert("地图被单击了！点击位置为：" + coordinate);
       // })
-      this.loadStationMarker()
+    //   this.loadStationMarker()
       this.loadDefaultMarker()
       this.loadLeftDrawer()
       // this.websocketsend2(JSON.stringify({ action: 'fly' ,data:{}}))
       setTimeout(()=>{
-        this.websocketsend(JSON.stringify({action:'allRadar',data:{isshow:1,uid:this.$store.getters.user.data.id}}))
-
-      },500)
-
+         this.websocketsend(JSON.stringify({action:'criminal',data:{uid:this.$store.getters.user.data.user.id}}))
+         this.websocketsend(JSON.stringify({action:'focus',data:{uid:this.$store.getters.user.data.user.id}}))
+      },500)    
+       this.ShipStatistical() 
+        
     },
     methods: {
-     choosed(item){
-            console.log(item)
-            // if(item.index=0){}
-        },
-      //统计国家数
-        flag(){
-          this.service.get('/ship/flag').then(res=>{
-            console.log("查询到的国家列表",res)
+        org(){
+             this.service.get('/org/allList',{
+                params:{}
+                }).then(res=>{
+            // console.log("组织机构",res)
+            // this.typelist=res.result
           })
         },
+        doSomeThing(e){
+            // this.map.setView([30.37892927824675,122.19491755725795], 13);
+            // alert(e)
+            
+        },
+        asdadsad(){
+            let a='12313123'
+            const h = this.$createElement
+        this.$notify({
+             title: '异常船只',
+            // duration: 60000,
+            offset: 200,
+           message: h('div', { class: 'message' }, [
+                h('div', { class: 'btnList' }, [
+                  h('span', {on: {click: this.doSomeThing(a)}}, '发现异常船只！'),
+                  h(
+                    'span',
+                    {
+                      class: 'later',
+                      on: {
+                        click: this.doSomeThing
+                      }
+                    },
+                    // '下载文件'
+                  )
+                ])
+              ]),
+        });
 
+        },
+         choosed(){
+            // console.log(item)
+            this.searchdialog=true
+            },
+        objectType(){  
+         this.service.get('/ship/shipType',{
+              params:{
+                flag:this.shipflag
+              }
+          }).then(res=>{     
+            // console.log('船舶类型',res)
+            this.shipflag=res.flags
+            // console.log("shipflag",this.shipflag)
+          })
+        },
+        objectareaData(){
+             this.service.get('/water/allList',{
+              params:{
+                name:this.objectArea
+              }
+          }).then(res=>{     
+            console.log('所有区域目标',res)
+            this.objectArea=res.list
+            //  console.log("objectArea",this.objectArea)
+            this.objectArea.forEach(function (item, index) {
+                var otype=item.type
+                // console.log('item', otype);
+            });
+          })
+        },
+        queryName(){
+           this.service.get('/ship/screeningName',{
+                params:{name:this.objectname}
+                }).then(res=>{
+            // console.log("目标名称筛选",res)
+            this.dialogVisible1=true
+            this.namelist=res.result
+          }) 
+        },
+        queryNumber(){
+             this.service.get('/ship/screeningMmsi',{
+                params:{mmsi:this.objectmmsi}
+                }).then(res=>{
+            // console.log("目标编号筛选",res)
+            this.dialogVisible2=true
+            this.mmsilist=res.result
+          }) 
+        },
+        queryData(){
+            this.service.get('/ship/screeningType',{
+                params:{type:this.oshipType}
+                }).then(res=>{
+            // console.log("目标类型筛选",res)
+            this.dialogVisible3=true
+            this.typelist=res.result
+          })
+        },
+        queryArea(){
+            let area
+            if(this.type=='圆形海域'){
+                area=0
+            }else if(this.type=='矩形海域'){
+                area=1
+            }else if(this.type=='多边形海域'){
+                area=2
+            }
+            console.log('区域data',this.objectArea)
+             for(let i in this.objectArea){
+                //   console.log("i",i)
+                  if(this.objectArea[i].type===area){
+                      console.log("this.objectArea[i]",this.objectArea[i])
+                             var points=(this.objectArea[i].points)
+                            console.log('points',points)
+                            var points111=JSON.stringify(this.objectArea[i].points)
+                            console.log('points',points111)
+                            let [radius,lat,lon]=[this.objectArea[i].radius,this.objectArea[i].lat,this.objectArea[i].lon]
+                            this.service.post('/ship/screeningWater',{
+                                // params:{
+                                    type:area,
+                                    lat:lat,
+                                    lon:lon,
+                                    points:JSON.stringify(this.objectArea[i].points),
+                                    radius:radius,
+                                    // }
+                                }).then(res=>{
+                            console.log("目标区域筛选",res)
+                            // console.log('区域data',this.objectArea)
+                            this.dialogVisible5=true
+                            this.arealist=res.result
+                        })
+                  }
+      
+             }
+        },
+        queryTime(){
+              this.service.get('/ship/screeningTime',{
+                params:{
+                    beginTime:this.beginTime,
+                    endTime:this.endTime}
+                }).then(res=>{
+            console.log("目标时间筛选",res)
+            this.dialogVisible4=true
+            if(res.result){
+                this.timelist=res.result
+            }else{
+                  this.$message('当前时间段内，暂无查到所对应的船舶' + '!');
+            }
+            
+          })
+        },
+        
+        // 统计
+          ShipStatistical(isShow=true,times=[],types=[],waters=[]){
+            let swne = this.getMapBounds()
+            let d = {
+              'maxLat': swne['neLat'],
+              'minLat': swne['swLat'],
+              'minLon': swne['swLon'],
+              'maxLon': swne['neLon'],
+              'times':times,
+              'types':types,
+              "waters":waters,
+            }
+          this.service.post('/ship/statistical',{
+            ...d
+          }).then(res=>{
+            console.log("船舶统计",res)
+            this.shipStatistics=res.list
+          }) 
+       }, 
         ...mapUtils,...homeMethods,...mapSocketFun,
       //加载区域船舶
-      loadAreaShip(isShow){
-            console.log('loadAreaShip')
-           console.log(this.$store.getters.user.data.user.id)
+      loadAreaShip(isShow=true,times=[],types=[],waters=[]){
+            // console.log('loadAreaShip')
+        //    console.log("当前用户登录信息",this.$store.getters.user.data.user.id)
           let swne = this.getMapBounds()
           let d = {
-            'isshow': isShow,
+            // 'isshow': isShow,
             'maxLat': swne['neLat'],
             'minLat': swne['swLat'],
             'minLon': swne['swLon'],
             'maxLon': swne['neLon'],
-            'times':[],
-            'types':[],
-            "waters":[],
-            'uid':this.$store.getters.user.data.user.id?this.$store.getters.user.data.user.id:null
+            'times':times,
+            'types':types,
+            "waters":waters,
+            // 'uid':this.$store.getters.user.data.user.id?this.$store.getters.user.data.user.id:null
           }
-          this.service.get('/ship/areaList',{params:{
+          this.service.post('/ship/areaList',{
             ...d
-          }}).then(res=>{
+          }).then(res=>{
             console.log("区域内船舶加载",res)
             if (this.map.getZoom() >= this.maxMapZoom) {
               this.areaShipData = [...res.list]
+            //   console.log('areaShipData', this.areaShipData)
             }
             // this.leftDrawerData.row1 = res.data.targetMap.columns
             // this.leftDrawerData.row3 = res.data.typeMap
@@ -462,18 +753,18 @@
       //初始化海量点
       addShipPointCollection(size, id = -1){
         let swne = this.getMapBounds()
-          // console.log(size)
+        //   console.log('size',size)
           this.service.post('/ship/drawSeaPoints', {
             width: size.x,
             height: size.y,
-            attributionid: id,
+            // attributionid: id,
+            body:id,
             'neLat': swne['neLat'],
             'swLat': swne['swLat'],
             'swLon': swne['swLon'],
             'neLon': swne['neLon']
           }).then(res => {
-            // console.log(res,'addShipPointCollection')
-
+            console.log(res,'addShipPointCollection')
             this.pointCollectionImg = res.data
             this.showPointCollectionImg=true
             this.map.dragging.enable();
@@ -500,8 +791,6 @@
             dragBox.style.cursor = 'all-scroll';
             dragBox.style.left = left + "px";
             dragBox.style.top = top + "px";
-
-
           };
           document.onmouseup = e => {
             //鼠标弹起来的时候不再移动
@@ -522,6 +811,121 @@
         margin: 0;
         padding: 0;
     }
+    /deep/ .el-dialog{
+        position: absolute;
+            right: 10%;
+            top: -12%;
+    }
+    // 搜索的结果弹框
+    /deep/ .typedialog{
+            width: 20%;
+            position: absolute;
+            right: 10%;
+            top: 22%;
+                .el-dialog__header{
+                padding: 0;
+               }
+    }
+    // 高级搜索
+    /deep/.signdialog   {
+         background: #e3efff;
+         outline: 2px solid #c8ffff;
+        .el-icon-close:before { //关闭弹框图标
+            content: "";
+        }
+        .el-dialog__header{
+            padding: 0;
+        }
+        .el-select>.el-input{ 
+            //  width: 273px;
+            width: 360px; 
+        }
+        .el-date-editor.el-input{
+            width: 120px;
+        }
+    }
+    .signChild{
+        margin-bottom: 10px;
+       font-weight: 900;
+    }
+    .signChild  button{
+            background: #0175ee;
+            width: 110px;
+            height: 40px;
+            border-color: #306ba3;
+            outline: 2px solid #c8ffff;
+            color: #97dbff;
+    }
+    .signChild  input{
+        // width: 273px;
+         width: 360px;
+        height: 40px;
+        border-color: #306ba3;
+         padding: 0 15px;
+         color: #606266;
+        //   box-shadow: 0 0 10px #c8ffff inset;
+         outline: 2px solid #c8ffff;
+    }
+    .signChild  span{
+        width: 40px;
+        height: 40px;
+        border:2px  solid #306ba3;
+        padding: 10px 15px;
+        color: #606266;
+        // box-shadow: 0 0 15px #c8ffff inset;
+         outline: 2px solid #c8ffff;
+        // border-right: none;
+    }
+    .search-result-list {
+    margin: 5px;
+    height: 220px;
+    overflow: auto;
+}
+.search-result-list li a:hover {
+    background: #f5f5f5;
+}
+// 船舶列表前面加图标
+.shipstate {
+    // background: url(../images/dialog-cssimages.png) no-repeat -11px -205px;
+    padding: 0 8px;
+    margin-right: 11px;
+}
+.open-shipdialog{
+    list-style: none;
+    font-weight: bold;
+    display: block;
+    border-bottom: 1px dashed #ccc;
+    padding: 5px 8px;
+}
+    .signChild {
+        /deep/ .el-input__inner{
+            border: 2px  solid #316ca4;
+            //  box-shadow: 0 0 10px #c8ffff inset;
+            outline: 2px solid #c8ffff;
+            }
+        /* 图标 */
+      /deep/.el-input .el-select__caret{
+        transform: rotateZ(180deg);
+        cursor: pointer;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid #0071eb;
+        font-size: 0;
+        line-height: 0;
+        }
+      /deep/  .el-input__suffix {
+          right: 18px;
+          transition: all .3s;
+          position: absolute;
+          top: 4px;
+      }
+     /deep/ .el-icon-arrow-up:before {
+            content: "";
+            }
+    }
+
  #home{
 
     //  height: calc(100% - 121px);
@@ -549,7 +953,7 @@
         100%{-webkit-transform:rotate(-360deg);}
     }
     #map /deep/ .leaflet-div-icon{
-    border: none;
+        border: none;
         background: transparent;
 }
     #map /deep/ #PlaneInfoView {
@@ -629,13 +1033,12 @@
     }
 
     .groupViewMain {
-        padding: 15px;
-        // background: #305071;
+        // padding: 15px;
         background: white;
     }
     .groupViewMain /deep/.el-input__inner{
         background: transparent;
-        color: white;
+        // color: white;
     }
 
     .groupViewMain p {
@@ -657,9 +1060,9 @@
         margin-top: .8rem;
     }
     .line {
-        margin-top: 1.5rem;
+        margin-top: 0.5rem;
         width: 100%;
-        height: 1px;
+        height: 8px;
         background: #e6e6e6;
         margin-bottom: 1rem;
     }
@@ -687,7 +1090,7 @@
         line-height: 30px;
         border: 1px solid #DCDFE6;
         cursor: pointer;
-
+            background: #eeeeee;
     }
 
     .selectAdd2 {
@@ -818,7 +1221,7 @@
         /*top: 15% !important;*/
         display: flex;
         flex-flow: column;
-        background: #305071;
+        // background: #305071;
         /*position: relative;*/
     }
 
@@ -832,7 +1235,8 @@
     }
 
     .DrawMain {
-        width: 86%;
+        // width: 86%;
+        width: 100%;
         height: 80%;
         background: #ffffff;
         color: #000000;
@@ -937,4 +1341,10 @@
         width: 70px;
         height: 37px;
     }
+
+    // 区域设置
+  /deep/  .el-scrollbar__wrap{
+        // overflow: scroll; 
+         height: 100%;
+     }
 </style>

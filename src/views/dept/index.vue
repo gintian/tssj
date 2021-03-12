@@ -54,7 +54,7 @@
 
     <el-table-column  prop="enable"  label="是否允许登录"  align="center">
       <template slot-scope="scope">
-            <span v-if="scope.row.enable == true" style="color:#34AA44;" @click="allowLogin(scope.row)">否</span>
+            <span v-if="scope.row.enable == true" style="color:#34AA44;" @click="allowLogin(scope.row)">是</span>
             <span v-if="scope.row.enable == false"  style="color:#F85A5A;" >否</span>
       </template>
     </el-table-column>
@@ -242,7 +242,7 @@ export default {
           console.log("用户数据",req)
           this.tableData = req.page.list
            this.total = req.page.totalRow //总条数
-          this.pages = req.page.totalPage;  //总页数
+           this.pages = req.page.totalPage;  //总页数
         })
        
     },

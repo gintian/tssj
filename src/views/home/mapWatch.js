@@ -4,36 +4,28 @@ import { addMyMarker, mapComopentFun } from '../../../../zhhf/src/views/home/map
 // import { addRadarDom } from '../../../src/views/home/mapComponentFactory'
 // import { updateShipMapv, addShipPointCollection } from '../../../src/views/home/copyZfwMapFun'
 let ShipDataImgMap = {
-  1:(type,time)=>{
-    if(type!==0){
-      return { imgName:'aim03.png',sizeWidth:13, sizeHeight:22 };//异常目标
-    }
-    let date = new Date().getTime()/1000;
-
-    if((date-time)<=300)/* 5分钟以内更新 */{
-      return { imgName:'1.png',sizeWidth:13, sizeHeight:22 };
-    }
-    if(300<(date-time)&&(date-time)<1800)/* 5分钟-30分钟以内更新 */{
-      return { imgName:'2.png',sizeWidth:13, sizeHeight:22 };
-    }
-
-    return { imgName:'3.png',sizeWidth:13, sizeHeight:22 }; /* 30分钟以上更新 */
+  1:(shipType)=>{
+    if(shipType=='客船'){
+      return { imgName:'kc.png',sizeWidth:16, sizeHeight:22 };//客船
+    } else if(shipType=='货船'){
+      return { imgName:'hc.png',sizeWidth:16, sizeHeight:22 };
+    } else if(shipType=='油轮'){
+      return { imgName:'yl.png',sizeWidth:16, sizeHeight:22 };
+    } else if(shipType=='危险货物'){
+      return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
+    } else if(shipType=='执法船'){
+      return { imgName:'zf.png',sizeWidth:16, sizeHeight:22 };
+    }else{
+      return { imgName:'another.png',sizeWidth:16, sizeHeight:22 };//其他
+    } 
   },
-  2:(type)=>{
-    if(type!==0){
-
-      return { imgName:'aim03.png',sizeWidth:16, sizeHeight:26 }//异常目标
-    }
-
-    return { imgName:'aim02.png',sizeWidth:16, sizeHeight:26 }
+  2:(shipType)=>{
+    return { imgName:'aim02.png',sizeWidth:16, sizeHeight:26 }  //融合目标
   },
-  3:(type)=>{
-    if(type!==0){
-      return { imgName:'aim03.png',sizeWidth:17, sizeHeight:17 };//异常目标
-    }
-
-    return { imgName:'aim01.png',sizeWidth:17, sizeHeight:17 };
-  }
+  3:(shipType)=>{
+    return { imgName:'aim01.png',sizeWidth:26, sizeHeight:26 }  //雷达目标
+  },
+ 
 }
 let flyDataImg=function(speed) {
 
@@ -52,46 +44,12 @@ let flyDataImg=function(speed) {
 export default {
   async shipData(val) {
     console.log('数据变化',val);// #d61c44 #26B574 handler
-    // this.removeOverlay('shipType');
-    //
-    // if (this.map.getZoom() < this.maxMapZoom) {
-    //   await this.updateShipMapv([])
-    // } else {
-    //   await this.updateShipMapv(val)
-    // }
-    // console.log(this.leftDrawerShipType)
-    // let finalArr = []
-    // val.forEach(e => {
-    //   if (this.leftDrawerShipType.name === e.shipType &&this.leftDrawerShipType.num <50) {
-    //     // console.log(e)
-    //     let bd09Arr = wgs84ToBD(parseFloat(e.lon), parseFloat(e.lat))
-    //     let marker3 = addMyMarker(bd09Arr[0], bd09Arr[1])
-    //     (40, 30, require('../../assets/asdad.png'), 0)
-    //     ('shipType')
-    //     (() => {
-    //     })
-    //     this.map.addOverlay(marker3)
-    //   }
-    //   if (this.map.getZoom() >= this.maxMapZoom) {
-    //
-    //     if (e.isSelect !== 0) {//判断isselect为1 按钮是点击的
-    //       // console.log('跟踪OBJ',e)00
-    //       this.removeOverlay('跟踪');
-    //       let bd09Arr = wgs84ToBD(parseFloat(e.lon), parseFloat(e.lat))
-    //       this.map.addOverlay(addMyMarker(bd09Arr[0], bd09Arr[1])(56, 56, require('../../assets/mapicon/shipselected.png'))('跟踪')(() => {
-    //       }))
-    //
-    //     }
-    //   }
-    // })
     this.ciLayer.clearLayers()
     this.leftDrawerShipTypeLayer.clearLayers()
     for (let i of val) {
-
-      // if(i.isFocus){
-      //   console.log(i)
-      // }
-      let sim=ShipDataImgMap[i.targettype](i.abnormal, i.time)
+      // let sim=ShipDataImgMap[i.targettype](i.abnormal, i.time)
+      let sim=ShipDataImgMap[i.targettype](i.shipType)
+      // console.log('sim',sim)
       let bd09Arr = wgs84ToBD(parseFloat(i.lon), parseFloat(i.lat))
       let icon = L.icon({
         iconUrl: require('../../assets/mapSigns/' + sim.imgName),
@@ -152,7 +110,7 @@ export default {
         this.dialogInfo.ship.radarid = info.radarid
         // this.dialogInfo.ship.attributionid = info.attributionid
         // this.dialogInfo.ship.urltype = info.urltype
-        console.log( this.dialogInfo.ship)
+        // console.log( this.dialogInfo.ship)
         if (res.error === 0) {
           this.showInfo.ship=true
         }
@@ -245,23 +203,51 @@ export default {
     }
 
   },
-  // socketEventData(val) {
-  //   // console.log(val,this.$route.name)
-  //   if (this.$route.name === 'Home') {
-  //     if (val.length > 0) {
-  //       const h = this.$createElement
-  //       // console.log(this.$refs['shipNotify'])
-  //       this.$notify({
-  //           title: '异常船只',
-  //           duration: 60000,
-  //           offset: 200,
-  //           dangerouslyUseHTMLString: true,
-  //           message: h('div', null, this.createNode(val))
-  //         }
-  //       )
-  //     }
-  //   }
-  // },
+  socketEventData(val) {
+     console.log('socketEventData',val)
+ 
+    const h = this.$createElement
+       this.$notify({
+            title: 'msg',
+          // type: 'success',
+          //  message: h('div', { class: 'message' }, [
+          //       h('div', { class: 'btnList' }, [
+          //         h('span', {on: {click: this.doSomeThing(val)}}, '你导出的数据报表已生成，点击'),
+          //         h(
+          //           'span',
+          //           {
+          //             class: 'later',
+          //             on: {
+          //               click: this.doSomeThing
+          //             }
+          //           },
+          //           '下载文件'
+          //         )
+          //       ])
+          //     ]),
+        });
+      // },
+      //   doSomeThing(e){
+      //     // this.map.setView([30.37892927824675,122.19491755725795], 13);
+      //     // alert(e)
+          
+      // },
+    // console.log(val,this.$route.name)
+    // if (this.$route.name === 'Home') {
+    //   if (val.length > 0) {
+    //     const h = this.$createElement
+    //     // console.log(this.$refs['shipNotify'])
+    //     this.$notify({
+    //         title: '异常船只',
+    //         duration: 60000,
+    //         offset: 200,
+    //         dangerouslyUseHTMLString: true,
+    //         message: h('div', null, this.createNode(val))
+    //       }
+    //     )
+    //   }
+    // }
+  },
   async socketFlyData(val) {
     // console.log('数据变化',val)
     this.planeLayer.clearLayers()

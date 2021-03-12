@@ -87,7 +87,7 @@
     methods:{
       clickShip(i){
         i.is=!i.is
-        // console.log(i)
+        console.log(i)
         this.$emit('selectMarker',i)
       },
       rowClick(row, column, event) {

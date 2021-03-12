@@ -11,7 +11,7 @@
             </el-form-item>
           </el-form>
             <div>
-                <el-input v-model="listQuery.name" placeholder="请输入" style="width: 200px;" class="filter-item" 
+                <el-input v-model="listQuery.level" placeholder="请输入" style="width: 200px;" class="filter-item" 
                 @input="query()"/>
                 <el-button class="filter-item" type="primary" icon="el-icon-search" @click="query()" >
                   搜索
@@ -25,30 +25,34 @@
     style="width: 100%"
     :header-cell-style="tableHeaderColor">
     
-    <el-table-column
-        prop="reg_time"
+    <!-- <el-table-column
+        prop="beginTime"
+        label="开始时间"
+        align="center">
+     </el-table-column>  -->
+  <el-table-column
+        prop="time"
         label="时间"
         align="center">
      </el-table-column> 
-  
 
   <el-table-column
-      prop="creator"
+      prop="level"
       label="级别"
       align="center">
     </el-table-column>
 
     <el-table-column
-      prop="loan_card"
+      prop="content"
       label="内容"
-      align="center">
+      >
     </el-table-column>
 </el-table>
     <!-- 分页 -->
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.pageNo"
+      :current-page="listQuery.pageNumber"
       :page-sizes="[10, 20, 30, 40]"
       :page-size="listQuery.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
@@ -71,9 +75,9 @@ export default {
       pages:1, //总页数
       total:1, //总条数
       listQuery:{
-        pageNo:1, //当前页面
+        pageNumber:1, //当前页面
         pageSize:10, //条数
-        name:''  //查询条件
+        level:''  //查询条件
       },
       Business_exception:null,
       // 日期范围
@@ -106,15 +110,16 @@ export default {
         },
     getList(){  //获取数据
       this.service.get( '/alarmlog/page', {
-          pageNumber: this.pageNumber,
-          pageSize: this.pageSize,
-          name: this.name
+        params:{
+          pageNumber: this.listQuery.pageNumber,
+          pageSize: this.listQuery.pageSize,
+          level: this.listQuery.level
            }
-        ).then(req => {
-          console.log("13212132",req)
-          this.list = req.list
+        }).then(req => {
+          // console.log("13212132",req)
+          this.list = req.page.list
           this.total = req.page.totalRow //总条数
-          this.pages = req.page.totalPage;  //总页数
+          this.pages = req.page.totalPage; //总页数
         })
     },
     query(){ //按名称查询
@@ -126,8 +131,8 @@ export default {
       this.getList();
     },
     //当前页变化
-    handleCurrentChange(val=this.listQuery.pageNo){
-      this.listQuery.pageNo = val;
+    handleCurrentChange(val=this.listQuery.pageNumber){
+      this.listQuery.pageNumber = val;
       this.getList();
     },
   }

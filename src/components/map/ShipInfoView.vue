@@ -13,22 +13,26 @@
                     <tr v-for="index in rowCount" :key="index">
                         <td class="title">{{ordArr[index-1].name}}：</td>
                         <td class="value" style="width: 150px;">{{shipTabObj[ordArr[index-1].prop]}}</td>
-
                         <td class="title">{{ordArr[rowCount + index -1].name}}：</td>
                         <td class="value">{{shipTabObj[ordArr[rowCount + index -1].prop]}}</td>
                     </tr>
+                    <tr v-if='ordArr.length%2===1'>
+                         <td class="title">{{ordArr[ordArr.length-1].name}}：</td>
+                        <td class="value" style="width: 150px;">{{shipTabObj[ordArr[ordArr.length-1].prop]}}</td>
+                    </tr> 
                 </table>
             </div>
         </div>
         <div class="down">
-            <el-button type="primary" @click="shipDetail" style="margin-left: 10px;margin-top: 5px;"  size="mini" icon="el-icon-warning-outline">信息</el-button>
+          <!-- targettype1是Ais目标2是融合目标3是雷达目标,其中雷达目标是没有信息框的 -->
+            <el-button type="primary" @click="shipDetail" style="margin-left: 10px;margin-top: 5px;"  size="mini" icon="el-icon-warning-outline" v-show="shipTabObj.targettype!==3">信息</el-button>
             <!-- <el-button type="primary" @click="track"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-view" v-show="shipTabObj.targettype!==1">跟踪</el-button> -->
-            <el-button type="primary" @click="histroy"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-share" v-show="shipTabObj.targettype!==3">轨迹</el-button>
+            <el-button type="primary" @click="histroy"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-share" >轨迹</el-button>
 
             <div v-show="shipTabObj.targettype!==3">
                 <!-- <el-button type="primary" @click="shipDetail"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-document" >船舶详情</el-button> -->
-                <el-button type="primary" @click="focus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-off" v-show="!shipTabObj.isFocus">设定为重点目标</el-button>
-                <!-- <el-button type="primary" @click="disFocus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-on"  v-show="shipTabObj.isFocus">取关</el-button> -->
+                <el-button type="primary" @click="focus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-off" v-show="!shipTabObj.isFocus">关注</el-button>
+                <el-button type="primary" @click="disFocus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-on"  v-show="shipTabObj.isFocus">取关</el-button>
             </div>
         </div>
         <el-dialog
@@ -65,12 +69,12 @@ export default {
     },
     computed: {
         rowCount: function() {
-            return Math.ceil(this.ordArr.length/2);
+            return Math.floor(this.ordArr.length/2);
         },
     },
     watch:{
         shipTabObj :function(val) {
-          console.log('shipTabObj',val.lasttime)
+          // console.log('shipTabObj',val.lasttime)
             if(val.targettype === 3){
                 // console.log("targettype",val.targettype)
                 this.ordArr = [
@@ -82,16 +86,6 @@ export default {
                     { id:9, name:'纬度' ,prop:'lat'},
                 ]
             }else {
-
-              // console.log(val.updatetime)
-              // if(val.updatetime){
-
-              //   this.shipTabObj.updatetime = new Date(val.updatetime).toISOString().split('T')[0] + ' ' +  new Date(val.updatetime).toTimeString().split(' ')[0];
-              // }
-
-              //   this.datetoString.bind(new Date(val.updatetime))('yyyy-MM-dd hh:mm:ss'); //new Date(val.updatetime).toLocaleString();
-              //  new Date().toISOString().split('T')[0] + new Date().toISOString().split('T')[1].split('.')[0]
-
               this.ordArr = [
                 { id:0, name:'IMO' ,prop:'imo'},
                 { id:1, name:'MMSI' ,prop:'mmsi'},
@@ -116,9 +110,7 @@ export default {
         }
     },
     mounted(){
-        //console.log('shipTabObj',this.shipTabObj)
-
-
+      console.log('shipTabObj',this.shipTabObj)
     },
   updated() {
     // console.log('shipTabObj',this.shipTabObj)
@@ -194,30 +186,35 @@ export default {
       this.dialogVisible = false
       this.$set(this.shipTabObj, 'isFocus', true)
       this.$emit('isFocus', {
-        description: this.description,
+        // description: this.description,
         focus: false,
-        targetType: 9,
-        targetSign: this.shipTabObj.mmsi
+        // targetType: 9,
+        // targetSign: this.shipTabObj.mmsi
+        mmsi: this.shipTabObj.mmsi ,  
+        // focus:this.shipTabObj.focus
       })
     },
     focus() {
       this.dialogVisible = true
-      // console.log(this.shipTabObj)
-      // if(this.shipTabObj.isFocus===true){
+      if(this.shipTabObj.focus===true){
+        console.log("this.shipTabObj.focus",this.shipTabObj.focus)
       // }else{
-      //   this.$emit('isFocus',{description:this.description,focus:this.shipTabObj.isFocus,targetType:9,targetSign:this.shipTabObj.mmsi})
+        // this.$emit('isFocus',{description:this.description,focus:this.shipTabObj.isFocus,targetType:9,mmsi:this.shipTabObj.mmsi})
+        this.$emit('isFocus',{mmsi:this.shipTabObj.mmsi,focus:this.shipTabObj.focus})
       // }
-      // this.$emit('isFocus',this.focus)
-
+      this.$emit('isFocus',this.focus)
+      }
     },
     disFocus() {
       this.$set(this.shipTabObj, 'isFocus', false)
       this.$emit('isFocus', {
-        description: this.description,
-        focus: true,
-        targetType: 9,
-        targetSign: this.shipTabObj.mmsi
+        // description: this.description,
+        // focus: true,
+        // targetType: 9,
+        mmsi: this.shipTabObj.mmsi ,  
+        focus:this.shipTabObj.focus
       })
+       
     },
     shipDetail(){
       this.$emit('shipDetail',this.shipTabObj.mmsi)

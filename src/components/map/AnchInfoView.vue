@@ -37,9 +37,9 @@ export default {
     props:{
         tabObj:{
             type:Object,
-            default:{}
+            default:()=>{}
         },
-        titleName:{
+        titleName:{ 
             type:String,
             default:''
         }
@@ -53,21 +53,19 @@ export default {
       tabObj(val){
         this.tabObj=val
         // this.tabObj.showed=false
-        console.log('TabObj',this.tabObj)
+        // console.log('锚地TabObj',this.tabObj)
       }
     },
     mounted(){
-        //console.log('shipTabObj',this.shipTabObj)
-
-
+        // console.log('锚地shipTabObj',this.shipTabObj)
     },
   data(){
         return {
             ordArr:[
                 { id:0, name:'名称' ,prop:'name'},
-              { id:1, name:'描述' ,prop:'description'},
-                { id:2, name:'经度' ,prop:'longitude'},
-                { id:3, name:'纬度' ,prop:'latitude'},
+                { id:1, name:'描述' ,prop:'describe'},
+                { id:2, name:'经度' ,prop:'lon'},
+                { id:3, name:'纬度' ,prop:'lat'},
               // { id:4, name:'设备编号' ,prop:'station'},
               // { id:5, name:'是否异常' ,prop:'statusString'},
               // { id:6, name:'是否使用' ,prop:'usedString'},
@@ -95,22 +93,10 @@ export default {
         report(){
             this.$emit('report')
         },
+        // 显示或隐藏
       showAnchArea(){
         this.tabObj.showed=!this.tabObj.showed
         this.$emit('showAnchArea',this.tabObj.showed)
-
-          // if(this.switchs){
-          //   let area=addPolygon(this.tabObj.waters,{
-          //     strokeColor: 'white',
-          //     strokeWeight: 3,
-          //     strokeOpacity: 0.6,
-          //     fillColor: '#fc923a',
-          //     strokeStyle: 'dashed',
-          //     fillOpacity: 0.4
-          //   })(wgs84ToBD)
-          //   this.map.addOverlay(area)
-          // }
-          // console.log(this.switchs)
       },
     }
 }

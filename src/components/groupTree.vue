@@ -4,12 +4,74 @@
             <div class="tree_filter">
                 <el-input
                         placeholder="请输入区域名称搜索"
-                        v-model="filterText">
+                        v-model="filterText" 
+                        :input="valueChange">
                 </el-input>
 
                 <span @click="openDrawView" class="selectAdd">+</span></div>
-                <!-- <el-button style="height:32px;">导入</el-button> -->
-        </div>
+                <el-upload
+                      class="upload-demo"
+                      :http-request="uploadSectionFile" 
+                      accept=".xls"
+                      multiple
+                      :action="uploadUrl"
+                      :on-change="handleChange"
+                      :file-list="fileList">
+                  <el-button size="small" type="primary" @click="submitUpload"  >导入</el-button>
+                </el-upload>
+          </div>
+
+         <el-dialog
+                :visible.sync="importdialog"
+                custom-class="importdialog"
+                width="40%"
+                title="导入数据"
+                :append-to-body="true">
+             <div class="importcontent">
+                      <el-table
+                          :data="tableData"
+                          style="width: 100%"
+                          :header-cell-style="tableHeaderColor">
+                          <el-table-column
+                              v-for="(item,index) in tableTop" 
+                              :key="index"
+                              :prop="item.prop"
+                              :label="item.name"
+                              >
+                          </el-table-column>
+                           <el-table-column  label="海域点位" prop="points" width="160">
+                              <template slot-scope="props">
+                              <span v-for="real in props.row.points" :key="real.index">纬度：{{real.lat}},经度：{{real.lon}}；</span>
+                            </template>
+                          </el-table-column>
+                          <el-table-column key='7' prop="opr" label="操作" align="center">
+                              <template slot-scope="scope">
+                                <el-button
+                                  type="text" size="small" class="btn-upt" @click="handleUpdate(scope.row,index)"   v-show="tableData[scope.row.id].show"  >导入</el-button>
+                                 
+                                <el-button
+                                  type="text" size="small" class="btn-upt" @click="handleDel(scope.row,item)"  v-show="tableData[scope.row.id].show"  >删除</el-button>
+
+                                   <h3   v-show="!tableData[scope.row.id].show"   class="btn-upt">√</h3>
+                              </template>
+                          </el-table-column>
+                    </el-table>
+                    <el-button  type="primary" size="small" :import='tableData' @click="clickImport()">一键导入</el-button>
+              </div>
+        </el-dialog>
+        <!-- 删除弹层功能 -->
+        <el-dialog  :visible.sync="dialogDelVisible"  custom-class="deleteDialog"   width="100px">
+          <p>确定删除？</p>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogDelVisible = false">
+              取消
+            </el-button>
+            <el-button type="primary" @click="delData()">
+              删除
+            </el-button>
+          </div>
+        </el-dialog>
+       
         <el-tree
                 :data="groupData"
                 node-key="id"
@@ -28,8 +90,7 @@
                 :modal='false'
         >
             <span>备注：{{areaInfo.description}}</span>
-            <span slot="footer" class="dialog-footer">
-  </span>
+            <span slot="footer" class="dialog-footer"></span>
         </el-dialog>
 
 
@@ -75,6 +136,7 @@
       },
     },
     data() {
+     
       const data = [{
         id: 1,
         label: '一级 1',
@@ -250,6 +312,48 @@
         isEdit: false
       }]
       return {
+        show:'',
+        tableData:[],
+        tableTop:[
+          { id: 0, prop: 'name', name: '名称',width: ''},
+          { id: 1, prop: 'type', name: '类型',width: ''},
+          { id: 2, prop: 'level', name: '等级',width: ''},
+          { id: 3, prop: 'radius', name: '海域半径',width: ''},
+          { id: 4, prop: 'lon', name: '经度',width: ''},
+          { id: 5, prop: 'lat', name: '纬度',width: ''}
+          // { id: 6, prop: 'points', name: '海域点位',width: ''},
+        ],
+        importTable:'',
+        importdata:'',
+        uploadUrl:'/water/pushExcel',
+        showSearch:false,
+      listQuery:{
+        pageNumber:1, //当前页面
+        pageSize:10, //条数
+        name:'' , //查询条件
+        id:''
+      },
+       addsForm:{   //新增数据
+        name:'',
+        lat:'',
+        lon:'',
+        points:'',
+        radius:'',
+        level:'',
+        type:''
+      },
+      temp:{  //表单字段
+        id:'',
+        station:'',
+        name:'',
+        lat:'',
+        lon:'',
+        range:'',
+        status:'',
+      },
+        dialogDelVisible:false, //删除弹层显隐
+        delid:'', 
+        importdialog:false,
         data: JSON.parse(JSON.stringify(data)),
         labels:[],
         areaInfo:{
@@ -261,26 +365,31 @@
           show:false,
           des:''
         },
+         action:'aaa',
         checkItem:{}, //点击关注时当前选中的列
         // groupData: [],
         filterText: '',
+         fileList: [],
         areaTypeStyle: {
           1: {
-            color: '#eaeaea',
+            // color: '#eaeaea',
+            color:'black',
             opacity: 0.8,
             fillColor: '#ff3a3d',
             strokeStyle: 'dashed',
             fillOpacity: 0.4
           },
           2: {
-            color: '#eaeaea',
+            // color: '#eaeaea',
+            color:'black',
             opacity: 0.8,
             fillColor: '#FFFC82',
             strokeStyle: 'dashed',
             fillOpacity: 0.4
           },
           3: {
-            color: '#eaeaea',
+            // color: '#eaeaea',
+            color:'black',
             opacity: 0.8,
             fillColor: '#fc923a',
             strokeStyle: 'dashed',
@@ -288,26 +397,36 @@
           }
         }
       }
+     
     },
     watch: {
       filterText(val) {
+          // console.log("val",val)
+          // this.filterText=val
         this.$refs.tree.filter(val)
       },
+      handleDel(val){
+        // console.log("val",val)
+        // for(let i in this.tableData){
+        //       this.tableData[i].id=i
+        //       this.tableData[i].show=true
+        //       }
+      },
       groupData(val){
-        console.log(val)
+        // console.log('groupData',val)
         this.groupData=val
       },
       areaData(val){
         this.areaData=val
+        console.log('areaData',val)
       },
       areaLayer(val){
-        console.log(val,"val")
+        // console.log(val,"val")
         this.areaLayer=val
-      }
+      },
+     
     },
-    mounted() {
-
-    },
+    mounted() {},
     updated() {
       // console.log(this.groupData)
       // console.log(this.areaData)
@@ -319,6 +438,129 @@
       // })
     },
     methods: {
+        valueChange(e){
+            console.log('e',e.target.value);
+            // this.msg=this.target.value;
+        },
+
+    change(e){
+      // console.log('e',e)
+      // this.$forceUpdate(e)   
+},
+    handleUpdate(row,index){
+      console.log('handleUpdate',row,index)
+      // console.log('this.tableData[row.id]',this.tableData[row.id])
+      if(row){    
+        let [level,type,points,radius,lat,lon]=[row.level,row.type,row.points,row.radius,row.lat,row.lon]
+        console.log('level,type',level,type)
+         this.service.post( '/water/save',{
+              level: level,
+              type: type,
+              lat:lat,
+              lon:lon,
+              radius:radius,
+              points:points
+         }).then(req => {
+          console.log("导入的数据",req)
+          // console.log("导入数据的状态",req.error)
+          if(req.error==0){
+            row.show=false
+            let _index=-1
+            for(let i =0;i< this.tableData.length;i+=1){
+               if(this.tableData[i].id===row.id){
+                  _index=i
+              }
+            }
+             this.$set(this.tableData,_index,{...row})
+          }
+        }) 
+      }
+    },
+    //一键导入
+      clickImport(){
+        console.log("表格数据",this.tableData)
+        for(let i in this.tableData){
+          // console.log("i",i)
+          if(this.tableData[i].show){
+              console.log("tableData",this.tableData[i])
+            let [level,type,points,radius,lat,lon]=[this.tableData[i].level,this.tableData[i].type,this.tableData[i].points,this.tableData[i].radius,this.tableData[i].lat,this.tableData[i].lon] 
+              this.service.post( '/water/save',{
+                    level: level,
+                    type: type,
+                    lat:lat,
+                    lon:lon,
+                    radius:radius,
+                    points:points
+              }).then(req => {
+                console.log("一键导入的数据",req)
+                // console.log("导入的数据",req.error)
+                  if(req.error==0){
+                      this.tableData[i].show=false;
+                        this.$set(this.tableData,i,this.tableData[i])
+                      console.log("表格数据更新后",this.tableData);
+                  }
+              }) 
+          }
+        } 
+      },
+       //删除弹层
+    handleDel(row,item){
+        console.log('row',row)
+        console.log('item',item)
+        //  for(let i in this.tableData){
+        //       this.tableData[i].id=i
+        //       this.tableData[i].show=true
+        //       }
+        // this.$set(this.tableData,show,{...row})
+       this.tableData.splice(row.id, 1);
+       this.$set(this.tableData,index,this.tableData[index])
+       console.log("this.tableData",this.tableData)
+    },
+       tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
+          if (rowIndex === 0) {
+            return 'background-color: #e7f3ff;color: #000;font-weight: 500;'
+          }
+        }, 
+       // 导入数据
+       uploadSectionFile(item){
+        //  console.log("导入的数据",item,process.env.VUE_APP_BASE_API+this.uploadUrl)
+           const fileObj = item.file;
+        // FormData 对象
+          const form = new FormData();
+          // 文件对象
+          form.append('file', fileObj);  
+           this.$axios({
+            method: 'post',
+            url: 'http://192.168.1.36:8093/'+this.uploadUrl,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            data: form,
+          }).then((res) => {
+            
+            var importdata=res
+            // console.log("接收数据：",importdata);
+            // console.log("返回数据：",res.data);
+            this.importdialog=true
+            this.tableData = res.data.list
+            // let t=[JSON.Parse(res.data)]
+            // var  tt=this.tableData.split('/',2)
+
+            for(let i in this.tableData){
+              this.tableData[i].id=i
+              this.tableData[i].show=true
+              }
+            // console.log("原始excel:",this.tableData)
+          });
+          
+      } ,  
+       handleChange(file, fileList) {
+        this.fileList = fileList.slice(-3);
+      },
+      submitUpload(){
+          this.$refs.upload.submit();
+          // this.importdialog=true
+      },
       ...mapUtils,
       //tree数据拖拽
       allowDrop(draggingNode, dropNode, type) {
@@ -338,18 +580,17 @@
         // return true
       },
       handleDrop(draggingNode, dropNode, dropType, ev) {
-        console.log( draggingNode, dropType,dropNode);
-
-
+        console.log( 'draggingNode',draggingNode, dropType,dropNode);
         this.$emit('allowDrop',{id:draggingNode.data.id,groupId:dropNode.data.id})
-
       },
       openDrawView() {
         this.$emit('openDrawView', true)
       },
+     
+      
       filterNode(value, data) {
         if (!value) return true
-        return data.label.indexOf(value) !== -1
+        return data.name.indexOf(value) !== -1
       },
       append(data) {
         const newChild = { id: id++, label: 'testtest', children: [] }
@@ -417,30 +658,29 @@
       },
       renderContent(h, { node, data, store }) {
         return (
-
           <span class="custom-tree-node" style="width:100%">
                         <i class={data.className} style="width:20px"> &nbsp;</i>
-              <span class="tree_node_top" on-click={(ev) => this.moverView(ev, store, data)}> {this.showOrEdit(data)}</span>
-             <span class="tree_node_op " style="font-size: 14px;float:right">
+            <span class="tree_node_top" on-click={(ev) => this.moverView(ev, store, data)}> {this.showOrEdit(data)}</span>
+            <span class="tree_node_op " style="font-size: 14px;float:right;color:red;">
                   <i class={this.showOrdHide(data)} on-click={(ev) => this.showArea(ev, store, data)} style="margin-left:5px"></i>
-
-                  <i class={this.isFocus(data)} style="margin-left:5px"
-                     on-click={(ev) => this.focusArea(ev, store, data)}></i>
+                  <i class={this.isFocus(data)} style="margin-left:5px"   on-click={(ev) => this.focusArea(ev, store, data)}></i>
                   <i class={this.editStyle(data)} style="margin-left:5px"
                      on-click={(ev) => this.nodeEdit(ev, store, data)}></i>
                   <i class={this.deleteStyle(data)} style="margin-left:5px"
                      on-click={() => this.remove(node, data)}></i>
-      </span>
-      </span>)
+            </span>
+        </span>)
       },
       showOrEdit(data) {
+        // console.log('showOrEdit',data)
         if (data.edit) {
+          // console.log('data.edit',data.edit)
           return (
-            <input type="text" class="node_labe" value={data.label}
+            <input type="text" class="node_labe" value={data.name}
                    on-blur={ev => this.edit_sure(ev, data)}/>
           )
         } else {
-          return <span class="node_labe">{data.label}</span>
+          return <span class="node_labe">{data.name}</span>
         }
       },
       showOrdHide(data)/* 绘制/隐藏区域   icon 样式*/ {
@@ -486,12 +726,12 @@
             console.log('修改区域')
             console.log(data)
             data.label = $input.value
-            this.$emit('updateGroupName', { id: data.id, label: data.label, type: 0 })
+            this.$emit('updateGroupName', { id: data.id, label: data.name, type: 0 })
             data.edit = false
           } else {
             console.log('修改组名')
             data.label = $input.value
-            this.$emit('updateGroupName', { id: data.id, label: data.label, type: 1 })
+            this.$emit('updateGroupName', { id: data.id, label: data.name, type: 1 })
             data.edit = false
           }
 
@@ -501,58 +741,22 @@
 
       },
       showAllArea(data, type)/*显示所有区域*/ {
-        // console.log(data)
+        // console.log('showAllArea',data,type)
         // i.typeLabel=type[this.areaData.lever]
         // console.log('showAllArea')
         // console.log(data,type)
-        for(let i of this.groupData){ //设置分组的所有区域眼睛icon为亮
-          if(i.children.length>0){
-            // area.push(i.children)
-            for (let j of i.children){
-              j.show=true
-              this.labels.push(j)
-              // console.log(j,'showAllArea')
-            }
+        
+        // for(let i of this.groupData){ //设置分组的所有区域眼睛icon为亮
+        // console.log(i,this.groupData)
+        //   if(i.children.length>0){
+        //     // area.push(i.children)
+        //     for (let j of i.children){
+        //       j.show=true
+        //       this.labels.push(j)
+        //       // console.log(j,'showAllArea')
+        //     }
 
-          }
-        }
-
-        // let icon={
-        //   1:' ⛒ ',
-        //   2:' ★ ',
-        //   3:' ✷ ',
-        // }
-        // for (let i of data) {
-        //   let label
-        //   const m = {
-        //     '0': 'circle',
-        //     '1': 'polygon',
-        //     '2': 'rectangle'
         //   }
-        //   console.log(i)
-        //
-        //   // for (let x of type) {//设置文字内容
-        //   //   if (x.value == i.lever) i.typeLabel = icon[i.lever]+x.name
-        //   // }
-        //   // // console.log(i)
-        //   // let mark = addPolygon(i,this.areaTypeStyle[i.lever])(wgs84ToBD)
-        //   // mark.tp = 'area'
-        //   // mark.mmsi = i.id
-        //   // for(let l of this.labels){
-        //   //   // console.log(l)
-        //   //   if(i.id===l.id){
-        //   //     label=l.label
-        //   //   }
-        //   // }
-        //   // mark.addEventListener('click', (e) => {
-        //   //   console.log(data,i)
-        //   //   this.areaInfo.dialog=true
-        //   //   this.areaInfo.label=i.name
-        //   //   this.areaInfo.description=i.description
-        //   // })
-        //   // this.map.addOverlay(mark)
-        //   // this.labelOverlay(i,i.name)//label
-        //
         // }
       },
       labelOverlay(data,label) {
@@ -645,14 +849,14 @@
         //   }
         // }
         //
-        for (let i of this.groupData) {
-          if (i.children.length > 0) {
-            // area.push(i.children)
-            for (let j of i.children) {
-              j.show = false
-            }
-          }
-        }
+        // for (let i of this.groupData) {
+        //   if (i.children.length > 0) {
+        //     // area.push(i.children)
+        //     for (let j of i.children) {
+        //       j.show = false
+        //     }
+        //   }
+        // }
         // this.groupData[0].children[0].show=true
         // console.log(this.groupData[0].children[0])
 
@@ -744,7 +948,7 @@
         }
       },
       addMarker(marker,data) {
-        console.log(marker)
+        // console.log('marker',marker)
         const mp = {
 
           'ship': () => {
@@ -832,6 +1036,7 @@
         this.labelOverlay(marker,marker.name)
         this.map.panTo(mp[marker.tp]().pos)
       },
+
       nodeEdit(ev, store, data) /*修改区域名称*/ {
         data.edit = true
         this.$nextTick(() => {//得到input
@@ -861,6 +1066,30 @@
 </script>
 
 <style scoped lang="less">
+/* 操作部分 */
+  .btn-upt{   
+    margin: 0 .5rem 0 0!important;
+    color: #0075EE;
+    padding-left: 14px;
+  }
+/deep/.importdialog{
+    right: 3%;
+    position: absolute;
+    top: 5%;
+  .el-dialog__header{
+     height: 53px;
+     line-height: 18px;
+    background: #2770D4;
+     color: white;
+     .el-dialog__title{
+        color: white; 
+     }
+    .el-dialog__headerbtn .el-dialog__close {
+        color: white;
+      }
+  }
+}
+
     /deep/ .el-input{
     //   font-size: 14px;
     // display: inline-block;
@@ -871,11 +1100,12 @@
     /deep/.el-tree{
         background: none!important;
         // color: white;
-        color: #eeeeee;
+        // color: #eeeeee;
+
     }
     .custom-tree-container{
         // color: white;
-        color: #eeeeee;
+        // color: #eeeeee;
     }
     /deep/.el-tree-node:hover>.el-tree-node__content{
         background: none;
@@ -903,6 +1133,7 @@
     .custom-tree-container /deep/  .tree_filter {
         margin-bottom: 1rem;
         height: 30px;
+        display: flex;
     }
     .custom-tree-container /deep/  .tree-block{
           display: flex;

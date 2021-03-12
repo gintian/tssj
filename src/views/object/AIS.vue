@@ -85,7 +85,7 @@
             <el-form-item label="纬度" prop="lat">
             <el-input v-model="addsForm.lat" />
           </el-form-item>
-          <el-form-item label="运行状态" prop="status">
+          <el-form-item label="运行状态（boole）" prop="status">
               <el-input v-model="addsForm.status" />
             </el-form-item>
       </el-form>
@@ -100,10 +100,10 @@
     </el-dialog> 
 
   <!-- 编辑弹层功能 -->
-     <el-dialog title="编辑雷达" :visible.sync="dialogFormVisible"     width="600px">
+     <el-dialog title="编辑AIS" :visible.sync="dialogFormVisible"     width="600px">
       <el-form ref="updateForm"  :model="temp" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
-          <el-form-item label="名称" prop="name" v-show="false">
+          <el-form-item label="名称" prop="name" >
               <el-input v-model="temp.name" />
             </el-form-item>
             <el-form-item label="编号" prop="station">
@@ -201,6 +201,8 @@ export default {
         status:'',
       },
       Business_exception:null,
+       update:''
+      
     }
   },
   filters:{},
@@ -220,6 +222,7 @@ export default {
         this.temp.status=true
       }else if(val=='正常'){
         this.temp.status=false
+        console.log("this.temp.status",this.temp.status)
       }
     },
     getList(){  //获取数据
@@ -294,12 +297,12 @@ export default {
      //编辑弹层
     handleUpdate(index,row){
      this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
-      if(this.temp.status=true){
-        this.update = "正常"
-      }else if(this.temp.status=false){
-       this.update = "异常"
+     console.log('获取到的',this.temp)
+      if(this.temp.status==true){
+        this.update = "异常"
+      }else if(this.temp.status==false){
+       this.update = "正常"
       }
-    
       this.dialogFormVisible = true; //弹层显示
     },
     // 添加雷达

@@ -17,12 +17,11 @@
       </div>
    </div>
     <div class="container-title">
-        <!-- <h3>全部用户（共{{Business_exception}}条）</h3> -->
             <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="handleAdd()" >
               添加
             </el-button>
           <div class="select_query">
-            <el-input v-model="listQuery.name" placeholder="输入船名/mmsi" style="width: 200px;" class="filter-item" 
+            <el-input v-model=" listQuery.type" placeholder="请输入异常类型1/2" style="width: 200px;" class="filter-item" 
             @input="query()"/>
             <el-button class="filter-item" type="primary" icon="el-icon-search" @click="query()" >
               搜索
@@ -42,8 +41,7 @@
       prop="ship_name"
       label="船名/MMSI"
       >
-      <!-- fixed:值有（true,left,right）列是否固定在左侧或者右侧，true 表示固定在左侧 -->
-      <!-- column 的 key，如果需要使用 filter-change 事件，则需要此属性标识是哪个 column 的筛选条件 -->
+
     </el-table-column>
     <el-table-column prop="type" label="分类" align="center" >
      <!-- align:	对齐方式,	值有left/center/right	默认left -->
@@ -67,17 +65,17 @@
       prop="end_time" 
       label="结束时间" >
     </el-table-column> -->
-    <el-table-column label="查看轨迹" >
+    <!-- <el-table-column label="查看轨迹" >
       <template slot-scope="scope">
         <el-button
-          type="text" size="small" class="btn-upt" @click="handleUpdate(scope.$index, scope.row)">查看</el-button>
+          type="text" size="small" class="btn-upt" @click="Track(scope.row)">查看</el-button>
       </template>
-    </el-table-column>
+    </el-table-column> -->
 
     <el-table-column label="查看地图" >
       <template slot-scope="scope">
         <el-button
-          type="text" size="small" class="btn-upt" @click="handleUpdate(scope.$index, scope.row)">查看</el-button>
+          type="text" size="small" class="btn-upt" @click="handleClickView(scope.row)">查看</el-button>
       </template>
     </el-table-column>
 
@@ -88,37 +86,52 @@
               placement="bottom"
               width="200"
               trigger="click" 
-               v-model="visible">
+              v-model="visible">
               <span>{{scope.row.reason}}</span>
         </el-popover>
         </template>
     </el-table-column>
   </el-table>
 
+<!-- 查看地图弹窗 -->
+<el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
+      <table-map :mapData="mapData"  markerType="point" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></table-map>
+</el-dialog>
   
-
+<!-- 查看地图弹窗 -->
+<!-- <el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
+      <table-map :mapData1="mapData1"  markerType="point" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></table-map>
+</el-dialog> -->
+  
  <!-- 新增弹层功能 -->
      <el-dialog title="添加可疑事件" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
       <el-form ref="updateForm"  :model="addsForm" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
-          <el-form-item label="ID" prop="id"  >
+             <!-- <el-form-item label="ID" prop="id"  >
               <el-input v-model="addsForm.id" />
-            </el-form-item>
-            <el-form-item label="船名/MMSI" prop="mmsi">
+            </el-form-item> -->
+            <el-form-item label="船舶标识符" prop="mmsi">
               <el-input v-model="addsForm.mmsi" />
             </el-form-item>
-          <el-form-item label="分类" prop="ship_type">
+             <el-form-item label="船舶名称" prop="ship_name">
+            <el-input v-model="addsForm.ship_name" />
+          </el-form-item>
+          <el-form-item label="船舶类型" prop="ship_type">
               <el-input v-model="addsForm.ship_type" />
             </el-form-item>
-            <el-form-item label="异常原因" prop="reason">
+            <el-form-item label="异常时经度" prop="lon">
+              <el-input v-model="addsForm.lon" />
+            </el-form-item>
+            <el-form-item label="异常时纬度" prop="lat">
+              <el-input v-model="addsForm.lat" />
+            </el-form-item>
+          <el-form-item label="异常原因" prop="reason">
             <el-input v-model.number="addsForm.reason" />
           </el-form-item>
           <el-form-item label="时间" prop="creat_time">
             <el-date-picker type="datetime" v-model="addsForm.creat_time" />
           </el-form-item>
-           <!-- <el-form-item label="结束时间" prop="creat_time">
-            <el-date-picker type="datetime" v-model="addsForm.creat_time" />
-          </el-form-item> -->
+          
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible1 = false">
@@ -145,10 +158,20 @@
 </template>
 
 <script>
+import TableMap from '../../../src/components/TableMap'
 export default {
   name: 'ComplexTable',
+  components:{'table-map':TableMap},
   data() {
     return { 
+       dialog: {
+          visible: false,
+          title: '',
+          showBtn:true,
+          showMap:false,
+          disabled:false
+        }, 
+        mapData:[],
       visible:false,
       tableData: [], //表格展示的数据
       pages:1, //总页数
@@ -158,12 +181,13 @@ export default {
       listQuery:{
         pageNumber:1, //当前页面
         pageSize:10, //条数
-        name:''  ,//查询条件
+        ship_name:''  ,//查询条件
         beginTime:'', //开始事件
         type:'' //异常类型
       },
+      ship_name:"",
        addsForm:{   //新增数据
-        id:'',
+        // id:'',
         creat_time:'',
         lat:'',
         lon:'',
@@ -185,9 +209,24 @@ export default {
     this.statistical();
     },
   methods: {
-    query(){ //按名称查询
-      this.getList();
-    },
+    // Track(row) {
+    //     console.log('查看轨迹')
+    //     this.dialog.showMap = true
+    //     if (row.waters) {
+    //       row = { ...row, ...row.waters }
+    //     }
+    //     this.mapData1 = [row]
+    //   },
+
+     handleClickView(row) {
+        console.log('查看地图')
+        this.dialog.showMap = true
+        if (row.waters) {
+          row = { ...row, ...row.waters }
+        }
+        this.mapData = [row]
+      },
+  
      // 修改table header的背景色
         tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
           if (rowIndex === 0) {
@@ -202,6 +241,9 @@ export default {
            this.twoType=res.twoType
          })
        },
+       query(){ //按名称查询
+            this.getList();
+          },
        getList(){  //获取数据
         this.service.get( '/criminal/page', {
           params:{
@@ -212,6 +254,7 @@ export default {
           } }).then(req => {
           console.log("可疑事件的数据",req)
           this.tableData = req.page.list
+          this.rows=req.page.totalRow
         })      
     },
     
@@ -221,8 +264,8 @@ export default {
       this.getList();
     },
     //当前页变化
-    handleCurrentChange(val=this.listQuery.pageNo){
-      this.listQuery.pageNo = val;
+    handleCurrentChange(val=this.listQuery.pageNumber){
+      this.listQuery.pageNumber = val;
       this.getList();
     },
      //详情弹层

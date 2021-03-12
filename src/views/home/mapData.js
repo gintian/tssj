@@ -7,23 +7,60 @@ const ship={
   isNormalShip:true,
   isAbnormalShip:true,
   shipMin5:true,//五分钟以内
-  shipMin530:true,//五分钟到三十分钟
-  shipMin30:true,//三十分钟以上
+  shipMin10 : true,//五分钟到十分钟
+  shipMin15 :true,//十分钟到十五分钟
+  shipMin20 :true,//十五分钟到二十分钟
+  shipMin24 :true,//二十分钟到二十四分钟
+  bulkShip : true , //散货船
+  containerShip : true  ,//集装箱船
+  tanker : true , //油轮
+  tug : true,//拖轮
+  fishingBoat : true,//渔船
+  passengerShip : true,//客船
+
   shipRadar:true,//雷达目标
   shipAis:true,//Ais目标
   shipFusion:true,//融合目标
+
+  myMovingMarker:'',//轨迹线
+
+  wharf : true, //码头
+  peer : true, //锚地
+  ais : true, //ais
+  radar : true,//雷达
 }
 //关于各种信息框开关的所有的变量
 const button={
   showPointCollectionImg:false,//控制海量点图片显隐
-  showSelectMarker:false,//控制图层功能显隐
+  showSelectMarker:false,//控制筛船功能显隐
+
+  showimportexcel:false,//控制导入离线船只功能显隐
+  showlayerSelect:false,  //控制图层筛选功能显隐
+  showObjectSelect:false,  //控制目标筛选功能显隐
+
   showShipCount:false, //九宫格密度是否展示
   showShipAreaCount:false, //统计是否展示
   shipCountData:[],
   shipAreaCountData:{},
   focusButton:false,
   areaCountOverlay:undefined,
+  showShipStatistics:false,   //控制左侧国家列表功能显隐
+  showMapSign:false,    //控制图例功能显隐
+  shipStatistics:[],
 
+  // 高级搜索的5个筛选类型
+  searchdialog:false,    // 高级搜索按钮弹窗
+  objectname:'',//目标名称
+  objectmmsi:'',//目标编号
+  shipflag:''  , oshipType:'',//目标类型
+  objectArea:'', type:'', //目标区域
+
+  // 高级搜索的5个筛选类型弹窗
+  dialogVisible1:false, namelist:'', //目标名称
+  dialogVisible2:false, mmsilist:'', //目标编号
+  dialogVisible3:false,   typelist:'',//目标类型
+  dialogVisible4:false,  beginTime:'', endTime:'', timelist:'',//目标时间
+  dialogVisible5:false,  arealist:'', //目标区域
 
   videoWidth:'400px',//摄像头视频宽度
   isEnlargeVideo:true,//是否允许放大缩小摄像头
@@ -116,7 +153,7 @@ const station={
 // 功能菜单按钮
 const menu={
   dropdownTitleData: [ //下拉框 视图渲染 数据
-    { id: 1, icon:['fas', 'fan'], title: '态势' },
+    { id: 1, icon:['fas', 'bullseye'], title: '目标' },
     // {
     //   id: 0, icon: ['fas','crosshairs'], title: '目标',
     //   // dropdownInfoData: [
@@ -146,10 +183,14 @@ const menu={
     //   // ]
     // },
     { id: 2, icon: ['fas','ruler-combined'], title: '测距' },
-    { id: 3, icon: ['far','object-ungroup'], title: '海域' },
+    { id: 3, icon: ['far','object-group'], title: '区域' },
     { id: 4, icon:[ 'fas','print'], title: '打印' },
-    { id: 5, icon: ['fas','redo'], title: '复位' },
-    { id: 8, icon: ['fas','layer-group'], title: '图层' ,
+    { id: 5, icon: ['fas','sync'], title: '复位' },
+    
+   
+    { id: 6, icon: ['fas','layer-group'], title: '图层'} ,
+    { id: 7, icon: ['fas','filter'], title: '筛船' },
+    { id: 8, icon: ['fas','download'], title: '导入' },
       // dropdownInfoData: [
       //   // { id: 0, icon: 'home', name: '资源站' ,ishttpGET:true},
       //   { id: 1, icon: 'anchor', name: '码头' ,is:true},
@@ -158,13 +199,16 @@ const menu={
       //   { id: 4, icon: 'gopuram', name: '铁塔' , ishttpGET:true},
       //   { id: 5, icon: 'ruler-horizontal', name: '海底光缆' ,is:true}
       // ]
-    },
-    { id: 6, icon: ['far','star'], title: '关注' },
-    { id: 7, icon: ['fas','vector-square'], title: '统计' },
-    { id: 8, icon: [ 'fas','th'], title: '密度' },
+    
+    // { id: 6, icon: ['far','star'], title: '关注' },
+    // { id: 7, icon: ['fas','vector-square'], title: '统计' },
+    // { id: 8, icon: [ 'fas','th'], title: '密度' },
   ],
   measureRuler:null, //测距实例
   clickedMarker:{},//图层功能当前点击的覆盖物
+
+   ruler1:null,//测距的方位实例1
+   ruler2:null,
 }
 
 const socket={
@@ -187,6 +231,14 @@ const area={
     positions: [],
     groupId: ''
   },
+  // drawData:{
+  //   level: '',
+  //   name: '',
+  //   type: '',
+  //   lat: '',
+  //   lon: '',
+  //   radius: ''
+  // },
   disabledDraw:true,
   showGroupView: false,//是否展示绘制分组界面
   showAddGroup: false,//是否展示添加分组界面
@@ -195,7 +247,7 @@ const area={
   currentDraw: {},//当前绘制的图形
   currentDrawLabel: {},//当前绘制的图形的文字信息
   areaData: [],
-  areaLength: 0,
+  areaLength: 0,  //区域设置显示
   showOrHide: '1',
   watersLevel: [],
   areaTypeStyle: {
@@ -226,6 +278,9 @@ const area={
 
 //关于地图的变量
 const map={
+  shipselect:[ "散货船", "集装箱船", "油轮", "客船", "渔船", "拖轮","其他"],
+  timeselect:[],
+  areaselect:[],
   map: null,
   ciLayer: null,//船舶覆盖物图层
   focusShipLayer: null,//关注船舶图层
@@ -233,7 +288,9 @@ const map={
   mapZoom:10,//当前地图等级
   baseLayer:null,//海图图层
   sateLayer:null,//卫星图图层
+
   drawLayer:null,//手动绘制图层
+  
   animateLayer:null,//轨迹动画图层
   planeLayer:null,//飞机图层
   areaLayer:null,//飞机图层
