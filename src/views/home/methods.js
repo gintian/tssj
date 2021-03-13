@@ -535,93 +535,110 @@ const menu = {
 // 覆盖物
 const marker = {
   // 部门初始化数据
-  loadGroupData() {
-    const map = {
-      1: '海军',
-      2: '陆军海防部队',
-      3: '军分区',
-      4: '海警局',
-      5: '公安局',
-      6: '海事局',
-      7: '海洋与渔业局',
-      8: '军民融合办',
-      9: '海关',
-      10: '边检'
-    }
-    this.service.post('/org/findAll', {}).then(res => {
-      // console.log(res)
-      // this.service.get('/project/orgType').then(res=>{
-      //
-      //   console.log(res)
-      // })
-      res.data.forEach(val => {
-        // console.log(map[val.type])
-        let bd09Arr = wgs84ToBD(val.longitude, val.latitude)
-        let myMarker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets/mapSigns/organization' + val.type + '.png'))
-        (map[val.type])
-        ()
-        this['orgLayer' + val.type].signal = map[val.type]
-        // let x=new L.layer
-        // this['orgLayer'+val.type]=
-        myMarker.addTo(this['orgLayer' + val.type])
-      })
-      // }
-    })
-  },
-  // 被动保障类基础设施初始化数据
+  // loadGroupData() {
+  //   const map = {
+  //     1: '海军',
+  //     2: '陆军海防部队',
+  //     3: '军分区',
+  //     4: '海警局',
+  //     5: '公安局',
+  //     6: '海事局',
+  //     7: '海洋与渔业局',
+  //     8: '军民融合办',
+  //     9: '海关',
+  //     10: '边检'
+  //   }
+    
+  //   this.service.get('/org/allList', {}).then(res => {
+  //     console.log("组织机构",res)
+  //     res.data.forEach(val => {
+  //       // console.log(map[val.type])
+  //       let bd09Arr = wgs84ToBD(val.longitude, val.latitude)
+  //       let myMarker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets/mapSigns/organization' + val.type + '.png'))
+  //       (map[val.type])
+  //       ()
+  //       this['orgLayer' + val.type].signal = map[val.type]
+  //       // let x=new L.layer
+  //       // this['orgLayer'+val.type]=
+  //       myMarker.addTo(this['orgLayer' + val.type])
+  //     })
+  //     // }
+  //   })
+  // },
+  //初始化数据
   loadDefaultMarker() {
     // this.loadSeaLineLayer()
     // let url = [
     //   {
-    //     url:'/anchorage/findAll',
-    //     signal:'锚地',
-    //     name:'anchorage',
+    //     signal:'陆军海防部队',
+    //     name:'port',
     //     click:true,
-    //     http:'post',
-    //     img:'/mapSigns/base8.png'
+    //     img:'/mapSigns/11.png'
     //   },
     //   {
-    //     url: '/port/findAll',
-    //     signal: '港区',
-    //     name: 'port',
+    //     signal: '海军',
+    //     name: 'port1',
     //     click: true,
-    //     http: 'post',
-    //     img: '/mapSigns/base6.png'
+    //     img: '/mapSigns/12.png'
     //   },
     //   {
-    //     url: '/pier/allList',
-    //     signal: '码头泊位',
+    //     signal: '海警局',
     //     click: true,
-    //     name: 'berth',
-    //     http: 'post',
-    //     img: '/mapSigns/02.png'
+    //     name: 'port2',
+    //     img: '/mapSigns/13.png'
     //   },
     //   {
-    //     url: '/apron/findAll',
-    //     signal: '停机坪',
+    //     signal: '军分区',
     //     click: false,
-    //     http: 'get',
-    //     img: '/mapSigns/base1.png'
-    //   }
+    //     name: 'port3',
+    //     img: '/mapSigns/14.png'
+    //   },
+    //   {
+    //     signal: '海事局',
+    //     name: 'port4',
+    //     click: true,
+    //     img: '/mapSigns/15.png'
+    //   },
+    //   {
+    //     signal: '公安局',
+    //     click: true,
+    //     name: 'port5',
+    //     img: '/mapSigns/16.png'
+    //   },
+    //   {
+    //     signal: '军民融合办',
+    //     click: false,
+    //     name: 'port6',
+    //     img: '/mapSigns/17.png'
+    //   },
+    //   {
+    //     signal: '海洋与渔业局',
+    //     click: true,
+    //     name: 'port7',
+    //     img: '/mapSigns/18.png'
+    //   },
+    //   {
+    //     signal: '边检',
+    //     click: false,
+    //     name: 'port8',
+    //     img: '/mapSigns/19.png'
+    //   }   
     // ]
     // for (let i of url) {
-    //   this.service[i.http](i.url, {
-    //     // 'isfocus': this.focusButton
-    //   })
-    //     .then(res => {
+    //   this.service.get('/org/allList').then(res => {
     //       console.log(res,i.url)
     //       for (let e of res.data) {
     //         let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
     //         let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets' + i.img))(i.signal)(() => {
     //         })
-    //         marker.isFocus = false
-
     //         // 是否允许点击
     //         if (i.click) {
     //           marker.addTo(this.markerLayersGroup).on('click', (event) => {
     //             // console.log(event)
-    //             this.service.post('/' + i.name + '/view', {
-    //               id: e.id
+    //             this.service.get('/org/view', {
+    //               params:{
+    //                 id:e.id
+    //               }
     //             }).then(res => {
     //               console.log(res.data)
     //               let a = Object.entries(this.showInfo)
@@ -630,20 +647,343 @@ const marker = {
     //               })
     //               // this.showInfo=new Map(a)
     //               this.showInfo[i.name] = true
-    //               this.dialogInfo[i.name] = res.data.columns
+    //               if (this.hasLayer(this.map, 'name' + e.id).length > 0) {
+    //                           res.name.showed = true
+    //                         } else {
+    //                           res.name.showed = false
+    //                         }
+    //               // this.dialogInfo[i.name] = res.data.columns
     //             })
     //           })
-    //         }
-
-    //         if (e.isFocus) {
-    //           // let marker= this.createMarker(bd09Arr[1],bd09Arr[0],15,15,require('../../assets' +i.img))(i.signal)(()=>{})
-    //           marker.isFocus = true
-    //           // marker.addTo(this.markerLayersGroup)
-    //         } else {
     //         }
     //       }
     //     })
     // }
+    // 陆军海防部队
+    this.service.get('/org/allList').then(res => {
+      // console.log("组织机构",res)
+      for (let e of res.list) {
+        if(e.type==2){
+        let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 20, 20, require('../../assets/mapSigns/11.png'))('军区')
+        ((event) => {
+          //组织机构信息框
+          this.service.get('/org/view', {
+            params:{
+              id:e.id
+            }
+          }).then(res => {
+            // console.log("组织机构选项",res)
+            let a = Object.entries(this.showInfo)
+            // console.log('组织机构',a)
+            a.forEach(e => {
+              this.showInfo[e[0]] = false
+            })
+            this.showInfo.port = true
+            if (this.hasLayer(this.map, 'port' + e.id).length > 0) {
+              res.org.showed = true
+            } else {
+              res.org.showed = false
+            }
+            this.dialogInfo.port = res.org
+            console.log('this.dialogInfo.port',this.dialogInfo.port)
+          })
+        })
+        marker.addTo(this.markerLayersGroup)
+      }
+      }
+    })
+        // 海军
+        this.service.get('/org/allList').then(res => {
+          console.log("组织机构",res)
+          for (let e of res.list) {
+            if(e.type==1){
+            let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+            let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 20, 20, require('../../assets/mapSigns/12.png'))('海军')
+            ((event) => {
+              //组织机构信息框
+              this.service.get('/org/view', {
+                params:{
+                  id:e.id
+                }
+              }).then(res => {
+                // console.log("组织机构选项",res)
+                let a = Object.entries(this.showInfo)
+                // console.log('组织机构',a)
+                a.forEach(e => {
+                  this.showInfo[e[0]] = false
+                })
+                this.showInfo.navy = true
+                if (this.hasLayer(this.map, 'navy' + e.id).length > 0) {
+                  res.org.showed = true
+                } else {
+                  res.org.showed = false
+                }
+                this.dialogInfo.navy = res.org
+                // console.log('this.dialogInfo.berth',this.dialogInfo.berth)
+              })
+            })
+            marker.addTo(this.markerLayersGroup)
+           }
+          }
+        })
+         // 海警局
+         this.service.get('/org/allList').then(res => {
+          // console.log("组织机构",res)
+          for (let e of res.list) {
+            if(e.type==4){
+            let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+            let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 20, 20, require('../../assets/mapSigns/13.png'))('海警局')
+            ((event) => {
+              //组织机构信息框
+              this.service.get('/org/view', {
+                params:{
+                  id:e.id
+                }
+              }).then(res => {
+                // console.log("组织机构选项",res)
+                let a = Object.entries(this.showInfo)
+                // console.log('组织机构',a)
+                a.forEach(e => {
+                  this.showInfo[e[0]] = false
+                })
+                this.showInfo.mary = true
+                if (this.hasLayer(this.map, 'mary' + e.id).length > 0) {
+                  res.org.showed = true
+                } else {
+                  res.org.showed = false
+                }
+                this.dialogInfo.mary = res.org
+              })
+            })
+            marker.addTo(this.markerLayersGroup)
+           }
+          }
+        })
+         // 军分区
+         this.service.get('/org/allList').then(res => {
+          for (let e of res.list) {
+            if(e.type==3){
+            let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+            let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 20, 20, require('../../assets/mapSigns/14.png'))('军分区')
+            ((event) => {
+              //组织机构信息框
+              this.service.get('/org/view', {
+                params:{
+                  id:e.id
+                }
+              }).then(res => {
+                // console.log("组织机构选项",res)
+                let a = Object.entries(this.showInfo)
+                // console.log('组织机构',a)
+                a.forEach(e => {
+                  this.showInfo[e[0]] = false
+                })
+                this.showInfo.milidivi = true
+                if (this.hasLayer(this.map, 'milidivi' + e.id).length > 0) {
+                  res.org.showed = true
+                } else {
+                  res.org.showed = false
+                }
+                this.dialogInfo.milidivi = res.org
+              })
+            })
+            marker.addTo(this.markerLayersGroup)
+           }
+          }
+        })
+              // 海事局
+              this.service.get('/org/allList').then(res => {
+                for (let e of res.list) {
+                  if(e.type==6){
+                  let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+                  let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 20, 20, require('../../assets/mapSigns/15.png'))('海事局')
+                  ((event) => {
+                    //组织机构信息框
+                    this.service.get('/org/view', {
+                      params:{
+                        id:e.id
+                      }
+                    }).then(res => {
+                      // console.log("组织机构选项",res)
+                      let a = Object.entries(this.showInfo)
+                      // console.log('组织机构',a)
+                      a.forEach(e => {
+                        this.showInfo[e[0]] = false
+                      })
+                      this.showInfo.msa = true
+                      if (this.hasLayer(this.map, 'msa' + e.id).length > 0) {
+                        res.org.showed = true
+                      } else {
+                        res.org.showed = false
+                      }
+                      this.dialogInfo.msa = res.org
+                    })
+                  })
+                  marker.addTo(this.markerLayersGroup)
+                 }
+                }
+              })
+           // 公安局
+           this.service.get('/org/allList').then(res => {
+            for (let e of res.list) {
+              if(e.type==5){
+              let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+              let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 20, 20, require('../../assets/mapSigns/16.png'))('公安局')
+              ((event) => {
+                //组织机构信息框
+                this.service.get('/org/view', {
+                  params:{
+                    id:e.id
+                  }
+                }).then(res => {
+                  // console.log("组织机构选项",res)
+                  let a = Object.entries(this.showInfo)
+                  // console.log('组织机构',a)
+                  a.forEach(e => {
+                    this.showInfo[e[0]] = false
+                  })
+                  this.showInfo.psb = true
+                  if (this.hasLayer(this.map, 'psb' + e.id).length > 0) {
+                    res.org.showed = true
+                  } else {
+                    res.org.showed = false
+                  }
+                  this.dialogInfo.psb = res.org
+                })
+              })
+              marker.addTo(this.markerLayersGroup)
+             }
+            }
+          })  
+      // 军民融合办
+      this.service.get('/org/allList').then(res => {
+        for (let e of res.list) {
+          if(e.type==8){
+          let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+          let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 20, 20, require('../../assets/mapSigns/17.png'))('军民融合办')
+          ((event) => {
+            //组织机构信息框
+            this.service.get('/org/view', {
+              params:{
+                id:e.id
+              }
+            }).then(res => {
+              // console.log("组织机构选项",res)
+              let a = Object.entries(this.showInfo)
+              // console.log('组织机构',a)
+              a.forEach(e => {
+                this.showInfo[e[0]] = false
+              })
+              this.showInfo.cmio = true
+              if (this.hasLayer(this.map, 'cmio' + e.id).length > 0) {
+                res.org.showed = true
+              } else {
+                res.org.showed = false
+              }
+              this.dialogInfo.cmio = res.org
+            })
+          })
+          marker.addTo(this.markerLayersGroup)
+         }
+        }
+      })    
+       // 海洋与渔业局
+       this.service.get('/org/allList').then(res => {
+        for (let e of res.list) {
+          if(e.type==7){
+          let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+          let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 20, 20, require('../../assets/mapSigns/18.png'))('海洋与渔业局')
+          ((event) => {
+            //组织机构信息框
+            this.service.get('/org/view', {
+              params:{
+                id:e.id
+              }
+            }).then(res => {
+              // console.log("组织机构选项",res)
+              let a = Object.entries(this.showInfo)
+              // console.log('组织机构',a)
+              a.forEach(e => {
+                this.showInfo[e[0]] = false
+              })
+              this.showInfo.ofa = true
+              if (this.hasLayer(this.map, 'ofa' + e.id).length > 0) {
+                res.org.showed = true
+              } else {
+                res.org.showed = false
+              }
+              this.dialogInfo.ofa = res.org
+            })
+          })
+          marker.addTo(this.markerLayersGroup)
+         }
+        }
+      }) 
+           // 边检
+           this.service.get('/org/allList').then(res => {
+            for (let e of res.list) {
+              if(e.type==10){
+              let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+              let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 20, 20, require('../../assets/mapSigns/19.png'))('边检')
+              ((event) => {
+                //组织机构信息框
+                this.service.get('/org/view', {
+                  params:{
+                    id:e.id
+                  }
+                }).then(res => {
+                  // console.log("组织机构选项",res)
+                  let a = Object.entries(this.showInfo)
+                  // console.log('组织机构',a)
+                  a.forEach(e => {
+                    this.showInfo[e[0]] = false
+                  })
+                  this.showInfo.fi = true
+                  if (this.hasLayer(this.map, 'fi' + e.id).length > 0) {
+                    res.org.showed = true
+                  } else {
+                    res.org.showed = false
+                  }
+                  this.dialogInfo.fi = res.org
+                })
+              })
+              marker.addTo(this.markerLayersGroup)
+             }
+            }
+          }) 
+             // 海关
+             this.service.get('/org/allList').then(res => {
+              for (let e of res.list) {
+                if(e.type==9){
+                let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+                let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 20, 20, require('../../assets/mapSigns/10.png'))('海关')
+                ((event) => {
+                  //组织机构信息框
+                  this.service.get('/org/view', {
+                    params:{
+                      id:e.id
+                    }
+                  }).then(res => {
+                    // console.log("组织机构选项",res)
+                    let a = Object.entries(this.showInfo)
+                    // console.log('组织机构',a)
+                    a.forEach(e => {
+                      this.showInfo[e[0]] = false
+                    })
+                    this.showInfo.customs = true
+                    if (this.hasLayer(this.map, 'customs' + e.id).length > 0) {
+                      res.org.showed = true
+                    } else {
+                      res.org.showed = false
+                    }
+                    this.dialogInfo.customs = res.org
+                  })
+                })
+                marker.addTo(this.markerLayersGroup)
+               }
+              }
+            }) 
         // ais
         this.service.get('/ais/allList', {
           // 'isfocus': this.focusButton
@@ -791,38 +1131,49 @@ const marker = {
             this.service.get('/pier/portShip',{
                  params:{id:e.id}
                  }).then(res=>{
-             console.log("码头统计时间",res)
-             // this.namelist=res.result
+            //  console.log("码头统计时间",res)
+             this.namelist=res.list
+            //  console.log("码头统计时间", this.namelist)
            }) 
-       
         })
-        // marker.isFocus = false
         marker.addTo(this.markerLayersGroup)
-        // if (e.isFocus) {
-        //   marker.isFocus = true
-        // }
       }
     })
-    this.service.get('/org/allList').then(res => {
-      console.log("组织机构",res)
-      for (let i of res.list) {
-        console.log("组织机构选项",i)
-        let p = []
-        // i.points.forEach(e => {
-        //   let bd09Arr = wgs84ToBD(e.lon, e.lat)
-        //   p.push([bd09Arr[1], bd09Arr[0]])
-        // })
-        // let arrow = L.polyline(p, {
-        //   //颜色
-        //   color: 'red'
-        // }).addTo(this.markerLayersGroup)
-      }
-    })
-    //     this.service.get('/org/allList',{
-    //       params:{}
-    //       }).then(res=>{
-    //     console.log("组织机构",res)
-    //   // this.typelist=res.result
+    // 组织机构
+    // this.service.get('/org/allList').then(res => {
+    //   console.log("组织机构",res)
+    //   for (let e of res.list) {
+    //     let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+    //     let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 20, 20, require('../../assets/mapSigns/11.png'))('军区')
+    //     ((event) => {
+    //       //组织机构信息框
+    //       this.service.get('/org/view', {
+    //         params:{
+    //           id:e.id
+    //         }
+    //       }).then(res => {
+    //         // console.log("组织机构选项",res)
+    //         let a = Object.entries(this.showInfo)
+    //         // console.log('组织机构',a)
+    //         a.forEach(e => {
+    //           this.showInfo[e[0]] = false
+    //         })
+    //         this.showInfo.port = true
+    //         if (this.hasLayer(this.map, 'port' + e.id).length > 0) {
+    //           res.port.showed = true
+    //         } else {
+    //           res.port.showed = false
+    //         }
+    //         // this.dialogInfo.port = res.pier
+    //         // console.log('this.dialogInfo.berth',this.dialogInfo.berth)
+    //       })
+    //     })
+    //     // marker.isFocus = false
+    //     marker.addTo(this.markerLayersGroup)
+    //     // if (e.isFocus) {
+    //     //   marker.isFocus = true
+    //     // }
+    //   }
     // })
   },
   //leaflet 折线 没有设置透明度属性 只能删除重新绘制

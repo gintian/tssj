@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <div style="display: grid;grid-template-columns: 88% 12%;background:#2770D4;color: #eee;    padding: 3px;">
-            <div style="padding-left: 10px;">{{titleName}}陆军海防部队信息</div>
+            <div style="padding-left: 10px;">{{titleName}}海事局信息</div>
             <div style="padding:0 4px;text-align: right;">
                 <el-button type="text" @click="remove" style="padding: 0;color: #eee;">X
                 </el-button>
@@ -20,11 +20,6 @@
                 </table>
             </div>
         </div>
-        <div class="down">
-            <!-- <el-button type="primary" @click="focus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-off" v-show="!tabObj.isFocus">关注</el-button>
-            <el-button type="primary" @click="disFocus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-on"  v-show="tabObj.isFocus">取关</el-button> -->
-        </div>
-        
     </div>
 </template>
 <script>

@@ -20,52 +20,50 @@
                 </table>
             </div>
         </div>
-        <div class="down">  
-           <!-- <el-button type="primary" @click="shipDetail" style="margin-left: 10px;margin-top: 5px;"  size="mini" icon="el-icon-warning-outline">船舶信息</el-button> -->
-           <!-- <el-button type="primary" @click="info"  style="margin-left: 0px;margin-top: 5px;"  size="mini" icon="el-icon-view">船舶列表</el-button>         -->
-            <!-- <el-button type="primary" @click="focus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-off" v-show="!tabObj.isFocus">关注</el-button>
-            <el-button type="primary" @click="disFocus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-on"  v-show="tabObj.isFocus">取关</el-button> -->
+        <!-- <div class="down">       </div> -->
+        <div class="satify_time" >
+          <!-- <h4>统计时间：</h4> -->
+                    <el-table
+                            :data="namelist"
+                            border
+                            style="width: 502px;  overflow: auto;height: 300px;">
+                        <el-table-column
+                                v-for="(i,index) in lift"
+                                :key="index"
+                                :prop="i.prop"
+                                :label="i.name"
+                                width="100"
+                        >
+                        </el-table-column>
+                    </el-table>
         </div>
-        <div class="satify_time">
-          <h4>统计时间：</h4>
-          <span>暂无数据</span>
-        </div>
-        <el-dialog
-                :modal="false"
-                title="备注"
-                :visible.sync="dialogVisible"
-                width="30%"
-                :show-close="false"
-        >
-            <el-input
-                    type="textarea"
-                    :rows="2"
-                    placeholder="请输入内容"
-                    v-model="description">
-            </el-input>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="dialogVisible=false">取 消</el-button>
-              <el-button type="primary" @click="subFocus">确 定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 <script>
   import ShipTab from '../ShipTab'
 
   export default {
+    data(){
+       return{
+        //  namelist:[],
+       }
+    },
     components: {
       ShipTab
     },
     props: {
-      tabObj: {
+      tabObj: {  //接受信息框的内容
         type: Object,
         default: {}
       },
       titleName: {
         type: String,
         default: ''
-      }
+      },
+       namelist: {
+        type: Array,
+        default: []
+      },
     },
     computed: {
       rowCount: function() {
@@ -76,7 +74,7 @@
           tabObj(val){
         // this.tabObj=val
         // this.tabObj.showed=false
-        console.log('码头TabObj',val)
+        // console.log('码头TabObj',val)
       }
     },
     mounted() {
@@ -88,6 +86,7 @@
     },
     data() {
       return {
+        
         ordArr: [
           { id: 0, name: '名称', prop: 'name' },
           // { id: 1, name: '所属码头', prop: 'attributionName' },
@@ -105,7 +104,16 @@
           // { id: 13, name: '企业名称', prop: 'orgName' },
           // { id: 14, name: '联系电话', prop: 'telphone' }
         ],
-        //urltypeArr
+         lift: [
+          { id: 1, name: '时间', prop: 'lasttime' ,width:'600px'},
+           { id: 8, name: 'mmsi', prop: 'mmsi' },
+          { id: 2, name: '船名', prop: 'name' },
+          { id: 3, name: 'imo', prop: 'imo' , width:'10px'},
+          { id: 4, name: '呼号', prop: 'callsign' , width:'10px'},
+          { id: 7, name: '类型', prop: 'shipType' },
+          { id: 5, name: '速度', prop: 'sog' , width:'10px'},
+          { id: 6, name: '航向', prop: 'cog', width:'10px' }     
+        ],
         dialogVisible:false,
         description:'',
       }
@@ -115,8 +123,9 @@
       //      this.service.get('/pier/portShip',{
       //           params:{id:this.tabObj.id}
       //           }).then(res=>{
-      //       console.log("码头统计时间",res)
-      //       // this.namelist=res.result
+      //       // console.log("码头统计时间",res)
+      //       this.namelist=res.list
+      //       console.log("码头统计时间", this.namelist)
       //     }) 
       // },
       remove() {
@@ -158,9 +167,11 @@
     }
   }
 </script>
-<style scoped>
+<style scoped  lang="less">
+/deep/.el-table__header{
+  width: 0;
+}
     .main {
-
         display: grid;
         /*grid-template-rows: 12% 70% 17%;*/
         /*height: 210px;*/

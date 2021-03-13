@@ -75,10 +75,8 @@
                                 :key="index"
                                 :prop="i.prop"
                                 :label="i.name"
-                                width="60"
-                        >
+                                width="60"  >
                         </el-table-column>
-
                     </el-table>
                 </div>
                 <div  style="margin-top: 10px">
@@ -102,7 +100,6 @@
                                 width="60"
                         >
                         </el-table-column>
-
                     </el-table>
                 </div>
                 <div  style="margin-top: 10px">

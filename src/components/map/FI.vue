@@ -1,16 +1,16 @@
 <template>
     <div class="main">
         <div style="display: grid;grid-template-columns: 88% 12%;background:#2770D4;color: #eee;    padding: 3px;">
-            <div style="padding-left: 10px;">{{titleName}}陆军海防部队信息</div>
+            <div style="padding-left: 10px;">{{titleName}}边检</div>
             <div style="padding:0 4px;text-align: right;">
                 <el-button type="text" @click="remove" style="padding: 0;color: #eee;">X
                 </el-button>
             </div>
         </div>
-        <div style="overflow: auto;padding: 5px;">
+        <div style="overflow: auto;padding: 22px;">
             <div>
                 <table style="width: 100%;">
-                    <tr v-for="index in rowCount" :key="index">
+                    <tr v-for="index in rowCount" :key="index" style="margin:20px;">
                         <td class="title">{{ordArr[index-1].name}}：</td>
                         <td class="value">{{tabObj[ordArr[index-1].prop]}}</td>
 
@@ -20,11 +20,6 @@
                 </table>
             </div>
         </div>
-        <div class="down">
-            <!-- <el-button type="primary" @click="focus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-off" v-show="!tabObj.isFocus">关注</el-button>
-            <el-button type="primary" @click="disFocus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-on"  v-show="tabObj.isFocus">取关</el-button> -->
-        </div>
-        
     </div>
 </template>
 <script>
@@ -126,7 +121,7 @@
     .main {
 
         display: grid;
-        grid-template-rows: 15% 65% 20%;
+        grid-template-rows: 15% 85%;
         height: 210px;
         width: auto;
         /* background: #305071; */
@@ -134,8 +129,9 @@
     }
 
     .title {
-        text-align: right;
-        /* color: #ffffff; */
+        /* text-align: right; */
+            /* padding: 20px; */
+                width: 57px;
         color: black;
         font-size: 14px;
         font-weight: 400;

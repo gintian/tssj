@@ -421,27 +421,6 @@ actions = () => {
       return {}
     }],
 
-    // [/^true_ais$/, function() {
-    //   // this.ais = true
-    //   this.markerLayersGroup.eachLayer(item=>{
-    //     console.log("item",item)
-    //     if(item.signal===this.clickedMarker.name){
-    //       item.setOpacity(1)
-    //     }   
-    //   return {}
-    // }],
-
-    // [/^true_雷达$/, function() {
-    //   // this.radar = true
-    //   console.log( " this.markerLayersGroup",this.markerLayersGroup)
-    //   this.markerLayersGroup.eachLayer(item=>{
-    //         console.log("item",item)
-    //         if(item.signal===this.clickedMarker.name){
-    //           item.setOpacity(1)
-    //         }
-    //       })
-    //   return {}   
-    // }],
     [/^true_(锚地|码头|ais|雷达)$/, function() {
       // this.peer = true
       console.log( " this.markerLayersGroup",this.markerLayersGroup)
@@ -453,27 +432,6 @@ actions = () => {
       return {}
     }],
   
-    // [/^false_ais$/, function() {
-    //   // this.ais = false
-    //   this.markerLayersGroup.eachLayer(item=>{
-    //     console.log("item",item)
-    //     if(item.signal===this.clickedMarker.name){
-    //       item.setOpacity(0)
-    //     }   
-    //   return {}
-    // }],
-
-    // [/^false_雷达$/, function() {
-    //   // this.radar = false
-    //   this.markerLayersGroup.eachLayer(item=>{
-    //         // console.log(item)
-    //         if(item.signal===this.clickedMarker.name){
-    //           item.setOpacity(0)
-    //           this.markerLayersGroup.removeLayer(this.roadLayer)
-    //         }
-    //       })
-    //   return {}
-    // }],
  
     [/^false_(锚地|码头|ais|雷达)$/, function() {
       // this.wharf = false
@@ -485,42 +443,32 @@ actions = () => {
       return {}
     }],
   
+    [/^false_(海军|陆军海防部队|军分区|海警局|公安局|海事局|海洋与渔业局|军民融合办|海关|边检)/, function() {
+      //  console.log(this.clickedMarker.name,groupMap[this.clickedMarker.name])
+      // console.log(this.departmentLayers.getLayers(),this['orgLayer'+groupMap[this.clickedMarker.name]].getLayers())
+      this.departmentLayers.removeLayer(this['orgLayer' + groupMap[this.clickedMarker.name]])
+      // this.departmentLayers.rem
+      // this.hideOverlay(this.clickItem.name)
+      return {}
+    }],
+    [/^true_(海军|陆军海防部队|军分区|海警局|公安局|海事局|海洋与渔业局|军民融合办|海关|边检)/, function() {
+      // this.showOverlay(this.clickItem.name)
+      // console.log(this.clickedMarker.name)
+      this.departmentLayers.addLayer(this['orgLayer' + groupMap[this.clickedMarker.name]])
+      return {}
+    }],
+    [/^true_海防单位$/, function() {
+      for (let i = 1; i < 11; i++) {
+        // console.log(this['orgLayer'+i])
+        this.departmentLayers.addLayer(this['orgLayer' + i])
+      }
+      return {}
+    }],
+    [/^false_海防单位$/, function() {
+      this.departmentLayers.clearLayers()
+      return {}
+    }],
     
-    // [/^true_海防单位$/, function() {
-    //   for (let i = 1; i < 11; i++) {
-    //     // console.log(this['orgLayer'+i])
-    //     this.departmentLayers.addLayer(this['orgLayer' + i])
-    //   }
-    //   return {}
-    // }],
-    // [/^false_海防单位$/, function() {
-    //   this.departmentLayers.clearLayers()
-    //   return {}
-    // }],
-    // [/^true_被动保障类基础设施$/, function() {
-    //   this.markerLayersGroup.eachLayer(item=>{
-    //     // console.log(item)
-    //     if(item.signal){
-    //       item.setOpacity(1)
-    //     }
-    //   })
-    //   this.markerLayersGroup.addLayer(this.roadLayer)
-    //   this.markerLayersGroup.addLayer(this.seaLineLayer)
-    //   return {}
-    // }],
-    // [/^false_被动保障类基础设施$/, function() {
-    //   this.markerLayersGroup.eachLayer(item=>{
-    //     // console.log(item)
-    //     if(item.signal){
-    //       item.setOpacity(0)
-    //     }else{
-    //       this.markerLayersGroup.removeLayer(this.roadLayer)
-    //     }
-    //   })
-    //   this.markerLayersGroup.removeLayer(this.roadLayer)
-    //   this.markerLayersGroup.removeLayer(this.seaLineLayer)
-    //   return {}
-    // }],
     // [/^true_(停机坪|执勤道路|执勤码头|港区|锚地|码头泊位|海底光缆)/, function() {
 
     //   if(this.clickedMarker.name==='执勤道路') this.markerLayersGroup.addLayer(this.roadLayer)

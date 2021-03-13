@@ -62,6 +62,8 @@ const button={
   dialogVisible4:false,  beginTime:'', endTime:'', timelist:'',//目标时间
   dialogVisible5:false,  arealist:'', //目标区域
 
+  namelist:[], //码头统计时间
+
   videoWidth:'400px',//摄像头视频宽度
   isEnlargeVideo:true,//是否允许放大缩小摄像头
   dialogInfo:{
@@ -77,6 +79,9 @@ const button={
     ship:{},
     shipDetail:{},
     port:{},
+
+    navy:{},//海军
+
     berth:{},
     seaLine:{},
     towerInfo:{},
@@ -96,6 +101,17 @@ const button={
     anchorage:false,//锚地开关
     berth:false, //码头泊位开关
     port:false, //港区开关
+
+    navy:false, //海军开关
+    mary:false,//海警军开关
+    milidivi:false,//军分区开关
+    msa:false,  //海事局开关
+    psb:false,  //公安局开关
+    cmio:false,//军民融合办开关
+    ofa:false, //海洋与渔业局
+    fi:false,//边检开关
+    customs:false,//海关开关
+
     seaLine:false, //海底光缆开关
     station:false, //资源站开关
     radar:false, //雷达开关

@@ -74,7 +74,8 @@
               { img: require('../assets/mapSigns/16.png'), label: '公安局' },
               { img: require('../assets/mapSigns/17.png'), label: '军民融合办' },  
               { img: require('../assets/mapSigns/18.png'), label: '海洋与渔业局' },
-              { img: require('../assets/mapSigns/19.png'), label: '边检' }  
+              { img: require('../assets/mapSigns/19.png'), label: '边检' }  ,
+              { img: require('../assets/mapSigns/10.png'), label: '海关' }  
             ],
           }
           ]

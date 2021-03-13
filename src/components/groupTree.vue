@@ -418,7 +418,7 @@
       },
       areaData(val){
         this.areaData=val
-        console.log('areaData',val)
+        // console.log('areaData',val)
       },
       areaLayer(val){
         // console.log(val,"val")

@@ -228,6 +228,7 @@
        <div  id='radarInfoView'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.radar">
            <RadarInfoView
                    :tabObj='dialogInfo.radar'
+                   :namelist='namelist'
                    titleName=''
                    @remove='showInfo.radar=false'
                    @isFocus="infoViewFocus"
@@ -242,16 +243,17 @@
            />
        </div>
        <!-- 码头泊位 信息框 -->
-       <div  id='pierInfoView'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.berth">
+       <div  id='pierInfoView'  style="height: auto;width: 550px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.berth">
            <PierInfoView
                    :tabObj='dialogInfo.berth'
+                   :namelist='namelist'
                    titleName=''
                    @remove='showInfo.berth=false'
                    @isFocus="infoViewFocus"
                    
            />
        </div>
-       <!-- 港区 信息框 -->
+       <!-- 组织机构之陆军海防部队信息框 -->
        <div  id='portInfoView'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.port">
            <PortInfoView
                    :tabObj='dialogInfo.port'
@@ -259,6 +261,78 @@
                    @remove='showInfo.port=false'
                    @isFocus="infoViewFocus"
 
+           />
+       </div>
+         <!-- 海军信息框 -->
+        <div  id='NavyInfoView'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.navy">
+           <NavyInfoView
+                   :tabObj='dialogInfo.navy'
+                   titleName=''
+                   @remove='showInfo.navy=false'
+           />
+       </div>
+         <!-- 海警局信息框 -->
+        <div  id='MarpoInfoView'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.mary">
+           <MarpoInfoView
+                   :tabObj='dialogInfo.mary'
+                   titleName=''
+                   @remove='showInfo.mary=false'
+           />
+       </div>
+      <!-- 军分区信息框 -->
+        <div  id='MilidivisInfoView'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.milidivi">
+           <MilidivisInfoView 
+                   :tabObj='dialogInfo.milidivi'
+                   titleName=''
+                   @remove='showInfo.milidivi=false'
+           />
+       </div>
+        <!-- 海事局信息框 -->
+        <div  id='MSA'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.msa">
+           <MSA 
+                   :tabObj='dialogInfo.msa'
+                   titleName=''
+                   @remove='showInfo.msa=false'
+           />
+       </div>
+     <!-- 海事局信息框 -->
+        <div  id='PSB'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.psb">
+           <PSB 
+                   :tabObj='dialogInfo.psb'
+                   titleName=''
+                   @remove='showInfo.psb=false'
+           />
+       </div>
+        <!-- 军民融合办信息框 -->
+        <div  id='CMIO'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.cmio">
+           <CMIO 
+                   :tabObj='dialogInfo.cmio'
+                   titleName=''
+                   @remove='showInfo.cmio=false'
+           />
+       </div>
+         <!-- 海洋与渔业局信息框 -->
+        <div  id='OFA'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.ofa">
+           <OFA 
+                   :tabObj='dialogInfo.ofa'
+                   titleName=''
+                   @remove='showInfo.ofa=false'
+           />
+       </div>
+          <!-- 边检信息框 -->
+        <div  id='FI'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.fi">
+           <FI 
+                   :tabObj='dialogInfo.fi'
+                   titleName=''
+                   @remove='showInfo.fi=false'
+           />
+       </div>
+          <!-- 海关信息框 -->
+        <div  id='FI'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.customs">
+           <Customs 
+                   :tabObj='dialogInfo.customs'
+                   titleName=''
+                   @remove='showInfo.customs=false'
            />
        </div>
        <!-- 海底光缆 信息框 -->
@@ -460,7 +534,17 @@
   import ShipAreaCount from '../../components/map/ShipAreaCount'
   import AnchInfoView from '../../components/map/AnchInfoView'
   import PierInfoView from '../../components/map/PierInfoView'
-  import PortInfoView from '../../components/map/PortInfoView'
+  import PortInfoView from '../../components/map/PortInfoView'   //陆军
+    import NavyInfoView from '../../components/map/NavyInfoView'  //海军
+    import MarpoInfoView from '../../components/map/MarpoInfoView'  //海警局
+    import MilidivisInfoView  from '../../components/map/MilidivisInfoView '  //军分区
+    import MSA from '../../components/map/MSA'  //海事局
+    import PSB from '../../components/map/PSB'  //公安局
+    import CMIO from '../../components/map/CMIO' //军民融合办
+    import OFA from '../../components/map/OFA' //海洋与渔业局
+    import FI from '../../components/map/FI' //边检
+    import Customs from '../../components/map/Customs' //海关
+
   import SeaLineInfoView from '../../components/map/SeaLineInfoView'
   import StationInfoView from '../../components/map/StationInfoView'
   import RadarInfoView from '../../components/map/RadarInfoView'
@@ -484,7 +568,8 @@
     name: 'Map',
     components: {
       Dropdown, ButtonGroup,MapControl,SelectMarker,ObjectSelect,layerSelect,ShipCount,ShipAreaCount,AnchInfoView,PierInfoView,PortInfoView,SeaLineInfoView,StationInfoView,RadarInfoView,RadarDataTabView,
-      AisInfoView,AisDataTabView,VideoView,LeftDrawer,DailyEventDiag,importExcel,ShipInfoView,Statistics,ShipDetailView,ShipHistory,FocusDialog,groupTree,
+      AisInfoView,AisDataTabView,VideoView,LeftDrawer,DailyEventDiag,importExcel,ShipInfoView,Statistics,ShipDetailView,ShipHistory,FocusDialog,groupTree,NavyInfoView,MarpoInfoView,MilidivisInfoView,
+      MSA,PSB,CMIO,OFA,FI,Customs,
       'map-signs': MapSigns,
       'country-signs':CountrySigns 
     },
@@ -512,7 +597,7 @@
       this.initWebSocket()
       this.map.setView([30.37892927824675,122.19491755725795], 10);
       console.log("user",this.$store.getters.user.data)
-      this.loadGroupData()
+      this.loadGroupData()   //重点目标
 //       L.circle([31.421995400095337,122.84572901429688], { radius: 30000, color: 'red', fillColor: '#f03', fillOpacity: 1 }).addTo(this.map);
       this.stationLayerGroup= new L.FeatureGroup().addTo(this.map);
       this.leftDrawerShipTypeLayer= new L.FeatureGroup().addTo(this.map);
@@ -715,7 +800,7 @@
           this.service.post('/ship/statistical',{
             ...d
           }).then(res=>{
-            console.log("船舶统计",res)
+            // console.log("船舶统计",res)
             this.shipStatistics=res.list
           }) 
        }, 
@@ -764,7 +849,7 @@
             'swLon': swne['swLon'],
             'neLon': swne['neLon']
           }).then(res => {
-            console.log(res,'addShipPointCollection')
+            // console.log(res,'addShipPointCollection')
             this.pointCollectionImg = res.data
             this.showPointCollectionImg=true
             this.map.dragging.enable();
