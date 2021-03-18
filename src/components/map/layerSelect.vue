@@ -1,12 +1,13 @@
 <template>
     <div id="selectShipDom">
         <div class="title">
+            <h4>图层筛选</h4>
             <i class="el-icon-close" @click="$emit('hide')"></i>
         </div>
         <div class="content" >     
                     <div class="signChildContent" v-for="(item,index) in  mapSigns" :key="index" >
                         <input  type="checkbox"  checked @click="selectAll(item)">
-                         <img :src='item.img' alt=""  width="15px" height="22px">
+                         <img :src='item.img' alt=""  width="15px" height="23px" >
                          <p   >{{item.name}}</p>
                     </div>
                     <!-- @click="selectClick(item,index)" -->
@@ -86,20 +87,33 @@
         width: 100%;
         height: 46px;
         background: #2770D4;
+         display: grid;
+        grid-template-columns: 85% 15%;
+          h4{
+            color: white;
+            font-weight: 100;
+            font-weight: normal;
+            height: 40px;
+            font-size: 14px;
+            line-height: 46px;
+            padding-left: 10px;
+            display: inline;
+        }
         i{
             color: white;
             cursor: pointer;
             font-size: 20px;
             line-height: 46px;
-            float: right;
-            margin-right: 10px;
+            // float: right;
+            // margin-right: 10px;
         }
     }
    .signChildContent {
     display: grid;
     grid-template-columns: 20% 25% 55%;
     margin: 17px 16px;
-    align-items: center;
+    // align-items: center;
+        place-items: center;  //使子元素水平垂直都居中
     }
 }
 </style>

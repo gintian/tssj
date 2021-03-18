@@ -29,6 +29,7 @@ service.interceptors.request.use(
       // config.data={param:config.data}
       // config.data.param= config.params.data
       // config.params = ''
+      
     }
     
     // console.log(config)
@@ -50,15 +51,15 @@ service.interceptors.response.use(
     //   store.commit('setJToken',response.headers['jwtToken'])
     // }
     if (data.error !== 0) {
-      console.log(data)
+      console.log('data',data)
       // if(status===500) 处理token过期等
-      Vue.prototype.$message({ message: data.message, type: 'error' });
+
+      Vue.prototype.$message({ message: data.msg, type: 'error' });
       Promise.reject(data.msg);
       return data
 
     } else {
-      // console.log(response);
-
+      // console.log(response)
       return data
     }
   },

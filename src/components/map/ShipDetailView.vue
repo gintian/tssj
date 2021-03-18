@@ -7,19 +7,20 @@
                 </el-button>
             </div>
         </div>
-        <div style="overflow: auto;padding: 5px;max-height: 400px;">
-            <!-- <div v-if="Object.keys(shipTabObj).length<2" style="height: 150px;display: grid;place-items: center">暂无
-            </div> -->
-            <div >
-                <div>
+        <div style="overflow: scroll;padding: 5px;max-height: 400px;">
+            <div v-if="Object.keys(shipTabObj).length<2" style="height: 150px;display: grid;place-items: center">暂无
+            </div>
+            <div v-else>
+                <div v-if="shipTabObj.archivesShip">
                     <p>基本信息</p>
                     <ul style=" list-style-type:none;overflow: hidden">
-                        <li v-for="i in ship"  :key="i.id"><span>{{i.name}}:</span>{{shipTabObj[i.prop]}}
+                        <li v-for="i in ship"  :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesShip[i.prop.charAt(0).toLowerCase()
+                            + i.prop.slice(1)]}}
                         </li>
                     </ul>
                 </div>
-
-              <div style="margin-top: 10px">
+                <div v-if="shipTabObj.archivesEngineList&&shipTabObj.archivesCommunicationList.length>0"
+                     style="margin-top: 10px">
                     <p>通讯信息</p>
                     <el-table
                             :data="shipTabObj.archivesCommunicationList"
@@ -28,7 +29,7 @@
                         <el-table-column
                                 v-for="(i,index) in communication"
                                 :key="index"
-                                :prop="i.prop"
+                                :prop="i.prop.charAt(0).toLowerCase() + i.prop.slice(1)"
                                 :label="i.name"
                                 width="60"
                         >
@@ -36,35 +37,40 @@
 
                     </el-table>
                 </div>
-                <div  style="margin-top: 10px">
+                <div v-if="shipTabObj.archivesConsumption" style="margin-top: 10px">
                     <p>消耗信息</p>
                     <ul style=" list-style-type:none;overflow: hidden">
-                        <li v-for="i in consumption" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj[i.prop]}}
+                        <li v-for="i in consumption" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesConsumption[i.prop.charAt(0).toLowerCase()
+                            + i.prop.slice(1)]}}
                         </li>
                     </ul>
                 </div>
-                <div  style="margin-top: 10px">
+                <div v-if="shipTabObj.archivesCrew" style="margin-top: 10px">
                     <p>船员与乘客</p>
                     <ul style=" list-style-type:none;overflow: hidden">
-                        <li v-for="i in crew" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj[i.prop]}}
+                        <li v-for="i in crew" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesCrew[i.prop.charAt(0).toLowerCase()
+                            + i.prop.slice(1)]}}
                         </li>
                     </ul>
                 </div>
-                <div  style="margin-top: 10px">
+                <div v-if="shipTabObj.archivesDimension" style="margin-top: 10px">
                     <p>船舶尺寸</p>
                     <ul style=" list-style-type:none;overflow: hidden">
-                        <li v-for="i in dimension" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj[i.prop]}}
+                        <li v-for="i in dimension" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesDimension[i.prop.charAt(0).toLowerCase()
+                            + i.prop.slice(1)]}}
                         </li>
                     </ul>
                 </div>
-                <div  style="margin-top: 10px">
+                <div v-if="shipTabObj.archivesDry" style="margin-top: 10px">
                     <p>干货信息</p>
                     <ul style=" list-style-type:none;overflow: hidden">
-                        <li v-for="i in dry" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj[i.prop]}}
+                        <li v-for="i in dry" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesDry[i.prop.charAt(0).toLowerCase()
+                            + i.prop.slice(1)]}}
                         </li>
                     </ul>
                 </div>
-                <div  style="margin-top: 10px">
+                <div v-if="shipTabObj.archivesEngineList&&shipTabObj.archivesEngineList.length>0"
+                     style="margin-top: 10px">
                     <p>船舶引擎</p>
                     <el-table
                             :data="shipTabObj.archivesEngineList"
@@ -73,20 +79,23 @@
                         <el-table-column
                                 v-for="(i,index) in engine"
                                 :key="index"
-                                :prop="i.prop"
+                                :prop="i.prop.charAt(0).toLowerCase() + i.prop.slice(1)"
                                 :label="i.name"
-                                width="60"  >
+                                width="60"
+                        >
                         </el-table-column>
+
                     </el-table>
                 </div>
-                <div  style="margin-top: 10px">
+                <div v-if="shipTabObj.archivesHull" style="margin-top: 10px">
                     <p>船体</p>
                     <ul style=" list-style-type:none;overflow: hidden">
-                        <li v-for="i in hull" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj[i.prop]}}
+                        <li v-for="i in hull" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesHull[i.prop.charAt(0).toLowerCase()
+                            + i.prop.slice(1)]}}
                         </li>
                     </ul>
                 </div>
-                <div  style="margin-top: 10px">
+                <div v-if="shipTabObj.archivesLiftList&&shipTabObj.archivesLiftList.length>0" style="margin-top: 10px">
                     <p>起重设备</p>
                     <el-table
                             :data="shipTabObj.archivesLiftList"
@@ -95,27 +104,30 @@
                         <el-table-column
                                 v-for="(i,index) in lift"
                                 :key="index"
-                                :prop="i.prop"
+                                :prop="i.prop.charAt(0).toLowerCase() + i.prop.slice(1)"
                                 :label="i.name"
                                 width="60"
                         >
                         </el-table-column>
+
                     </el-table>
                 </div>
-                <div  style="margin-top: 10px">
+                <div v-if="shipTabObj.archivesLiquid" style="margin-top: 10px">
                     <p>液货信息</p>
                     <ul style=" list-style-type:none;overflow: hidden">
-                        <li v-for="i in liquid" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj[i.prop]}}
+                        <li v-for="i in liquid" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesLiquid[i.prop.charAt(0).toLowerCase()
+                            + i.prop.slice(1)]}}
                         </li>
                     </ul>
                 </div>
-                <div  style="margin-top: 10px">
+                <div v-if="shipTabObj.archivesMachinery" style="margin-top: 10px">
                     <p>机械设备</p>
                     <ul style=" list-style-type:none;overflow: hidden">
-                        <li v-for="i in machinery" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj[i.prop]}}
+                        <li v-for="i in machinery" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesMachinery[i.prop.charAt(0).toLowerCase()
+                            + i.prop.slice(1)]}}
                         </li>
                     </ul>
-                </div>   
+                </div>
             </div>
         </div>
 
@@ -131,11 +143,38 @@
     },
 
     mounted() {
-      // console.log('shipTabObj',this.shipTabObj)
+      console.log('shipTabObj',this.shipTabObj)
     },
     watch: {
       shipTabObj: function(val) {
-        console.log('数据变化',val)
+
+        console.log('数据变化shipTabObj',val)
+        if(val.archivesShip){
+          val.archivesShip.lAST_UPD_DT=new Date(val.archivesShip.lAST_UPD_DT).toISOString().split('T')[0] + ' ' +  new Date(val.archivesShip.lAST_UPD_DT).toTimeString().split(' ')[0];
+          val.archivesShip.lAST_UPD_DT_LONG=new Date(parseFloat(val.archivesShip.lAST_UPD_DT_LONG+'000')).toISOString().split('T')[0] + ' ' +  new Date(parseFloat(val.archivesShip.lAST_UPD_DT_LONG+'000')).toTimeString().split(' ')[0];
+          for(let i of this.ship){
+            let archivesShip=val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)]
+            // console.log(this.base[i.prop],val.ship[this.base[i.prop]])
+            // this.formShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)]='  —'
+            if(archivesShip===undefined||archivesShip===''||archivesShip==='null'){
+              // console.log(archivesShip,this.base[i.prop],val.ship[this.base[i.prop]])
+              val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)]=val.ship[this.base[i.prop]]
+
+              if(this.base[i.prop]==='null'){
+                // console.log('base1',val.ship[this.base[i.prop]])
+                val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)]=' —'
+              }
+              // console.log(val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)])
+            }
+
+          }
+        }
+        // console.log(val.archivesShip)
+        if(val.archivesCommunicationList){
+          for(let i of val.archivesCommunicationList){
+            i.lAST_UPD_DT=new Date(val.archivesShip.lAST_UPD_DT).toISOString().split('T')[0] + ' ' +  new Date(val.archivesShip.lAST_UPD_DT).toTimeString().split(' ')[0];
+          }
+        }
       }
     },
     updated() {
@@ -143,33 +182,47 @@
     },
     data() {
       return {
+        base:{
+          'IMO':'null',
+          'SHIPTYPE_KEY':'shiptype',
+          'NAME':'name',
+          'TRIMNAME':'null',
+          'LOCALNAME':'null',
+          'EXNAME':'null',
+          'PORTID':'null',
+          'MMSI':'mmsi',
+          'CALLSIGN':'null',
+          'ICECLASS':'null',
+          'COUNTRY_CODE':'null',
+          'BUILT':'null',
+          'DATASOURCE':'status',
+          'REMARK':'null',
+          'SPEED':'speed',
+          'LAST_UPD_DT':'null',
+          'ClassKey':'null',
+          'LAST_UPD_DT_LONG':'null',
+        },
         ship: [
-          { id: 1, name: 'IMO', prop: 'imo' },
-          { id: 2, name: '船舶类型', prop: 'shipType' },
-          { id: 3, name: '船舶名称', prop: 'name' },
-          { id: 4, name: '来源', prop: 'FROM'},
-          { id: 5, name: '船舶呼号', prop: 'callsign' },
-          { id: 6, name: '航迹向', prop: 'cog' },
-          { id: 7, name: '目的地', prop: 'DEST' },
-          { id: 8, name: '目的地代码', prop: 'destcode' },
-          { id: 9, name: '纬度', prop: 'lon' },
-          { id: 10, name: '国籍', prop: 'flag' },
-          { id: 11, name: '更新时间', prop: 'lasttime' },
-          { id: 12, name: '经度', prop: 'lat' },
-          { id: 13, name: '吃水', prop: 'draugh' },
-          { id: 14, name: '监测的ais设备编号', prop: 'station' },
-          { id: 15, name: '尾距', prop: 'trail' },
-          { id: 16, name: '船舶宽度', prop: 'width' },
-          { id: 17, name: '船舶长度', prop: 'length' },
-           { id: 18, name: '转向率', prop: 'rot' },
-          { id: 19, name: '船舶航行状态', prop: 'navistat' },
-           { id: 20, name: '船首向', prop: 'hog' },
-          { id: 21, name: '速度', prop: 'sog' },
-           { id: 22, name: '预计到达时间', prop: 'ata' },
-          { id: 23, name: '标准化预计到达时间', prop: 'eta_std' },
-           { id: 24, name: '左舷距', prop: 'left' },
+          { id: 1, name: 'IMO', prop: 'IMO' },
+          { id: 2, name: '船舶类型', prop: 'SHIPTYPE_KEY' },
+          { id: 4, name: '船舶名称', prop: 'NAME' },
+          { id: 5, name: '简称', prop: 'TRIMNAME' },
+          { id: 6, name: '当地语言', prop: 'LOCALNAME' },
+          { id: 7, name: '船前的名', prop: 'EXNAME' },
+          { id: 8, name: '注册港口', prop: 'PORTID' },
+          { id: 9, name: 'MMSI', prop: 'MMSI' },
+          { id: 10, name: '船舶呼号', prop: 'CALLSIGN' },
+          { id: 11, name: '冰级', prop: 'ICECLASS' },
+          { id: 12, name: '船旗', prop: 'COUNTRY_CODE' },
+          { id: 13, name: '建造完工', prop: 'BUILT' },
+          { id: 14, name: '数据来源', prop: 'DATASOURCE' },
+          { id: 15, name: '备注', prop: 'REMARK' },
+          { id: 16, name: '设计航速', prop: 'SPEED' },
+          { id: 17, name: '更新日期', prop: 'LAST_UPD_DT' },
+          { id: 18, name: '所属船级社', prop: 'ClassKey' },
+          { id: 19, name: '更新时间', prop: 'LAST_UPD_DT_LONG' }
         ],
-         communication: [
+        communication: [
           { id: 1, name: '终端类型', prop: 'TERMINAL_TYPE' },
           { id: 2, name: '船舶类型', prop: 'SHIPTYPE_KEY' },
           { id: 3, name: '号码', prop: 'TERMINAL_NO' },
@@ -210,16 +263,16 @@
           { id: 9, name: '备注', prop: 'REMARK' }
         ],
         dry: [
-          { id: 1, name: '捆包货物容量', prop: 'BALE' },
-          { id: 2, name: '谷物容量', prop: 'GRAIN' },
-          { id: 3, name: '集装箱容量', prop: 'TEU' },
-          { id: 4, name: '仓内轻便梯', prop: 'RAMPSINTERNAL' },
-          { id: 5, name: '货仓数量情况', prop: 'HOLDS' },
-          { id: 6, name: 'DryDes', prop: 'DRYDES' },
-          { id: 7, name: '最大舱盖尺寸', prop: 'HATCHESSIZEMAX' },
-          { id: 8, name: '舱盖情况', prop: 'HATCHES' },
-          { id: 9, name: '冷藏箱TEU', prop: 'REEFER_TEU' },
-          { id: 10, name: '冷藏箱CAPACITY', prop: 'REEFER_CAPACITY' }
+          // { id: 1, name: '捆包货物容量', prop: 'BALE' },
+          // { id: 2, name: '谷物容量', prop: 'GRAIN' },
+          // { id: 3, name: '集装箱容量', prop: 'TEU' },
+          // { id: 4, name: '仓内轻便梯', prop: 'RAMPSINTERNAL' },
+          // { id: 5, name: '货仓数量情况', prop: 'HOLDS' },
+          // { id: 6, name: 'DryDes', prop: 'DRYDES' },
+          // { id: 7, name: '最大舱盖尺寸', prop: 'HATCHESSIZEMAX' },
+          // { id: 8, name: '舱盖情况', prop: 'HATCHES' },
+          // { id: 9, name: '冷藏箱TEU', prop: 'REEFER_TEU' },
+          // { id: 10, name: '冷藏箱CAPACITY', prop: 'REEFER_CAPACITY' }
         ],
         engine: [
           { id: 1, name: '序号', prop: 'SEQNO' },
@@ -283,6 +336,7 @@
           { id: 8, name: '制冷', prop: 'REFRIGERATING' },
           { id: 9, name: 'Other', prop: 'OTHER' }
         ],
+        //urltypeArr
         dialogVisible: false,
         description: '',
         formShip:{},
@@ -297,14 +351,14 @@
 </script>
 <style scoped lang="less">
     .main {
+
         display: grid;
         /*grid-template-rows: 11% 74% 15%;*/
         width: 500px;
         max-width: 600px;
+        // background: #305071;
         background: white;
-        // background: #eeeeee;
         color: black;
-        // opacity: .9;
     }
 
     p {
@@ -324,30 +378,22 @@
     li{
         text-align: left;
     }
-    li span {    
-    margin-right: 20px;
+    li span {
+        /*text-align: left;*/
     }
 
     li:nth-child(2n) {
         /*float: left;*/
-        margin-left: 10%;
+        margin-left: 15%;
     }
     /deep/.cell{
-        color: white;
+        // color: white;
+        color: black;
     }
-
-    /deep/.cell{
-        color: white;
-    }
-    /deep/.el-table--enable-row-hover /deep/.el-table__body tr:hover > td {
-        background-color: transparent !important;
-    }
-
-    .el-table--border::after, .el-table--group::after, .el-table::before{
+    .el-table, .el-table__expanded-cell{
         background: none!important;
     }
-    /deep/.el-table--border, /deep/.el-table--group, /deep/.el-table, /deep/.el-table th,/deep/ .el-table tr{
-        background: transparent;
+    .el-table--border, .el-table--group{
+        border: none;
     }
-    
 </style>

@@ -1,7 +1,7 @@
 // import { addMyMarker, mapComopentFun } from './mapComponentFactory'
 import { wgs84ToBD } from '../../utils/coordinateConvert'
-import { addMyMarker, mapComopentFun } from '../../../../zhhf/src/views/home/mapComponentFactory'
-// import { addRadarDom } from '../../../src/views/home/mapComponentFactory'
+import { addMyMarker, mapComopentFun,addPolygon } from '../../../../zhhf/src/views/home/mapComponentFactory'
+import { addRadarDom } from '../../../src/views/home/mapComponentFactory'
 // import { updateShipMapv, addShipPointCollection } from '../../../src/views/home/copyZfwMapFun'
 let ShipDataImgMap = {
   1:(shipType)=>{
@@ -27,21 +27,23 @@ let ShipDataImgMap = {
   },
  
 }
-let flyDataImg=function(speed) {
+// let flyDataImg=function(speed) {
 
-  if(speed<=120){
-    return 'fly1.svg'
-  }else if(speed<=360){
-    return 'fly2.svg'
-  }else if(speed<=1000){
-    return 'fly3.svg'
-  }else if(speed>1000){
-    return 'fly4.svg'
-  }
+//   if(speed<=120){
+//     return 'fly1.svg'
+//   }else if(speed<=360){
+//     return 'fly2.svg'
+//   }else if(speed<=1000){
+//     return 'fly3.svg'
+//   }else if(speed>1000){
+//     return 'fly4.svg'
+//   }
 
-}
+// }
+
 
 export default {
+  
   async shipData(val) {
     console.log('数据变化',val);// #d61c44 #26B574 handler
     this.ciLayer.clearLayers()
@@ -80,6 +82,8 @@ export default {
       }
     }
 
+
+
     this.ciLayer.addOnClickListener((e,data)=>{
       this.animateLayer.clearLayers()
       let info=data[0].data.signal
@@ -98,134 +102,117 @@ export default {
         this.showInfo.ship = true
         return
       }
-      this.service.get('/ship/view', {
-       params:{
-        mmsi: info.mmsi
-       }
-      }).then(res => {
-        // console.log(res)
-        this.dialogInfo.ship = res.ais
-        this.dialogInfo.ship.targettype = info.targettype
-        this.dialogInfo.ship.targetid = info.targetid
-        this.dialogInfo.ship.radarid = info.radarid
-        // this.dialogInfo.ship.attributionid = info.attributionid
-        // this.dialogInfo.ship.urltype = info.urltype
-        // console.log( this.dialogInfo.ship)
-        if (res.error === 0) {
-          this.showInfo.ship=true
-        }
-
-      })
+      this.ship_detail(info.mmsi)
+      
     })
     this.map.dragging.enable();
     // this.map.scrollWheelZoom.enable();
   },
+  
+  
   socketRadarData(val) {
-    // console.log('socketRadarData',val,this.stationID)
-    // this.removeOverlay('雷达')
+//     // console.log('socketRadarData',val)
+//       this.radarLayer.clearLayers()
+//     let mz=this.map.getZoom()
+//     function marker(e) {
+//       let size=105*Math.pow(2,10-mz)
+//       let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+//       let marker = L.marker([bd09Arr[1], bd09Arr[0]], {
+//         icon: L.divIcon({
+//           className: 'radarMarker',
+//           html: `<div  style="pointer-events: none;">
+//                 <img src=${require('../../assets/radar/back.png')} alt="radar" style="width: 100%;pointer-events: none;">
+//                 <img src=${require('../../assets/radar/spin.png')} alt="asdadad" style="pointer-events: none;position: absolute" id="radarSpin">
+//                  <div style="position: absolute;top: 55%;left: 50%;z-index: 3;border-radius: 50%;display: flex;" ><div style="position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);color: white;cursor: pointer;pointer-events: all;">${e.current_num}</div></div>
+//                 <div  style="display:${e.current_num>0?'block':'none'}">
+//                  <p style="position: absolute;top: calc(0% - 1.5em);left: calc(50% - 2em);z-index: 3;color: #eeeeee;font-size: 0.5em">${((Math.round(e.current_max_distance / 1852) / 5) * 5).toFixed(0)}海里</p>
+//                 <p style="position: absolute;top: calc(8% - 1em);left: calc(50% - 2em);z-index: 3;color: #eeeeee;font-size: 0.5em">${((Math.round(e.current_max_distance / 1852) / 5) * 4).toFixed(0)}海里</p>
+//                 <p style="position: absolute;top: calc(19% - 1em);left: calc(50% - 2em);z-index: 3;color: #eeeeee;font-size: 0.5em">${((Math.round(e.current_max_distance / 1852) / 5) * 3).toFixed(0)}海里</p>
+//                 <p style="position: absolute;top: calc(30% - 1em);left: calc(50% - 1.5em);z-index: 3;color: #eeeeee;font-size: 0.5em">${((Math.round(e.current_max_distance / 1852) / 5) * 2).toFixed(0)}海里</p>
+//                 </div>               
+// `
+//           , iconAnchor: [e.current_max_distance / size / 2, e.current_max_distance / size / 2],
+//           iconSize: [e.current_max_distance / size, e.current_max_distance / size]
+//         })
+//       })
+//       marker.signal = '雷达'
+//       return marker
+//     }
+//     if (this.stationCheck.radar) {
+//       console.log('socketRadarData',val)
+//       for (let i of val) {
+//         console.log('socketRadarData',i)
+//         // console.log(this.stationLayers)
+//         if (i.showed) {
+//           // if(i.attributionId===this.stationID){
+//           //   marker(i).addTo(this.radarLayer);
+//           // }else if(this.stationID===undefined){
+//           //   marker(i).addTo(this.radarLayer);
+//           // }
+//           if(this.focusButton){
+//             this.stationLayers.eachLayer(item=>{
+//               if(item.detail.id===i.attributionId&&item.detail.isFocus===this.focusButton&&this.focusButton){
+//                 marker(i).addTo(this.radarLayer).on('click',  (e) =>{
+//                   this.service.post('/radar/view', {
+//                     id: i.id
+//                   }).then(res => {
+//                     console.log(res)
+//                     let a=Object.entries(this.showInfo)
+//                     a.forEach(e=>{
+//                       this.showInfo[e[0]]=false
+//                     })
+//                     this.dialogInfo.radar = res.data
+//                     this.showInfo.radar=true
+//                   })
+//                 });
+//               }
+//             })
+//           }else{
+//             marker(i).addTo(this.radarLayer).on('click',  (e) =>{
+//               this.service.post('/radar/view', {
+//                 id: i.id
+//               }).then(res => {
+//                 console.log(res)
+//                 let a=Object.entries(this.showInfo)
+//                 a.forEach(e=>{
+//                   this.showInfo[e[0]]=false
+//                 })
+//                 this.dialogInfo.radar = res.data
+//                 this.showInfo.radar=true
+//               })
+//             });
+//           }
 
-      this.radarLayer.clearLayers()
-    let mz=this.map.getZoom()
-    function marker(e) {
-      let size=105*Math.pow(2,10-mz)
-      let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
-      let marker = L.marker([bd09Arr[1], bd09Arr[0]], {
-        icon: L.divIcon({
-          className: 'radarMarker',
-          html: `<div  style="pointer-events: none;">
-                <img src=${require('../../assets/radar/back.png')} alt="radar" style="width: 100%;pointer-events: none;">
-                <img src=${require('../../assets/radar/spin.png')} alt="asdadad" style="pointer-events: none;position: absolute" id="radarSpin">
-                 <div style="position: absolute;top: 55%;left: 50%;z-index: 3;border-radius: 50%;display: flex;" ><div style="position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);color: white;cursor: pointer;pointer-events: all;">${e.current_num}</div></div>
-                <div  style="display:${e.current_num>0?'block':'none'}">
-                 <p style="position: absolute;top: calc(0% - 1.5em);left: calc(50% - 2em);z-index: 3;color: #eeeeee;font-size: 0.5em">${((Math.round(e.current_max_distance / 1852) / 5) * 5).toFixed(0)}海里</p>
-                <p style="position: absolute;top: calc(8% - 1em);left: calc(50% - 2em);z-index: 3;color: #eeeeee;font-size: 0.5em">${((Math.round(e.current_max_distance / 1852) / 5) * 4).toFixed(0)}海里</p>
-                <p style="position: absolute;top: calc(19% - 1em);left: calc(50% - 2em);z-index: 3;color: #eeeeee;font-size: 0.5em">${((Math.round(e.current_max_distance / 1852) / 5) * 3).toFixed(0)}海里</p>
-                <p style="position: absolute;top: calc(30% - 1em);left: calc(50% - 1.5em);z-index: 3;color: #eeeeee;font-size: 0.5em">${((Math.round(e.current_max_distance / 1852) / 5) * 2).toFixed(0)}海里</p>
-                </div>               
-`
-          , iconAnchor: [e.current_max_distance / size / 2, e.current_max_distance / size / 2],
-          iconSize: [e.current_max_distance / size, e.current_max_distance / size]
-        })
-      })
-      marker.signal = '雷达'
-      return marker
-    }
-    if (this.stationCheck.radar) {
-      // console.log('socketRadarData',val)
-      for (let i of val) {
-        // console.log('socketRadarData',i)
-        // console.log(this.stationLayers)
-        if (i.showed) {
-          // if(i.attributionId===this.stationID){
-          //   marker(i).addTo(this.radarLayer);
-          // }else if(this.stationID===undefined){
-          //   marker(i).addTo(this.radarLayer);
-          // }
-          if(this.focusButton){
-            this.stationLayers.eachLayer(item=>{
-              if(item.detail.id===i.attributionId&&item.detail.isFocus===this.focusButton&&this.focusButton){
-                marker(i).addTo(this.radarLayer).on('click',  (e) =>{
-                  this.service.post('/radar/view', {
-                    id: i.id
-                  }).then(res => {
-                    console.log(res)
-                    let a=Object.entries(this.showInfo)
-                    a.forEach(e=>{
-                      this.showInfo[e[0]]=false
-                    })
-                    this.dialogInfo.radar = res.data
-                    this.showInfo.radar=true
-                  })
-                });
-              }
-            })
-          }else{
-            marker(i).addTo(this.radarLayer).on('click',  (e) =>{
-              this.service.post('/radar/view', {
-                id: i.id
-              }).then(res => {
-                console.log(res)
-                let a=Object.entries(this.showInfo)
-                a.forEach(e=>{
-                  this.showInfo[e[0]]=false
-                })
-                this.dialogInfo.radar = res.data
-                this.showInfo.radar=true
-              })
-            });
-          }
+//         }
 
-        }
-
-      }
-    } else {
-      this.radarLayer.clearLayers()
-    }
+//       }
+//     } else {
+//       this.radarLayer.clearLayers()
+//     }
 
   },
   socketEventData(val) {
      console.log('socketEventData',val)
- 
-    const h = this.$createElement
-       this.$notify({
-            title: 'msg',
-          // type: 'success',
-          //  message: h('div', { class: 'message' }, [
-          //       h('div', { class: 'btnList' }, [
-          //         h('span', {on: {click: this.doSomeThing(val)}}, '你导出的数据报表已生成，点击'),
-          //         h(
-          //           'span',
-          //           {
-          //             class: 'later',
-          //             on: {
-          //               click: this.doSomeThing
-          //             }
-          //           },
-          //           '下载文件'
-          //         )
-          //       ])
-          //     ]),
-        });
+    // const h = this.$createElement
+    //    this.$notify({
+    //         title: 'msg',
+    //       type: 'success',
+    //        message: h('div', { class: 'message' }, [
+    //             h('div', { class: 'btnList' }, [
+    //               h('span', {on: {click: this.doSomeThing(val)}}, '你导出的数据报表已生成，点击'),
+    //               h(
+    //                 'span',
+    //                 {
+    //                   class: 'later',
+    //                   on: {
+    //                     click: this.doSomeThing
+    //                   }
+    //                 },
+    //                 '下载文件'
+    //               )
+    //             ])
+    //           ]),
+    //     });
       // },
       //   doSomeThing(e){
       //     // this.map.setView([30.37892927824675,122.19491755725795], 13);
@@ -247,6 +234,31 @@ export default {
     //     )
     //   }
     // }
+  },
+  socketRadarData(val) {
+
+    // if (this.stationCheck.radar) {
+    //   // console.log('socketRadarData',val)
+    //   for (let i of val) {
+    //     console.log('socketRadarData',i)
+    //     if(i.status==false){
+    //       // for(let s of this.stationMarker){
+    //        if(i.id){
+    //          // console.log(i)
+    //          let bd09Arr = wgs84ToBD(parseFloat(i.lon), parseFloat(i.lat))
+    //          setTimeout(() => {
+    //            console.log(this.$refs['radarMain' + i.id][0])
+    //            this.map.addLayer()
+    //          }, 1200)
+    //        }
+    //       // }
+    //     }
+    //   }
+    // } 
+    // else {
+    //   this.removeOverlay('雷达')
+    // }
+
   },
   async socketFlyData(val) {
     // console.log('数据变化',val)

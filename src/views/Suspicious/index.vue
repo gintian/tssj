@@ -21,8 +21,19 @@
               添加
             </el-button>
           <div class="select_query">
-            <el-input v-model=" listQuery.type" placeholder="请输入异常类型1/2" style="width: 200px;" class="filter-item" 
-            @input="query()"/>
+             <!-- 分类 -->
+            <div class="oper-type" style="margin-right: 26px;">
+                <span class="event_nav_msg">分类：</span>
+                    <el-select  v-model="listQuery.type"  class="selectInput"  :popper-append-to-body="false">
+                      <el-option   v-for="item in options"  :value="item.value" :label="item.label"   :key="item.value">
+                        <!-- {{item.type}} -->
+                        <!-- <span v-if="item.type == 0">一类</span>
+                        <span v-if="item.type == 1">二类</span> -->
+                      </el-option>
+                    </el-select>
+            </div>
+            <!-- <el-input v-model="ship_name"  placeholder="请输入船名/MMSI" style="width: 200px;" class="filter-item" 
+            @input="query()"/>       -->
             <el-button class="filter-item" type="primary" icon="el-icon-search" @click="query()" >
               搜索
             </el-button>   
@@ -44,10 +55,9 @@
 
     </el-table-column>
     <el-table-column prop="type" label="分类" align="center" >
-     <!-- align:	对齐方式,	值有left/center/right	默认left -->
      <template slot-scope="scope">
-            <span v-if="scope.row.type == 1">一类</span>
-            <span v-if="scope.row.type == 2">二类</span>
+            <span v-if="scope.row.type == 0">一类</span>
+            <span v-if="scope.row.type == 1">二类</span>
       </template>
     </el-table-column>
     
@@ -79,18 +89,18 @@
       </template>
     </el-table-column>
 
-    <el-table-column label="事件信息" prop="reason" >
+    <!-- <el-table-column label="事件信息" prop="reason" >
       <template slot-scope="scope">
         <el-button  type="text" size="small" class="btn-upt"  @click="visible = !visible">详情</el-button>
         <el-popover
               placement="bottom"
-              width="200"
+              width="1200"
               trigger="click" 
               v-model="visible">
               <span>{{scope.row.reason}}</span>
         </el-popover>
         </template>
-    </el-table-column>
+    </el-table-column> -->
   </el-table>
 
 <!-- 查看地图弹窗 -->
@@ -164,6 +174,13 @@ export default {
   components:{'table-map':TableMap},
   data() {
     return { 
+       options: [{
+        value:'一类',
+        lable:'一类'
+      },{
+        value:'二类',
+        lable:'二类'
+      }],    //分类
        dialog: {
           visible: false,
           title: '',
@@ -200,6 +217,7 @@ export default {
       dialogFormVisible1:false, //新增弹层显示与隐藏
       
       Business_exception:null,
+      listQuery_type:''
     }
   },
   filters:{
@@ -245,16 +263,29 @@ export default {
             this.getList();
           },
        getList(){  //获取数据
+       let type
+        if(this.listQuery.type=='一类'){
+          type=0
+        }else if(this.listQuery.type=='二类'){
+          type=1
+        }
         this.service.get( '/criminal/page', {
           params:{
              pageNumber: this.listQuery.pageNumber,
               pageSize: this.listQuery.pageSize,
-              type: this.listQuery.type,
+              type: type,
               beginTime:this.listQuery.beginTime
           } }).then(req => {
           console.log("可疑事件的数据",req)
           this.tableData = req.page.list
+          for(let i in req.page.list){
+            this.tableData[i].isshow=false
+          }
+          
+          console.log("this.tableData",this.tableData)
           this.rows=req.page.totalRow
+          // this.options= req.page.list
+          this.ship_name=req.page.list
         })      
     },
     
@@ -291,6 +322,10 @@ export default {
 }
 </script>
 <style  lang="less" scoped>
+.select_query{
+  display: flex;
+  justify-content: space-between;
+}
 .el-pagination {
     text-align: center; 
 }
@@ -352,7 +387,7 @@ border: 1px solid #0078FF;
     }
   }
   .el-input__inner {
-    border: 1px solid #a4a4a4;
+    // border: 1px solid #a4a4a4;
 }
   .el-dialog__footer{
     text-align: center;

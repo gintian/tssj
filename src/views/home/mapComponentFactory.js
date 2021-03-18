@@ -36,7 +36,7 @@ export function debounce(fn,wait){
  * type 0 是圆形 、 1 是多边形 、2 是矩形
  */
 export let addPolygon = (waters,style) =>{
- // console.log('waters?',waters);
+//  console.log('addPolygon_waters?',waters);
 
   let obj = {
 

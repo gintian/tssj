@@ -7,7 +7,7 @@
                 </el-button>
             </div>
         </div>
-        <div style="overflow: auto;padding: 5px;">
+        <div style="overflow: auto;">
             <div>
                 <table style="width: 100%;">
                     <tr v-for="index in rowCount" :key="index" style="margin:10px;">
@@ -121,8 +121,8 @@
     .main {
 
         display: grid;
-        grid-template-rows: 15% 85%;
-        height: 210px;
+        grid-template-rows: 20% 80%;
+        height: 150px;
         width: auto;
         /* background: #305071; */
          background: white;
@@ -130,7 +130,7 @@
 
     .title {
         /* text-align: right; */
-            padding: 20px;
+        text-indent: 10px;
         color: black;
         font-size: 14px;
         font-weight: 400;

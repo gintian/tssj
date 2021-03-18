@@ -121,19 +121,21 @@
     .main {
 
         display: grid;
-        grid-template-rows: 15% 65% 20%;
-        height: 210px;
+        grid-template-rows: 28% 72%;
+        height: 110px;
         width: auto;
         /* background: #305071; */
          background: white;
     }
 
     .title {
-        text-align: right;
+        /* text-align: right; */
         /* color: #ffffff; */
         color: black;
         font-size: 14px;
         font-weight: 400;
+        text-indent: 10px;
+        width: 60px;
     }
 
     .value {

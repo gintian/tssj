@@ -1,6 +1,7 @@
 <template>
     <div id="selectShipDom">
         <div class="title">
+           <h4 >目标筛选 </h4>
             <i class="el-icon-close" @click="$emit('hide')"></i>
         </div>
         <div class="content" style="overflow: auto;height: calc(100% - 40px)">
@@ -76,13 +77,25 @@
         width: 100%;
         height: 46px;
         background: #2770D4;
+        display: grid;
+        grid-template-columns: 85% 15%;
+        h4{
+            color: white;
+            font-weight: 100;
+            font-weight: normal;
+            height: 40px;
+            font-size: 14px;
+            line-height: 46px;
+            padding-left: 10px;
+            display: inline;
+        }
         i{
             color: white;
             cursor: pointer;
             font-size: 20px;
             line-height: 46px;
-            float: right;
-            margin-right: 10px;
+            // float: right;
+            // margin-right: 10px;
         }
     }
    .signChildContent {

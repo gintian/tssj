@@ -9,7 +9,7 @@
       </div>
       <!--导航菜单-->
       <el-menu :default-active="$route.path" router :collapse="collapsed" ref="leftNavigation">
-        <template v-for="(issue,index) in $router.options.routes">
+        <template v-for="(issue,index) in $router.options.routes" >
           <template v-if="issue.name === $store.state.leftNavState"><!-- 注意：这里就是leftNavState状态作用之处，当该值与router的根路由的name相等时加载相应菜单组 -->
             <template v-for="(item,index) in issue.children">
               <el-submenu v-if="!item.leaf" :index="index+''" v-show="item.menuShow" :key=''>
@@ -95,18 +95,25 @@
 /deep/ .el-menu-item.is-active:hover{
   background: rgb(12, 2, 2);
   font-size: 22px;
+  text-align: center;
+}
+
+/deep/ aside .el-menu .el-menu-item {
+    text-align: center;
 }
 
 
-
 /deep/ .el-menu-item *{
-  padding: 0 43px;
+  // padding: 0 43px;
   font-size: 20px;
 }
 
 /deep/  .el-menu-item .iconfont      {
     display: block;
     width: 121px;
+}
+/deep/  .el-menu-item span{
+    // padding: 0 43px;
 }
 </style>>
 

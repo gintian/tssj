@@ -72,6 +72,10 @@ export  default {
     let map = {
       'circle': (wgs84ToBD) => {
         console.log('circle',waters)
+
+        // this.showInfo.customArea = true
+        // this.dialogInfo.customArea=waters
+
         let bd09Arr = wgs84ToBD(waters.centerx, waters.centery)
         let circle = L.circle([bd09Arr[1], bd09Arr[0]], {
           //圆半径
@@ -83,6 +87,9 @@ export  default {
       },
       'polygon': (wgs84ToBD) => {
         console.log('polygon',waters)
+
+        // this.showInfo.customArea = true
+        // this.dialogInfo.customArea=waters
         let points = []
         waters.points.forEach(e => {
           let bd09Arr = wgs84ToBD(e.lon, e.lat)
@@ -96,6 +103,10 @@ export  default {
       },
       'rectangle': (wgs84ToBD) => {
         console.log('rectangle',waters)
+        
+        // this.showInfo.customArea = true
+        // this.dialogInfo.customArea=waters
+
         let points = []
         let p1 = wgs84ToBD(waters.lon1, waters.lat1)
         let p2 = wgs84ToBD(waters.lon2, waters.lat2)

@@ -50,7 +50,7 @@
                                   type="text" size="small" class="btn-upt" @click="handleUpdate(scope.row,index)"   v-show="tableData[scope.row.id].show"  >导入</el-button>
                                  
                                 <el-button
-                                  type="text" size="small" class="btn-upt" @click="handleDel(scope.row,item)"  v-show="tableData[scope.row.id].show"  >删除</el-button>
+                                  type="text" size="small" class="btn-upt" @click="handleDel(scope.row)"  v-show="tableData[scope.row.id].show"  >删除</el-button>
 
                                    <h3   v-show="!tableData[scope.row.id].show"   class="btn-upt">√</h3>
                               </template>
@@ -58,18 +58,6 @@
                     </el-table>
                     <el-button  type="primary" size="small" :import='tableData' @click="clickImport()">一键导入</el-button>
               </div>
-        </el-dialog>
-        <!-- 删除弹层功能 -->
-        <el-dialog  :visible.sync="dialogDelVisible"  custom-class="deleteDialog"   width="100px">
-          <p>确定删除？</p>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogDelVisible = false">
-              取消
-            </el-button>
-            <el-button type="primary" @click="delData()">
-              删除
-            </el-button>
-          </div>
         </el-dialog>
        
         <el-tree
@@ -87,8 +75,7 @@
                 :title="areaInfo.label"
                 :visible.sync="areaInfo.dialog"
                 width="15%"
-                :modal='false'
-        >
+                :modal='false'>
             <span>备注：{{areaInfo.description}}</span>
             <span slot="footer" class="dialog-footer"></span>
         </el-dialog>
@@ -99,8 +86,7 @@
                 title="备注"
                 :visible.sync="focusDialog.show"
                 width="30%"
-                :show-close="false"
-        >
+                :show-close="false" >
             <el-input
                     type="textarea"
                     :rows="2"
@@ -117,6 +103,7 @@
 
 <script>
   import mapUtils from '../utils/mapUtils';
+  //  import { addPolygon } from '../views/home/mapComponentFactory.js'
   import { wgs84ToBD } from '../utils/coordinateConvert'
   let id = 1000
   export default {
@@ -325,23 +312,9 @@
         ],
         importTable:'',
         importdata:'',
-        uploadUrl:'/water/pushExcel',
+        uploadUrl:'water/pushExcel',
         showSearch:false,
-      listQuery:{
-        pageNumber:1, //当前页面
-        pageSize:10, //条数
-        name:'' , //查询条件
-        id:''
-      },
-       addsForm:{   //新增数据
-        name:'',
-        lat:'',
-        lon:'',
-        points:'',
-        radius:'',
-        level:'',
-        type:''
-      },
+      
       temp:{  //表单字段
         id:'',
         station:'',
@@ -405,13 +378,6 @@
           // this.filterText=val
         this.$refs.tree.filter(val)
       },
-      handleDel(val){
-        // console.log("val",val)
-        // for(let i in this.tableData){
-        //       this.tableData[i].id=i
-        //       this.tableData[i].show=true
-        //       }
-      },
       groupData(val){
         // console.log('groupData',val)
         this.groupData=val
@@ -426,6 +392,7 @@
       },
      
     },
+   
     mounted() {},
     updated() {
       // console.log(this.groupData)
@@ -442,11 +409,6 @@
             console.log('e',e.target.value);
             // this.msg=this.target.value;
         },
-
-    change(e){
-      // console.log('e',e)
-      // this.$forceUpdate(e)   
-},
     handleUpdate(row,index){
       console.log('handleUpdate',row,index)
       // console.log('this.tableData[row.id]',this.tableData[row.id])
@@ -503,19 +465,18 @@
           }
         } 
       },
-       //删除弹层
-    handleDel(row,item){
-        console.log('row',row)
-        console.log('item',item)
-        //  for(let i in this.tableData){
-        //       this.tableData[i].id=i
-        //       this.tableData[i].show=true
-        //       }
-        // this.$set(this.tableData,show,{...row})
-       this.tableData.splice(row.id, 1);
-       this.$set(this.tableData,index,this.tableData[index])
-       console.log("this.tableData",this.tableData)
-    },
+          //删除弹层
+        handleDel(row){
+            console.log('row',row)
+            // row.show=false
+          //  this.tableData.splice(row.index, 1);
+            this.tableData.splice(row.index, 1);
+            row.show=false
+          
+            //  this.$set(this.tableData,_index,{...row})
+          console.log("this.tableData",this.tableData)
+        },
+
        tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
           if (rowIndex === 0) {
             return 'background-color: #e7f3ff;color: #000;font-weight: 500;'
@@ -672,9 +633,9 @@
         </span>)
       },
       showOrEdit(data) {
-        // console.log('showOrEdit',data)
+        console.log('showOrEdit',data)
         if (data.edit) {
-          // console.log('data.edit',data.edit)
+          console.log('data.edit',data.edit)
           return (
             <input type="text" class="node_labe" value={data.name}
                    on-blur={ev => this.edit_sure(ev, data)}/>

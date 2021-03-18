@@ -14,7 +14,7 @@
                     <td class="title">{{ordArr[index-1].name}}：</td>
                     <td class="value">{{tabObj[ordArr[index-1].prop]}}</td>
 
-                    <td class="title">{{ordArr[rowCount + index -1].name}}：</td>
+                    <td class="title1">{{ordArr[rowCount + index -1].name}}：</td>
                     <td class="value">{{tabObj[ordArr[rowCount + index -1].prop]}}</td>
                     </tr>
                 </table>
@@ -112,10 +112,20 @@ export default {
     background: white;
 }
 .title{
-  text-align: right;
+  /* text-align: right; */
   color: black;
   font-size: 14px;
   font-weight: 400;
+    text-indent: 10px;
+    width: 60px;
+}
+.title1{
+  /* text-align: right; */
+  color: black;
+  font-size: 14px;
+  font-weight: 400;
+    text-indent: 30px;
+    width: 144px;
 }
 .value{
   color: black;
@@ -123,7 +133,7 @@ export default {
   font-weight: 400;
 }
 .down{
-    margin-left: 5%;
+    /* margin-left: 5%; */
     padding: 5px;
 }
 </style>

@@ -121,19 +121,20 @@
     .main {
 
         display: grid;
-        grid-template-rows: 15% 65% 20%;
-        height: 210px;
+         grid-template-rows: 20% 80%;
+        height: 150px;
         width: auto;
         /* background: #305071; */
          background: white;
     }
 
     .title {
-        text-align: right;
-        /* color: #ffffff; */
+        /* text-align: right; */
+       text-indent: 10px;
         color: black;
         font-size: 14px;
         font-weight: 400;
+            width: 56px;
     }
 
     .value {
@@ -146,10 +147,5 @@
     .down {
         padding: 5px;
         padding-left: 15px;
-        /*display: grid;*/
-        /*grid-template-columns: repeat(2,40.5%);*/
-        /* grid-template-rows: 50% 50%;*/
-        /* grid-row-gap: 1%;*/
-        /* grid-column-gap: 1%;*/
     }
 </style>

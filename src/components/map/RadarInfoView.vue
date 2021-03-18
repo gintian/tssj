@@ -141,17 +141,17 @@ export default {
 .main{
 
     display: grid;
-    grid-template-rows: 30%  70%;
+    grid-template-rows: 24% 76%;
     height: auto;
     width: auto;
     background: white;
 }
 .title{
-  text-align: right;
+//   text-align: right;
   color: black;
   font-size: 14px;
   font-weight: 400;
-
+  width: 46px;
 }
 .value{
 //   color: #ffffff;
@@ -228,7 +228,7 @@ p{
             background: #3e6791;
             height: 1.5rem;
             padding-left: 15px;
-            text-align: left ;
+            // text-align: left ;
         }
         .first {
             display: grid;

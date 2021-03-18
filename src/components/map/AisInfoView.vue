@@ -21,19 +21,6 @@
             </div>
         </div>
         <div class="down">
-            <!--<el-button type="primary" @click="info" style="margin-left: 10px;margin-top: 5px;"  size="mini" icon="el-icon-warning-outline">信息</el-button>-->
-            <!-- <el-button type="primary" @click="info"  style="margin-left: 0px;margin-top: 5px;"  size="mini" icon="el-icon-view">船舶列表</el-button> -->
-<!--            <el-button type="primary" @click="focus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-off" v-show="!tabObj.isFocus">关注</el-button>-->
-<!--            <el-button type="primary" @click="disFocus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-on"  v-show="tabObj.isFocus">取关</el-button>-->
-<!--           <div>-->
-<!--               <span style="display: inline-block;padding:0 10px">关注</span>-->
-<!--               <el-switch-->
-<!--                       v-model="tabObj.isFocus"-->
-<!--                       active-color="#13ce66"-->
-<!--                       @change="focus"-->
-<!--               >-->
-<!--               </el-switch>-->
-<!--           </div>-->
         </div>
         <el-dialog
                 :modal="false"
@@ -160,18 +147,19 @@ export default {
 .main{
 
     display: grid;
-    grid-template-rows: 15% 65% 20%;
-    height: 210px;
+   grid-template-rows: 20% 80%;
+        height: 150px;
     width: auto;
     /* background: #305071; */
     background: white;
 }
 .title{
-  text-align: right;
-  /* color: #ffffff; */
+  /* text-align: right; */
+  text-indent: 8px;
   font-size: 14px;
   font-weight: 400;
   color: black;
+  width: 56px;
 }
 .value{
   /* color: #e2e2e2; */

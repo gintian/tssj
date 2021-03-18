@@ -55,7 +55,7 @@
     <el-table-column  prop="enable"  label="是否允许登录"  align="center">
       <template slot-scope="scope">
             <span v-if="scope.row.enable == true" style="color:#34AA44;" @click="allowLogin(scope.row)">是</span>
-            <span v-if="scope.row.enable == false"  style="color:#F85A5A;" >否</span>
+            <span v-if="scope.row.enable == false"  style="color:#F85A5A;" @click="notallowLogin(scope.row)" >否</span>
       </template>
     </el-table-column>
     
@@ -351,7 +351,27 @@ export default {
         });
     }) .catch(() => {
     this.$message.info('已取消操作!');
-  });
+      });
+    },
+
+
+    // 是否允许登录
+    notallowLogin(row){
+      // console.log(row)
+    this.reid=row.id
+    this.$confirm('是否允许登录？', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消', type: 'warning' })
+    .then(() => { 
+      this.service.get('/user/changeEnable?id='+this.reid).then((response) => {
+        // this.$message.success('成功设置为不允许登录' + '!');
+        this.getList()})
+        .catch((response) => {
+          this.$message.error('设置失败!');
+        });
+    }) .catch(() => {
+    this.$message.info('已取消操作!');
+      });
     }
   }
 }

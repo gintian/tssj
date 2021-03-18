@@ -13,7 +13,7 @@
         <el-row v-show="$store.state.topNavState==='home'">
           <el-col :span="24">
             <el-menu :default-active="defaultActiveIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
-              <el-menu-item index="/">首页</el-menu-item>
+              <el-menu-item index="/map">首页</el-menu-item>
               <el-menu-item index="/objectManager">系统管理</el-menu-item>
             </el-menu>
           </el-col>
@@ -21,7 +21,7 @@
         <el-row v-show="$store.state.topNavState==='enterprise'">
           <el-col :span="24">
             <el-menu :default-active="defaultActiveIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
-              <el-menu-item index="/">首页</el-menu-item>
+              <el-menu-item index="/map">首页</el-menu-item>
               <el-menu-item index="/objectManager">目标管理</el-menu-item>
               <el-menu-item index="/Suspicious">可疑事件</el-menu-item>
               <el-menu-item index="/deptManager">用户管理</el-menu-item>
@@ -38,7 +38,9 @@
 
     <!--中间-->
     <transition name="fade" mode="out-in">
-      <router-view></router-view>
+      <!-- <div class="router" > -->
+          <router-view></router-view>
+      <!-- </div> -->
     </transition>
   </el-row>
 </template>
@@ -54,7 +56,6 @@ import '@/assets/iconfont/iconfont.css'
       }
     },
     created() {// 组件创建完后获取数据，
-      // 此时 data 已经被 observed 了
       this.fetchNavData();
     },
     methods: {
@@ -103,7 +104,7 @@ import '@/assets/iconfont/iconfont.css'
       },
       jumpTo(url){
         this.defaultActiveIndex = url;
-        this.$router.push(url); //用go刷新
+        this.$router.push(url); 
       },
       logout(){
         //logout

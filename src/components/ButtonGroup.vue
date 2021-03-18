@@ -2,19 +2,19 @@
   <div class="buttonDiv">
     <div @click="setItemClass(1)" :class="{ item:true , itemClick:isItem1}">
         <div style=" position: relative;" >
-                    <img  src="../assets/bg1.png"/>
+                    <img  src="../assets/mapGroup/seaMap.png"/>
                     <span style="">{{item1Text}}</span>
         </div>
     </div>
     <div @click="setItemClass(2)"  :class="{ item:true , itemClick:isItem2}">
         <div style=" position: relative;" >
-                    <img  src="../assets/bg2.png"/>
+                    <img  src="../assets/mapGroup/sateMap.png"/>
                     <span>{{item2Text}}</span>
         </div>
     </div>
    <div @click="setItemClass(3)" :class="{ item:true , itemClick:isItem3}">
       <div style=" position: relative;" >
-                    <img  src="../assets/bg3.png"/>
+                    <img  src="../assets/mapGroup/dituMap.png"/>
                     <span>{{item3Text}}</span>
         </div>
    </div>

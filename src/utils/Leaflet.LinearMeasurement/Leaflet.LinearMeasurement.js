@@ -170,6 +170,8 @@
       this.latlngsList = [];
       this.sum = 0;
       this.distance = 0;
+      this.angle=0;  //方位角
+      this.eLat=0;    //当前的经纬度
       this.separation = 1;
       this.last = 0;
       this.fixedLast = 0;
@@ -182,8 +184,11 @@
       this.SUB_UNIT_CONV = 1000;
       this.UNIT = 'km';
       this.SUB_UNIT = 'm';
+      this.FAN_UNIT='/';
+      this.ANGLE_UNIT='°';
 
       if(this.options.unitSystem === 'imperial'){
+        console.log('options.unitSystem',this.options.unitSystem)
         this.UNIT_CONV = 1609.344;
         this.SUB_UNIT_CONV = 5280;
         this.UNIT = 'mi';
@@ -191,8 +196,12 @@
       }
 
       this.measure = {
-        scalar: 0,
-        unit: this.SUB_UNIT
+        scalar: 0,  //标量
+        unit: this.SUB_UNIT , //单位
+        f:this.FAN_UNIT, //反斜杠
+        angle: 0 , //方位角
+        eLat:0, //当前的经纬度
+        a:this.ANGLE_UNIT  //方位角的单位
       };
     },
 
@@ -272,6 +281,7 @@
         latlng = latlngs[latlngs.length-1],
         prevLatlng = latlngs[0],
         original = prevLatlng.distanceTo(latlng)/this.UNIT_CONV,
+        // console.log('original',original),
         dis = original;
 
       var p2 = this._map.latLngToContainerPoint(latlng),
@@ -344,9 +354,11 @@
       p_latLng = this._map.containerPointToLatLng(b);
 
       if(label){
+        console.log('label',label)
         var cicon = L.divIcon({
           className: 'total-popup-label ' + nodeCls,
-          html: '<span style="color: '+color+';">'+label+azimut+'</span>'
+          html: '<span style="color: '+color+';">'+label +this.measure.f+this.measure.angle +this.measure.a +'<br/>'
+          +this.measure.eLat+'</span>'
         });
 
         options.icon = cicon;
@@ -422,12 +434,18 @@
 
       return multi;
     },
-
-    formatDistance: function(distance, precision) {
+    // 测绘
+    formatDistance: function(distance, precision,angle,eLat) {
       var s = L.Util.formatNum((distance < 1 ? distance*parseFloat(this.SUB_UNIT_CONV) : distance), precision),
         u = (distance < 1 ? this.SUB_UNIT : this.UNIT);
-
-      return { scalar: s, unit: u };
+        // console.log( '移动的',s,u,angle)
+      return {
+         scalar: s,
+         unit: u ,
+         f:this.FAN_UNIT,
+         angle:angle,
+         eLat:eLat,
+         a:this.ANGLE_UNIT};
     },
 
     hasClass: function(target, classes){
@@ -501,18 +519,46 @@
         var latLng = e.latlng;
 
         this.latlngs = [this.prevLatlng, e.latlng];
+        
+        var  eLat=[e.latlng.lat.toFixed(6) ,e.latlng.lng.toFixed(6)]
+        // console.log(' 当前的经纬度', eLat )
+        // console.log('鼠标移动经纬度：',this.prevLatlng, e.latlng);
 
         if(!this.poly){
           this.poly = this.renderPolyline(this.latlngs, '5 5', this.layer);
         } else {
           this.poly.setLatLngs(this.latlngs);
         }
-
+        // distanceTo()计算当前的两个位置与数据库中的一个位置之间的距离
         /* Distance in miles/meters */
         this.distance = parseFloat(this.prevLatlng.distanceTo(e.latlng))/this.UNIT_CONV;
 
+
+        var  x= this.prevLatlng.lat-e.latlng.lat  
+          //  console.log(' 纬度差',x )
+
+        var  y= e.latlng.lng-this.prevLatlng.lng
+          //  console.log(' 经度差',y )
+
+        var dbsin = y /x;
+          //  console.log('比例',dbsin);
+
+           if (dbsin < 0)  dbsin = dbsin * -1;
+           var dbjiao =Math.atan(dbsin);
+           dbjiao = dbjiao * 180 / 3.141592654;
+
+           if (e.latlng.lng < this.prevLatlng.lng) {
+              dbjiao = 180 - dbjiao;
+           }
+          
+           var theAngle, angle = 0;
+           theAngle = dbjiao;
+           angle = dbjiao;  //方位角计算
+
+          //  console.log('角度',angle.toFixed(1));
+
         /* scalar and unit */
-        this.measure = this.formatDistance(this.distance + this.sum, 2);
+        this.measure = this.formatDistance(this.distance + this.sum, 2,angle.toFixed(1),eLat);
 
         var a = this.prevLatlng ? this._map.latLngToContainerPoint(this.prevLatlng) : null,
           b = this._map.latLngToContainerPoint(latLng);
@@ -593,11 +639,12 @@
 
       var workspace = this.layer,
         label = this.measure.scalar + ' ' + this.measure.unit + ' ',
+        // angle =this.measure.angle +' '+this.measure.a + ' ',
         total_scalar = this.measure.unit === this.SUB_UNIT ? this.measure.scalar/this.UNIT_CONV : this.measure.scalar,
         total_latlng = this.total.getLatLng(),
         total_label = this.total,
         html = [
-          '<div class="total-popup-content" style="background-color:'+this.options.color+'; color: '+this.options.contrastingColor+'">' + label + azimut,
+          '<div class="total-popup-content" style="background-color:'+this.options.color+'; color: '+this.options.contrastingColor+'">' + label  + azimut,
           '  <svg class="close" viewbox="0 0 45 35">',
           '   <path style="stroke: '+this.options.contrastingColor+'" class="close" d="M 10,10 L 30,30 M 30,10 L 10,30" />',
           '  </svg>',
@@ -615,6 +662,7 @@
       };
 
       var fireSelected = function(e){
+        
         if(L.DomUtil.hasClass(e.originalEvent.target, 'close')){
           me.mainLayer.removeLayer(workspace);
         } else {

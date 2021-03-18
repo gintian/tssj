@@ -232,10 +232,11 @@ export default {
     background: white;
 }
 .title{
-  text-align: right;
+  /* text-align: right; */
   color: black;
   font-size: 14px;
   font-weight: 400;
+  text-indent: 9px;
 }
 .value{
   color: black;

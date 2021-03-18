@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <div style="display: grid;grid-template-columns: 88% 12%;background:#2770D4;color: #eee;    padding: 3px;">
-            <div style="padding-left: 10px;">{{titleName}}海洋与渔业局信息</div>
+            <div style="padding-left: 10px;">{{titleName}}自定义区域</div>
             <div style="padding:0 4px;text-align: right;">
                 <el-button type="text" @click="remove" style="padding: 0;color: #eee;">X
                 </el-button>
@@ -13,10 +13,13 @@
                     <tr v-for="index in rowCount" :key="index">
                         <td class="title">{{ordArr[index-1].name}}：</td>
                         <td class="value">{{tabObj[ordArr[index-1].prop]}}</td>
-
                         <td class="title">{{ordArr[rowCount + index -1].name}}：</td>
                         <td class="value">{{tabObj[ordArr[rowCount + index -1].prop]}}</td>
                     </tr>
+                     <tr v-if='ordArr.length%2===1'>
+                        <td class="title">{{ordArr[ordArr.length-1].name}}：</td>
+                        <td class="value">{{tabObj[ordArr[ordArr.length-1].prop]}}</td>
+                    </tr>    
                 </table>
             </div>
         </div>
@@ -37,7 +40,7 @@
       titleName: {
         type: String,
         default: ''
-      }
+      },
     },
     computed: {
       rowCount: function() {
@@ -47,13 +50,13 @@
     watch: {
         tabObj(val){
           // console.log('zzhi',val)
-        this.tabObj=val
-        this.tabObj.showed=false
-        // console.log('组织机构TabObj',val)
+        // this.tabObj=val
+        // this.tabObj.showed=false
+        console.log('自定义区域TabObj',val)
       }
     },
     mounted() {
-      // console.log('组织机构TabObj',this.tabObj)
+      console.log('自定义区域TabObj',this.tabObj)
     },
     updated() {
       // console.log('shipTabObj',this.tabObj)
@@ -61,18 +64,16 @@
     data() {
       return {
         ordArr: [
-          { id: 0, name: '名称', prop: 'name' },
-          // { id: 1, name: '所属区域', prop: 'area' },
-          { id: 2, name: '经度', prop: 'longitude' },
-          { id: 3, name: '纬度', prop: 'latitude' },
+          { id: 2, name: '经度', prop: 'lon' },
+          { id: 3, name: '纬度', prop: 'lat' },
+          // { id: 0, name: '类型', prop: 'type' },
           { id: 4, name: '描述', prop: 'description' },
-          // { id: 5, name: '通信联络', prop: 'communicate' },
-          // { id: 6, name: '航行条件', prop: 'conditions' },
+          { id: 5, name: '区域名称', prop: 'name' },
+          // { id: 6, name: '等级', prop: 'level' },
           // { id: 7, name: '码头设备', prop: 'equipment' },
           // { id: 8, name: '引航方式', prop: 'pilotagWay' },
           // { id: 9, name: '航法', prop: 'sailing' }
         ],
-        //urltypeArr
         dialogVisible: false,
         description: ''
       }
@@ -121,7 +122,7 @@
     .main {
 
         display: grid;
-       grid-template-rows: 20% 45% 35%;
+       grid-template-rows: 20% 80%;
         height: 150px;
         width: auto;
         /* background: #305071; */
@@ -130,7 +131,7 @@
 
     .title {
         /* text-align: right; */
-       text-indent: 10px;
+         text-indent: 10px;
         color: black;
         font-size: 14px;
         font-weight: 400;

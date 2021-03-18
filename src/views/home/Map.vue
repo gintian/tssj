@@ -1,7 +1,36 @@
 <template>
-   <div id="home">
-       <div id="map" ></div>
-       <button @click="asdadsad" style="position: absolute;top: 0%;z-index: 400;right: 8px;width:23px;height:25px;">123</button>
+   <div id="home" style="z-index: 900;">
+       <div id="map"  ref="map">
+           
+       </div>
+       <!--控制条-->
+    <!-- <div class="map-control" v-show="isActual"> -->
+      <!--播放暂停按钮-->
+      <!-- <Icon
+        v-if="!isPlay"
+        class="play-icon"
+        type="ios-play"
+        @click="isPlay=true;navgControl(playIcon)"
+      />
+      <Icon v-else class="play-icon" type="ios-pause" @click="isPlay=false;navgControl('pause')"/> -->
+      <!--已播放时间-->
+      <!-- <span class="passed-time">{{passedTime}}</span> -->
+       <!--进度条-->
+      <!-- <Slider class="map-slider" v-model="sliderVal" :tip-format="hideFormat" :step="0.0001"></Slider> -->
+       <!--倍速-->
+      <!-- <div class="map-times" @mouseenter="isTimesChoose=true" @mouseleave="isTimesChoose=false">
+        <div class="times-show">倍速 {{times}}</div>
+        <div class="choose-box">
+          <ul v-show="isTimesChoose">
+            <li v-for="item in speedList" :key="item.value" :class="{active:times==item.value}" @click="changeSpeed(item.value)">{{item.label}}</li>
+          </ul>
+        </div>
+      </div> -->
+      <!--结束时间-->
+      <!-- <span class="passed-time">{{totalTime}}</span> -->
+    <!-- </div> -->
+         
+       <!-- <button @click="pushMessage" style="position: absolute;top: 0%;z-index: 400;right: 8px;width:23px;height:25px;">123</button> -->
        <!-- 统计图标 -->
             <button  class="signTitle" style="position: absolute;top: 59%;z-index: 400;right: 8px;width:23px;height:25px;" @click="showShipStatistics=!showShipStatistics">   
                        <img src="../../assets/Statistics.png" alt="" >
@@ -11,11 +40,13 @@
                        <img src="../../assets/example.png" alt="" >
              </button> -->
              <!-- 轨迹线回放 -->
-             <div id="myMovingMarker" style=" position: absolute;left:10%; bottom:20%;z-index: 400;">
+             <div  v-if="myMovingMarker"  id="myMovingMarker" style=" position: absolute;left:10%; bottom:20%;z-index: 400;">
                     <el-button type="warning" plain @click="myMovingMarker.start()">开始</el-button>
                     <el-button type="primary" plain  @click="myMovingMarker.pause()">暂停</el-button>
                     <el-button type="success" plain @click="myMovingMarker.stop()">停止</el-button>    
                     <el-button type="danger" plain  @click="myMovingMarker.resume()">重置</el-button>
+                    <!-- <el-button type="primary" plain  @click="backMarker.moveTo([48.8567, 2.3508],1000)">快退</el-button> -->
+                    <!-- <el-button type="success" plain @click="myMovingMarker.stop()">停止</el-button>   -->
              </div>
         <!--    导入离线船只-->
        <div  id="import" style=" position: absolute;right:6%; bottom:35%;z-index: 400;" v-drag  v-show="showimportexcel">
@@ -23,15 +54,13 @@
        </div>
         <!-- 折叠开关国家船舶列表信息显示-->
             <div  id="countrySigns" style="position: absolute;top: 3%;z-index: 400;left: 2%;background: #0075EE;width:37px;height:30px;" >
-                <country-signs ></country-signs>
+                <country-signs  @ship_detail='ship_detail'></country-signs>
             </div>
         <!-- 高级搜索框 -->
          <div class="query-input"  style="position: absolute;top: 3%;z-index: 400; right: 2%;" >
-                <!-- <el-dropdown> -->
                     <el-button type="primary" @click="choosed" >
                             <i class="el-icon-search" style="margin-right:10px;"></i>高级搜索
                     </el-button>
-                <!-- </el-dropdown> -->
                 <div   v-drag >
                  <el-dialog
                         :visible.sync="searchdialog"
@@ -41,7 +70,7 @@
                          <div  >
                               <div class="signChild" >
                                   <button  @click="queryName">目标名称</button>
-                                  <input placeholder="请输入目标名称" asdadadav-model="objectname" >
+                                  <input placeholder="请输入目标名称"  v-model="objectname" >
                               </div>
                               <div class="signChild">
                                   <button  @click="queryNumber">目标编号</button>
@@ -88,7 +117,7 @@
                         :append-to-body="true">
                        <h3>当前所填的目标名称，所对应的船舶有:</h3>
                         <ul class="search-result-list" >    
-                            <li class="open-shipdialog"  v-for="item in namelist"    :key="item.id" >{{item}}</li>
+                            <li class="open-shipdialog"  v-for="item in objectnamelist"    :key="item.id"  @click="ship_detail(item)">{{item}}</li>
                         </ul>
                  </el-dialog>
                  <el-dialog
@@ -98,7 +127,7 @@
                         :append-to-body="true">
                         <h3>当前所填的目标编号，所对应的船舶有:</h3>
                         <ul class="search-result-list" >    
-                            <li class="open-shipdialog"  v-for="item in mmsilist"    :key="item.id" >{{item}}</li>
+                            <li class="open-shipdialog"  v-for="item in mmsilist"    :key="item.id"  @click="ship_detail(item)">{{item}}</li>
                         </ul>
                  </el-dialog>
                  <el-dialog
@@ -112,7 +141,7 @@
                         </p> -->
                          <h3>当前所选的目标类型，所对应的船舶有:</h3>
                         <ul class="search-result-list" >    
-                            <li class="open-shipdialog"  v-for="item in typelist"    :key="item.id" >{{item}}</li>
+                            <li class="open-shipdialog"  v-for="item in typelist"    :key="item.id"  @click="ship_detail(item)">{{item}}</li>
                         </ul>
                  </el-dialog>
                  <el-dialog
@@ -122,7 +151,7 @@
                         :append-to-body="true">
                         <h3>当前时间段内，所对应的船舶:</h3>
                         <ul class="search-result-list" >    
-                            <li class="open-shipdialog"  v-for="item in timelist"    :key="item.id" >{{item}}</li>
+                            <li class="open-shipdialog"  v-for="item in timelist"    :key="item.id"  @click="ship_detail(item)">{{item}}</li>
                         </ul>
                  </el-dialog>
                  <el-dialog
@@ -132,7 +161,7 @@
                         :append-to-body="true">
                         <h3>当前所选的目标区域，返回:</h3>
                         <ul class="search-result-list" >    
-                            <li class="open-shipdialog"  v-for="item in arealist"    :key="item.id" >{{item}}</li>
+                            <li class="open-shipdialog"  v-for="item in arealist"    :key="item.id"  @click="ship_detail(item)">{{item}}</li>
                         </ul>
                  </el-dialog>
          </div>
@@ -143,7 +172,7 @@
        <img :src="pointCollectionImg" alt=""  style="position: fixed;left: 20px;top: 94px;z-index: 400;pointer-events: none;" v-show="showPointCollectionImg">
        <!--     地图类型切换-->
        <div class="ButtonGroupDiv"  style="position: absolute; right: 30px;bottom: 5%;z-index: 400;">
-           <ButtonGroup item1Text='地图' item2Text='卫星图' item3Text='海图' @clickItem='buttonGroupClickItem'/>
+           <ButtonGroup item1Text='海图' item2Text='卫星图' item3Text='地图' @clickItem='buttonGroupClickItem'/>
        </div>
        <!--       地图图例-->
        <div  id="mapSigns" style=" position: absolute;right:8px; bottom:35%;z-index: 400;" v-drag > 
@@ -228,7 +257,6 @@
        <div  id='radarInfoView'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.radar">
            <RadarInfoView
                    :tabObj='dialogInfo.radar'
-                   :namelist='namelist'
                    titleName=''
                    @remove='showInfo.radar=false'
                    @isFocus="infoViewFocus"
@@ -251,6 +279,14 @@
                    @remove='showInfo.berth=false'
                    @isFocus="infoViewFocus"
                    
+           />
+       </div>
+        <!-- 区域信息框 -->
+        <div  id='CustomArea'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag  v-show="showInfo.customArea">
+           <CustomArea 
+                   :tabObj='dialogInfo.customArea'
+                   titleName=''
+                   @remove='showInfo.customArea=false'
            />
        </div>
        <!-- 组织机构之陆军海防部队信息框 -->
@@ -328,7 +364,7 @@
            />
        </div>
           <!-- 海关信息框 -->
-        <div  id='FI'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.customs">
+        <div  id='customs'  style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"   v-drag v-show="showInfo.customs">
            <Customs 
                    :tabObj='dialogInfo.customs'
                    titleName=''
@@ -512,6 +548,7 @@
                </el-form>
            </div>
        </div>
+        
    </div>
 </template>
 
@@ -545,6 +582,8 @@
     import FI from '../../components/map/FI' //边检
     import Customs from '../../components/map/Customs' //海关
 
+  import CustomArea from '../../components/map/CustomArea' //自定义区域
+
   import SeaLineInfoView from '../../components/map/SeaLineInfoView'
   import StationInfoView from '../../components/map/StationInfoView'
   import RadarInfoView from '../../components/map/RadarInfoView'
@@ -564,12 +603,17 @@
   import CountrySigns  from '../../components/CountrySigns .vue'
   import { wgs84ToBD } from '../../utils/coordinateConvert'
   import { formRules } from '../../utils/formRules'
+//   import {
+//     addMyMarker,
+//     addPolygon, customMarker, addStationDom,
+//     mapComopentFun, addRadarDom
+//   } from './mapComponentFactory'
   export default {
     name: 'Map',
     components: {
       Dropdown, ButtonGroup,MapControl,SelectMarker,ObjectSelect,layerSelect,ShipCount,ShipAreaCount,AnchInfoView,PierInfoView,PortInfoView,SeaLineInfoView,StationInfoView,RadarInfoView,RadarDataTabView,
       AisInfoView,AisDataTabView,VideoView,LeftDrawer,DailyEventDiag,importExcel,ShipInfoView,Statistics,ShipDetailView,ShipHistory,FocusDialog,groupTree,NavyInfoView,MarpoInfoView,MilidivisInfoView,
-      MSA,PSB,CMIO,OFA,FI,Customs,
+      MSA,PSB,CMIO,OFA,FI,Customs,CustomArea,
       'map-signs': MapSigns,
       'country-signs':CountrySigns 
     },
@@ -590,9 +634,10 @@
     },
 
     mounted() {
+        //  this.map = this.$utils.map.createMap("map");
       this.objectType()
       this.objectareaData()
-      this.org()
+    //   this.pushMessage()  
       this.mapInit()
       this.initWebSocket()
       this.map.setView([30.37892927824675,122.19491755725795], 10);
@@ -627,57 +672,28 @@
     //   this.loadStationMarker()
       this.loadDefaultMarker()
       this.loadLeftDrawer()
+      this.ShipStatistical() 
       // this.websocketsend2(JSON.stringify({ action: 'fly' ,data:{}}))
       setTimeout(()=>{
          this.websocketsend(JSON.stringify({action:'criminal',data:{uid:this.$store.getters.user.data.user.id}}))
          this.websocketsend(JSON.stringify({action:'focus',data:{uid:this.$store.getters.user.data.user.id}}))
-      },500)    
-       this.ShipStatistical() 
-        
-    },
+          this.websocketsend(JSON.stringify({action:'allRadar',data:{}}))
+      },500) },
     methods: {
-        org(){
-             this.service.get('/org/allList',{
-                params:{}
-                }).then(res=>{
-            // console.log("组织机构",res)
-            // this.typelist=res.result
-          })
-        },
-        doSomeThing(e){
-            // this.map.setView([30.37892927824675,122.19491755725795], 13);
-            // alert(e)
-            
-        },
-        asdadsad(){
-            let a='12313123'
-            const h = this.$createElement
-        this.$notify({
-             title: '异常船只',
-            // duration: 60000,
-            offset: 200,
-           message: h('div', { class: 'message' }, [
-                h('div', { class: 'btnList' }, [
-                  h('span', {on: {click: this.doSomeThing(a)}}, '发现异常船只！'),
-                  h(
-                    'span',
-                    {
-                      class: 'later',
-                      on: {
-                        click: this.doSomeThing
-                      }
-                    },
-                    // '下载文件'
-                  )
-                ])
-              ]),
-        });
-
-        },
+        
+            // this.$nextTick(() => {
+            //     this.$refs["map"].map.invalidateSize(true);
+            // }),
+        // pushMessage(){
+        //      this.service.get('/script/pushMessage',{
+        //         params:{name:name}
+        //         }).then(res=>{
+        //     console.log("发送websocket",res)
+        //   })
+        // },
          choosed(){
             // console.log(item)
-            this.searchdialog=true
-            },
+            this.searchdialog=true},
         objectType(){  
          this.service.get('/ship/shipType',{
               params:{
@@ -708,9 +724,9 @@
            this.service.get('/ship/screeningName',{
                 params:{name:this.objectname}
                 }).then(res=>{
-            // console.log("目标名称筛选",res)
+            console.log("目标名称筛选",res)
             this.dialogVisible1=true
-            this.namelist=res.result
+            this.objectnamelist=res.result
           }) 
         },
         queryNumber(){
@@ -1411,10 +1427,9 @@
         margin-left: 10%;
     }
 
-    .drawItem:last-child {
+    .drawItem:last-child {  
         text-align: center;
-
-        margin-left: -10%;
+        // margin-left: -10%;
 
     }
 

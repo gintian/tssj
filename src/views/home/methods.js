@@ -1,5 +1,10 @@
 import { actions } from './noIf'
 import { wgs84ToBD } from '../../utils/coordinateConvert'
+import {
+  addMyMarker,
+  addPolygon, customMarker, addStationDom,
+  mapComopentFun, addRadarDom
+} from './mapComponentFactory'
 
 const map = {
   // 地图初始化
@@ -20,8 +25,8 @@ const map = {
         bounds: L.bounds([20037508.342789244, 0], [0, 20037508.342789244])
       })
     this.map = L.map('map', {
-      crs: crs,
-      // crs: L.CRS.EPSG3857,
+      // crs: crs,
+      crs: L.CRS.EPSG3857,
       //不添加属性说明控件
       attributionControl: false,
       //显示中心
@@ -39,6 +44,9 @@ const map = {
       // maxBounds: [[-90, -180], [90, 180]],
       // preferCanvas: true
     })
+    // this.map.invalidateSize(true)   // 地图容器大小改变时,地图自适应新容器
+
+    // this.map._onResize();
     let myFilter = [
       'blur:0px',
       'Grayscale: 0%',
@@ -51,44 +59,47 @@ const map = {
       'Saturate:440%',
       'sepia:0%'
     ]
-    //离线地图+天地卫星图+天地海图
-    // this.baseLayer = L.tileLayer('http://218.205.125.142:8001/{z}/{x}/{y}.png').addTo(this.map)//服务器上的离线地图
-    // this.sateLayer =L.tileLayer.chinaProvider(
-    //   'TianDiTu.Satellite.Map',
-    //   {
-    //     key: '5bc35f0a4fce14db0a93e3407ab5c17e',
-    //     maxZoom:18,
-    //     minZoom:5,
-    //   })
+    //离线海图+天地卫星图+天地地图
+    this.baseLayer = L.tileLayer('http://218.205.125.142:8001/{z}/{x}/{y}.png').addTo(this.map)//服务器上的离线海图
 
-      // this.seaLayer =L.tileLayer.chinaProvider(
-    //   'TianDiTu.Normal.Map',
-    //   {
-    //     key: '5bc35f0a4fce14db0a93e3407ab5c17e',
-    //     maxZoom:18,
-    //     minZoom:5,
-    //   })
-    this.baseLayer = L.tileLayer.colorFilter('http://online{s}.map.bdimg.com/tile/?qt=tile&x={x}&y={y}&z={z}&styles=pl&udt=20150518', {
-      maxZoom: 18,
-      minZoom: 3,
-      subdomains: [0, 1, 2],
-      tms: true,
-      filter: myFilter
-    })
-    this.sateLayer = L.tileLayer.chinaProvider('Baidu.Satellite.Map', {
-      maxZoom: 18,
-      minZoom: 3,
-      // subdomains: [0,1,2],
-      tms: true
-    })
+    this.sateLayer =L.tileLayer.chinaProvider(
+      'TianDiTu.Satellite.Map',
+      {
+        // key: '5bc35f0a4fce14db0a93e3407ab5c17e',
+        key:'0edce4abf031ad686066dc2fc90b4b61',
+        maxZoom:18,
+        minZoom:5,
+      })
+
+      this.seaLayer =L.tileLayer.chinaProvider(
+      'TianDiTu.Normal.Map',
+      {
+        // key: '5bc35f0a4fce14db0a93e3407ab5c17e',
+        key:'0edce4abf031ad686066dc2fc90b4b61',
+        maxZoom:18,
+        minZoom:5,
+      })
+    // this.baseLayer = L.tileLayer.colorFilter('http://online{s}.map.bdimg.com/tile/?qt=tile&x={x}&y={y}&z={z}&styles=pl&udt=20150518', {
+    //   maxZoom: 18,
+    //   minZoom: 3,
+    //   subdomains: [0, 1, 2],
+    //   tms: true,
+    //   filter: myFilter
+    // })
+    // this.sateLayer = L.tileLayer.chinaProvider('Baidu.Satellite.Map', {
+    //   maxZoom: 18,
+    //   minZoom: 3,
+    //   // subdomains: [0,1,2],
+    //   tms: true
+    // })
     
-    //高德地图
-    this.seaLayer =  L.tileLayer.chinaProvider('GaoDe.Satellite.Map', {//海图的API
-      maxZoom: 18,
-      minZoom: 3,
-      // subdomains: [0,1,2],
-      tms: true
-    })
+    // //高德地图
+    // this.seaLayer =  L.tileLayer.chinaProvider('GaoDe.Satellite.Map', { //海图的API
+    //   maxZoom: 18,
+    //   minZoom: 3,
+    //   // subdomains: [0,1,2],
+    //   tms: true
+    // })
     //设置图层组
     //  var vector = L.layerGroup([vectorMap]);
     // var  image = L.layerGroup([imageMap]);
@@ -143,16 +154,9 @@ const map = {
         action: 'myfly',
         data: d
       })
-      // console.log('websock2',this.websock2.readyState)
-      // console.log(this.$store.getters.user.data.id)
-      // console.log('发送数据', data)
-      // if(this.websock2.readyState===1){
-
-      //   this.websocketsend2(data)
-      // }else{
-      //   this.initWebSocket()
-      // }
     }
+
+ 
     this.map.on('moveend', debounce(() => {
       end()
     }, 350))
@@ -208,13 +212,8 @@ const menu = {
             type: 'line',
             display: 'none'
           })
-          var  math1=this.map.addControl(this.measureRuler)
-          // this.ruler2=math1.LatLng()
-          console.log("math1",math1._animateToCenter.lat)
-
+          this.map.addControl(this.measureRuler)
           this.measureRuler.initRuler()
-          // var  math=Math.asin( this.map.addControl(this.measureRuler))
-          // console.log("math",math)
         } else {
           this.measureRuler.resetRuler(true)
         }
@@ -695,7 +694,7 @@ const marker = {
     })
         // 海军
         this.service.get('/org/allList').then(res => {
-          console.log("组织机构",res)
+          // console.log("组织机构",res)
           for (let e of res.list) {
             if(e.type==1){
             let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
@@ -1030,6 +1029,14 @@ const marker = {
         let bd09Arr = wgs84ToBD(e.lon, e.lat)
         let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/01.png'))('雷达')
         ((event) => {
+          // 雷达扫描圈
+          // this.service.get('/radar/radarCalculate', {
+          //   params:{
+          //     id:e.id
+          //   }
+          // }).then(res => {
+          //   console.log("雷达统计",res)
+          // })
           //雷达信息框
           // console.log("雷达信息",e)
           this.service.get('/radar/view', {
@@ -1326,12 +1333,13 @@ const marker = {
     console.log('infoViewFocus',data)
     if (!data.focus) {
       console.log('关注', data.mmsi)
-        this.service.get('/ship/focus',
-          {
-            parmas:{
-               mmsi: data.mmsi
-            }
-          }).then(res=>{
+        this.service.get('/ship/focus?mmsi='+ data.mmsi,
+          // {
+          //   parmas:{
+          //      mmsi: data.mmsi
+          //   }
+          // }
+          ).then(res=>{
             console.log("关注接口",res)
             if (res.error === 0) {
                this.$message.success('关注成功！')
@@ -1652,6 +1660,37 @@ const ship={
     //     })
     //   })
   },
+  ship_detail(mmsi){
+    this.service.get('/ship/view', {
+      params:{
+       mmsi: mmsi
+      }
+     }).then(res => {
+       console.log('船舶信息11111',res)
+       // console.log(res)
+       this.dialogInfo.ship = res.ais
+       // this.dialogInfo.ship.targettype = info.targettype
+       // this.dialogInfo.ship.targetid = info.targetid
+       // this.dialogInfo.ship.radarid = info.radarid
+       // this.dialogInfo.ship.attributionid = info.attributionid
+       // this.dialogInfo.ship.urltype = info.urltype
+       // console.log( this.dialogInfo.ship)
+       var  latitude=res.ais.lat
+       var  longitude=res.ais.lon
+       if (res.error === 0) {
+         // this.dialogInfo.ship = res.ais
+         console.log('this.map',this.map)
+         this.map.setView([latitude,longitude], 12 , { 
+             pan: { animate: true , duration: 0.5 }, 
+             zoom: { animate: true }, 
+             animate: true
+         })
+         this.showInfo.ship=true
+       }
+  
+     })
+  },
+
   // 船舶详细信息框的船舶详情
   shipDetail(data){
     console.log('shipDetail',data)
@@ -1667,6 +1706,8 @@ const ship={
      params:{mmsi: data} 
     }).then(res => {
       console.log("船舶详细信息",res)
+      // this.$store.dispatch('setUserData', res)
+      // this.$store.commit('setJSESSIONID', res.JSESSIONID)
       this.dialogInfo.shipDetail = res.ais
       this.showInfo.shipDetail=true
     })
@@ -1708,13 +1749,175 @@ const ship={
             if (res.list.length < 1) {
               this.$message.warning('暂无轨迹');
             }else{
+//                //创建一个巡航轨迹路线
+//         var pathSimplifierIns = new PathSimplifier({
+//           zIndex: 100,//地图层级，
+//           map: map, //所属的地图实例
+//           //巡航路线轨迹列表
+//           getPath: function(pathData, pathIndex) {
+//               return pathData.path;
+//           },
+//           //hover每一个轨迹点，展示内容
+//           getHoverTitle: function(pathData, pathIndex, pointIndex) {
+//               if (pointIndex >= 0) {
+//                   return pathData.name + '，点：' + pointIndex + '/' + pathData.path.length;
+//               }
+//               return pathData.name + '，点数量' + pathData.path.length;
+//           },
+//           //自定义样式，可设置巡航器样式，巡航轨迹样式，巡航轨迹点击、hover等不同状态下的样式，不设置则用默认样式，详情请参考api文档
+//           renderOptions:{},
+//           //绘制路线节点
+//           renderOptions: {
+//               renderAllPointsIfNumberBelow: 100 //绘制路线节点，如不需要可设置为-1
+//           }
+//       });
+//       //设置数据
+//       pathSimplifierIns.setData([{
+//           name: '路线0',
+//           path: [
+//               [116.478935, 39.997761],
+//               [116.478939, 39.997825],
+//               [116.478912, 39.998549],
+//               [116.478912, 39.998549],
+//               [116.478998, 39.998555],
+//               [116.478998, 39.998555],
+//               [116.479282, 39.99856],
+//               [116.479658, 39.998528],
+//               [116.480151, 39.998453],
+//               [116.480784, 39.998302],
+//               [116.480784, 39.998302],
+//               [116.481149, 39.998184],
+//               [116.481573, 39.997997],
+//               [116.481863, 39.997846],
+//               [116.482072, 39.997718],
+//               [116.482362, 39.997718],
+//               [116.483633, 39.998935],
+//               [116.48367, 39.998968],
+//               [116.484648, 39.999861]
+//           ]
+//       }]);
+//       //对第一条线路（即索引 0）创建一个巡航器
+//       var navg = pathSimplifierIns.createPathNavigator(0, {
+//           loop: false, //循环播放
+//           speed: 100//巡航速度，单位千米/小时
+//       });
+
+// that.navgtr.on("start resume", function() {
+//   that.navgtr._startTime = Date.now();
+//   that.navgtr._startDist = this.getMovedDistance();
+// });
+// that.navgtr.on("stop pause", function() {
+//    that.navgtr._movedTime = Date.now() - that.navgtr._startTime;
+//    that.navgtr._movedDist = this.getMovedDistance() - that.navgtr._startDist;
+// });
+
+
+              // 速度选择  
+        //  function  PickerChange(e) {  
+        //     var that = this;  
+        //     if (e.detail.value <= 0) {  
+        //         e.detail.value = 0;  
+        //     }  
+        //     that.index = e.detail.value;  
+        //     if (that.index == 0) {  
+        //         that.doubleSpeed = 1000;  
+        //         that.butn = 0;  
+        //         clearInterval(that.timer);  
+        //     } else if (that.index == 1) {  
+        //         that.doubleSpeed = 500;  
+        //         that.butn = 0;  
+        //         clearInterval(that.timer);  
+        //     } else if (that.index == 2) {  
+        //         that.doubleSpeed = 100;  
+        //         that.butn = 0;  
+        //         clearInterval(that.timer);  
+        //     }  
+        //   }
+    // 播放  
+        //  function  carPlay() {  
+        //     var that = this;  
+        //     console.log(that.doubleSpeed);  
+        //     if (that.butn === 0) {  
+        //         that.butn = 1;  
+        //     }  
+        //     if (!that.carFlager) {  
+        //         that.polyline[1].points = [];  
+        //         that.markers[0].latitude =  that.polyline[0].points[0].latitude;  
+        //         that.markers[0].longitude =  that.polyline[0].points[0].longitude;  
+        //         that.i = 0;  
+        //         that.numItem = 0;  
+        //         that.progress = 0;  
+        //     }else {  
+        //         that.i = that.timeI   
+        //     }  
+        //     clearInterval(that.timer);  
+        //     let item = that.polyline[0].points;  
+        //     var points = [],bd09Arr=[]
+        //     res.list.forEach(e => {
+        //        bd09Arr = wgs84ToBD(parseFloat(e.lon), parseFloat(e.lat))
+        //       // console.log('bd09Arr',bd09Arr)
+        //       var po=points.push([bd09Arr[1], bd09Arr[0]])
+        //         // console.log("points",po)
+        //       // duration.push(800)
+        //     })
+        //     // 进度  
+        //     let allProgress = 100;  
+        //     let allte = 100 / polyline.points.length;  
+        //     that.timer = setInterval(function(){  
+        //         that.carMap.translateMarker({  
+        //             markerId: that.markers[0].id,  
+        //             // 速度  
+        //             duration:this.doubleSpeed,  
+        //             // duration:0,  
+        //             // 指定 marker 移动到的目标点  
+        //             destination: {  
+        //                 longitude: that.polyline[0].points[that.i].longitude,  
+        //                 latitude: that.polyline[0].points[that.i].latitude  
+        //             },  
+        //             // 自动旋转  
+        //             autoRotate: false,  
+        //             // 旋转角度  
+        //             rotate: that.mapList[that.i].directionDegrees,  
+        //         });  
+
+        //         var polyline = L.polyline(points, { color: 'red' }).addTo(this.animateLayer);
+
+        //         that.latitude = that.polyline[0].points[that.i].latitude;  
+        //         that.longitude = that.polyline[0].points[that.i].longitude;  
+        //         that.info = [that.mapList[that.i]];  
+        //         that.carspeed = that.info[0].speed;  
+        //         that.carTime = that.info[0].address;  
+        //         // that.polyline[1].color = '#1e83ff';  
+        //         polyline[1].points.push(item[that.numItem]);  
+        //         that.progress = allte + that.progress;  
+        //         that.i++;  
+        //         that.timeI = that.i  
+        //         that.numItem++;  
+
+        //         if (that.numItem >= item.length) {  
+        //             that.numItem = 0;  
+        //             that.butn = 0;  
+        //             that.carFlager = false;  
+        //             that.carMap.includePoints({  
+        //                 points: that.polyline[0].points,  
+        //                 padding: [30, 20, 20, 30],  
+        //                 success: function(res) {  
+        //                 }  
+        //             });  
+        //             clearInterval(that.timer);  
+        //             return;  
+        //         }  
+
+        //     }, that.doubleSpeed);  
+        // }
+
               var points = [],duration=[],bd09Arr=[]
             res.list.forEach(e => {
                bd09Arr = wgs84ToBD(parseFloat(e.lon), parseFloat(e.lat))
               // console.log('bd09Arr',bd09Arr)
               var po=points.push([bd09Arr[1], bd09Arr[0]])
                 // console.log("points",po)
-              duration.push(800)
+              duration.push(1000)
             })
            L.marker(points[0], {
               icon:L.icon({
@@ -1736,18 +1939,22 @@ const ship={
             },{highlight: 'permanent'}).addTo(this.animateLayer);
             var polyline = L.polyline(points, { color: 'red' }).addTo(this.animateLayer);
 
+            // Marker.moveTo(bd09Arr,1000,function(){
+            //   alert('进行中。。。'); 
+            //   });
+
             points.forEach(item=>{
-              console.log('item',item)
+              // console.log('item',item)
 
               item[0]=item[0]*1000000
               item[1]=item[1]*1000000
-              console.log('item1',item)
+              // console.log('item1',item)
               item[0]=item[0]-item[0]%1
               item[1]=item[1]-item[1]%1
-              console.log('item2',item)
+              // console.log('item2',item)
               item[0]=item[0]/1000000
               item[1]=item[1]/1000000
-              console.log('item3',item)
+              // console.log('item3',item)
 
               let c=L.circle(item, {radius: 50,color:'green',fillColor:'greeb'}).addTo(this.animateLayer);
               var p1 = L.popup("<l-popup :content='profile1-1+'</l-popup>")
@@ -1785,10 +1992,11 @@ const ship={
             var points = [],duration=[],bd09Arr=[]
             res.list.forEach(e => {
                bd09Arr = wgs84ToBD(parseFloat(e.lon), parseFloat(e.lat))
+ 
               // console.log('bd09Arr',bd09Arr)
               var po=points.push([bd09Arr[1], bd09Arr[0]])
                 // console.log("points",po)
-              duration.push(800)
+              duration.push(8000)
             })
            var marker1= L.marker(points[0], {
               icon:L.icon({
@@ -1799,7 +2007,9 @@ const ship={
               })
             }).addTo(this.animateLayer);
             
+            
             // marker1.enableTemporaryHighlight();   //临时调用高亮显示
+
             var marker2= L.marker(points[points.length-1], {
               icon:L.icon({
                 iconUrl: require('../../assets/history/end.png'),
@@ -1808,19 +2018,22 @@ const ship={
                 shadowSize: [41, 41]
               })
             },{highlight: 'permanent'}).addTo(this.animateLayer);
+
+            // marker2.moveTo(lat, duration)
+
             var polyline = L.polyline(points, { color: 'red' }).addTo(this.animateLayer);
 
             points.forEach(item=>{
-                console.log('item',item)
+                // console.log('item',item)
                 item[0]=item[0]*1000000
                 item[1]=item[1]*1000000
-                console.log('item1',item)
+                // console.log('item1',item)
                 item[0]=item[0]-item[0]%1
                 item[1]=item[1]-item[1]%1
-                console.log('item2',item)
+                // console.log('item2',item)
                 item[0]=item[0]/1000000
                 item[1]=item[1]/1000000
-                console.log('item3',item)
+                // console.log('item3',item)
                  //小数点保留六位
             //  if (item.indexOf('.') > 0) {　　　　　　　　
             //      const longlatsplit = item.split('.');　　　　　　　
@@ -1844,10 +2057,30 @@ const ship={
                   iconAnchor: [20,22]
                 })
               }).addTo(this.animateLayer);
+
+           
+            //   this.myMovingMarker.once('click', function () {
+            //     this.myMovingMarker.start();
+            //     this.myMovingMarker.on('click', function () {
+            //         if ( this.myMovingMarker.isRunning()) {
+            //           this.myMovingMarker.pause();
+            //         } else {
+            //           this.myMovingMarker.moveTo(bd09Arr,1000,function(){
+            //             alert('进行中。。。'); 
+            //             });
+            //         }
+            //     });
+            // });
+            // this.backMarker = L.Marker.movingMarker([[48.8567, 2.3508],[50.45, 30.523333]],
+            //   [20000]).addTo(this.animateLayer);
+
                 this.myMovingMarker.start(); //开始 若已暂停则恢复
                 this.myMovingMarker.stop(); //手动停止  若在之后调用`start`，则标记将从起点再次开始折线。
                 this.myMovingMarker.pause();//暂停
                 this.myMovingMarker.resume();//重置  恢复动画
+
+                // var lnglat = new L.LngLat(48.8567, 2.3508);
+                // this.backMarker.moveTo(lnglat,9000);
           }
         })
       }
@@ -1862,11 +2095,14 @@ const area={
   },
   showAllArea()/*显示隐藏所有区域*/ {
 
-    // console.log('1231313')
+    console.log('1231313',this.showOrHide)
     if (this.showOrHide ==='1') {
       console.log('显示所有')
-      // this.$refs.groupTree.showAllArea(this.areaData, this.watersLevel)
       console.log('areaData',this.areaData)
+
+      // this.showInfo.customArea = true
+      // this.dialogInfo.customArea=this.areaData[0]
+
       for (let i of this.areaData) {
         const m = {
           '0': 'circle',
@@ -1878,9 +2114,15 @@ const area={
           2:' ★ ',
           3:' ✷ ',
         }
-        // for (let x of this.watersLevel) {//设置文字内容
-        //   if (x.value === i.lever) i.typeLabel = icon[i.lever]+x.name
-        // }
+        // this.showInfo.customArea = true,
+        // this.dialogInfo.customArea =this.areaData[0]
+        // var latlngs = [[30.09404881287048, 122.53051757812501],[31.09404881287048, 122.53051757812501],[31.09404881287048, 123.53051757812501]];
+
+        // var polygon = L.polygon(latlngs, {color: 'red'}).addTo(this.map);
+        
+        // polygon.on('click', function(e) {
+        //   alert(1231)
+        //     })
         i.centerx=i.lon
         i.centery=i.lat
       if(i.type===1){
@@ -1889,16 +2131,106 @@ const area={
         i.lat2=i.points[1].lat
         i.lon2=i.points[1].lon
       }
-        // console.log(i)
-        this.createPolygon(m[i.type], i,'area' +i.id,
-          this.areaTypeStyle[i.level]
+        // console.log('i.type',i)         
+
+      var createPolygon=  this.createPolygon(m[i.type], i,'area' +i.id,
+          this.areaTypeStyle[i.level],
+          // console.log('this.areaTypeStyle',this.areaTypeStyle[i.level]),
         )(wgs84ToBD).addTo(this.areaLayer);
+
+        // console.log('areaTypeStyle',createPolygon),
+        createPolygon.on('click', (e) =>{
+          // alert(1231)
+          // console.log('e',e)
+          this.showInfo.customArea=true
+          this.dialogInfo.customArea = i
+          })
       }
     } else {
       console.log('隐藏所有')
       this.areaLayer.clearLayers()
       this.$refs.groupTree.hideAllArea(this.areaData, this.watersLevel)
     }
+  },
+  labelOverlay(data,label) {
+
+    let _this=this;
+    let s=5/(Math.pow(2, 9))*Math.pow(2, this.map.getZoom())
+    let p=wgs84ToBD(data.centerLon, data.centerlat)
+
+    let style={
+      1:'#ff6161',
+      2:'#ffd461',
+      3:'#ff9661',
+    }
+
+    function ComplexCustomOverlay(point, text, mouseoverText) {
+      this._point = point
+      this._text = text
+      this._overText = mouseoverText
+    }
+    ComplexCustomOverlay.prototype = new BMap.Overlay()
+    ComplexCustomOverlay.prototype.initialize = function(map) {
+      _this._map = map
+      var div = this._div = document.createElement('div')
+      div.style.position = 'absolute'
+      div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat)
+      div.style.backgroundColor = style[data.lever]
+      // div.style.border = '1px solid #BC3B3A'
+      div.style.color = 'black'
+      div.style.height = "15px"
+      // div.style.width = "px"
+      div.style.padding = '2px'
+      div.style.lineHeight =  "15px"
+      div.style.whiteSpace = 'nowrap'
+      div.style.MozUserSelect = 'none'
+      div.style.fontSize =  "10px"
+      var span = this._span = document.createElement('span')
+      div.appendChild(span)
+      span.appendChild(document.createTextNode(this._text))
+      var that = this
+      _this.map.getPanes().labelPane.appendChild(div)
+      return div
+    }
+    ComplexCustomOverlay.prototype.draw = function() {
+      var map = _this._map
+      var pixel = map.pointToOverlayPixel(this._point)
+      let s=5/(Math.pow(2, 9))*Math.pow(2, map.getZoom())
+      // console.log(s)
+      this._div.style.left = pixel.x-25 - 0.55*s + "px";
+      this._div.style.top  = pixel.y - 0.78*s  + "px";
+      this._div.style.zIndex = "0"
+      if(_this.map.getZoom()>10||_this.map.getZoom()<9)/*地图缩放到9级以下 对文字隐藏*/{
+        this._div.style.height = "0px"
+        this._div.style.lineHeight =  "0px"
+        this._div.style.width = "0px"
+        this._div.style.fontSize =  "0px"
+        this._div.style.padding = '0'
+      }else{
+        this._div.style.padding = '2px'
+        this._div.style.height = s+"px"
+        this._div.style.lineHeight = s+"px"
+        this._div.style.width = "auto"
+        this._div.style.fontSize =  s+"px"
+      }
+    }
+    ComplexCustomOverlay.prototype.addEventListener = function(event,fun){
+      this._div['on'+event] = fun;
+    }
+    var myCompOverlay = new ComplexCustomOverlay(new BMap.Point(p[0], p[1]), data.typeLabel)
+
+    // myCompOverlay.imm
+    // myCompOverlay.tp = 'areaLabel'
+    // myCompOverlay.mmsi = data.id
+    this.map.addOverlay(myCompOverlay)
+    myCompOverlay.addEventListener('click',() =>{
+      this.showInfo.customArea = true
+      // this.dialogInfo.customArea=this.drawData[i]
+      // console.log(label)
+      // this.areaInfo.dialog=true
+      // this.areaInfo.label=label
+      // this.areaInfo.description=data.description
+    })
   },
   hideAllArea() {
     // this.$refs.groupTree.hideAllArea(this.areaData)
@@ -1931,7 +2263,7 @@ const area={
   loadGroupData() {
 
     this.service.get('/water/allList').then(res => {
-      console.log(res)
+      // console.log(res)
       this.groupData = JSON.parse(JSON.stringify(res.list))
     })
     this.service.get('/enum/waterLevel').then(res => {
@@ -2014,7 +2346,17 @@ const area={
           this.drawData.positions.forEach((e,index)=>{
             p.push({lat:e[1],lon:e[0],ordered:index})
           })
-          console.log(this.drawData)
+          console.log('drawData',this.drawData)
+
+          // this.showInfo.customArea = true
+          // // this.areadefineLayer
+          // if (this.hasLayer(this.map, 'customArea' + e.id).length > 0) {
+          //   this.drawData.org.showed = true
+          // } else {
+          //   this.drawData.org.showed = false
+          // }
+          // this.dialogInfo.customArea=this.drawData
+
           // newData.points=this.drawData.positions
           this.service.post( '/water/save',{
                   level: this.drawData.lever,
@@ -2025,11 +2367,14 @@ const area={
                   points:p,
                   name:this.drawData.name
              }).then(res => {
-              console.log("导入的数据",res)
+              console.log("新增绘制的数据",res)
               if(res.error===0){this.$message.success({ message: '成功', })}this.closeDraw()
                 this.loadGroupData();this.drawLayer.clearLayers()
               // console.log("导入数据的状态",req.error)
              })
+
+
+
           const map={
       
             0:()=>{
@@ -2093,7 +2438,7 @@ const area={
             },
           }
           // map[this.isDrawType]()
-          console.log(this.isDrawType)
+          console.log('isDrawType',this.isDrawType)
 
         }
       } else {
@@ -2182,6 +2527,7 @@ const area={
         // console.log(e.layer.toGeoJSON().geometry.coordinates,e.layer.options.radius);
         this.drawData.positions = []
         let point = e.layer.toGeoJSON().geometry.coordinates
+        console.log('points',e.layer.toGeoJSON().geometry.coordinates);
         this.drawData.positions.push(point)
         this.drawData.radius = e.layer.options.radius
         // this.currentDraw = e.layer

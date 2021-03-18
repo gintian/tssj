@@ -181,12 +181,12 @@
     }
 
     .title {
-        text-align: right;
-        /* color: #ffffff; */
+        // text-align: right;
+        text-indent: 6px;
         color: black;
         font-size: 14px;
         font-weight: 400;
-        width: 70px;
+        width: 50px;
     }
 
     .value {
@@ -204,6 +204,12 @@
         /*!* grid-template-rows: 50% 50%;*!*/
         /*grid-row-gap: 1%;*/
         /*grid-column-gap: 1%;*/
+    }
+ /deep/   .el-table--enable-row-hover .el-table__body tr:hover>td {
+    /* background-color: #0075EE; */
+    /* opacity: 10%; */
+    color: black;
+    background-color: rgba(0,117,238,0.2);
     }
     .satify_time{
       margin-top:20px;

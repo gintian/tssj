@@ -108,8 +108,20 @@
                 top: 23%;
           .el-dialog__header{   
             background: rgb(39, 112, 212);
+                padding: 8px 20px 10px;
             .el-dialog__title{
                 color: white;
+            }
+            .el-dialog__headerbtn {
+                position: absolute;
+                top: 13px;
+                right: 20px;
+                padding: 0;
+                background: 0 0;
+                border: none;
+                outline: 0;
+                cursor: pointer;
+                font-size: 16px;
             }
               .el-dialog__close{
                   color: white;
@@ -120,11 +132,11 @@
             color: black;
             h4{
                 margin-bottom: 10px;
-                background: #d0e8ec;
+                background: #E3EFFB;
                     padding: 14px;
             }
             .signChild {
-                    padding: 6px 21px;
+                  padding: 6px 21px;
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                     .signChildContent {

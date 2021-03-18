@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import Home from '../views/Home.vue'
-import map from '../views/home/Map'
+import map from '../views/home/Map.vue'
 
 import LeftNav from '@/components/nav/leftNav.vue'
 
@@ -34,7 +34,7 @@ let router = new VueRouter({
   routes: [
     {
       path: '/map2',
-      name:'map',
+      name:'Map',
       component: map
     },
     {
@@ -47,27 +47,44 @@ let router = new VueRouter({
       path: '*',
       component: NotFound
     },
+ 
+ 
     {
       path: '/',
       type: 'home', // 根据type区分不同模块（顶部导航）
-      name: 'home', // 根据name区分不同子模块（左侧导航）
-      redirect: '/map2',
-      component: Home,
+      // name: 'home', // 根据name区分不同子模块（左侧导航）
+      redirect: '/home',
+      component: Home,   
       menuShow: true,
       children: [
         {
-          path: '/map2',  //首页
+          path: '/',  //首页
           // component: LeftNav,
-          name: 'Map', // 当前路由的name
+          // name: 'Map',
           leaf: true, // 只有一个节点
-          iconCls: 'iconfont icon-home', // 图标样式class
+          // iconCls: 'iconfont icon-home', // 图标样式class
           menuShow: true,
           children: [
-            { path: '/map', component: map, name: '', menuShow: true }
+            { path: '/map', component: map, name: 'Map', menuShow: true }
           ]
         }
       ]
     },
+
+    //  {
+    //         path: '/',
+    //         type: 'home', // 根据type区分不同模块（顶部导航）
+    //   //       name: 'home', // 根据name区分不同子模块（左侧导航）
+    //         redirect: '/home',
+    //         component: Home, 
+    //         // leaf: true,
+    //          menuShow: true,  
+    //          children: [
+    //                   { path: '/map', component: map, name: 'Map', menuShow: true }
+    //                 ]
+    //  },
+      
+
     {
       path: '/alarmLog',
       type: 'enterprise',
@@ -97,19 +114,19 @@ let router = new VueRouter({
           children: [
             { path: '/alarmLog/add', component: EnterpriseAdd, name: '系统操作日志', menuShow: true }
           ]
-        },
-        
-        {
-          path: '/enterpriseValidate',
-          component: LeftNav,
-          name: 'enterpriseValidate',
-          leaf: true, // 只有一个节点
-          iconCls: 'iconfont  icon-gaojing',
-          menuShow: true,
-          children: [
-            { path: '/alarmLog/validate', component: EnterpriseValidate, name: '系统告警日志', menuShow: true }
-          ]
         }
+        
+        // {
+        //   path: '/enterpriseValidate',
+        //   component: LeftNav,
+        //   name: 'enterpriseValidate',
+        //   leaf: true, // 只有一个节点
+        //   iconCls: 'iconfont  icon-gaojing',
+        //   menuShow: true,
+        //   children: [
+        //     { path: '/alarmLog/validate', component: EnterpriseValidate, name: '系统告警日志', menuShow: true }
+        //   ]
+        // }
       ]
     },
 
@@ -135,7 +152,7 @@ let router = new VueRouter({
                   {
                   path: '/AIS',
                   component: LeftNav,
-                  name: 'AIS',
+                  // name: 'AIS',
                   leaf: true, // 只有一个节点
                   iconCls: 'iconfont icon-base-signal-full', // 图标样式class
                   menuShow: true,
@@ -182,7 +199,7 @@ let router = new VueRouter({
           component: LeftNav,
           name: 'SuspiciousList',
           leaf: true, // 只有一个节点
-          iconCls: 'iconfont icon-home', // 图标样式class
+          iconCls: 'iconfont icon-home', 
           menuShow: true,
           children: [
             { path: '/Suspicious/list', component: Suspicious, name: '', menuShow: true }
@@ -203,7 +220,7 @@ let router = new VueRouter({
           component: LeftNav,
           name: 'deptList',
           leaf: true, // 只有一个节点
-          iconCls: 'iconfont icon-user', // 图标样式class
+          iconCls: 'iconfont icon-user', 
           menuShow: true,
           children: [
             { path: '/dept/list', component: DeptManager, name: '', menuShow: true }
@@ -215,13 +232,8 @@ let router = new VueRouter({
   ]
 });
 
-// const router = new VueRouter({
-//   // mode: 'history',
-//   mode: 'hash',
-//   base: process.env.BASE_URL,
-//   routes
-// })
-const whiteList = ['/login', '/loading','/screen', '/loadings','/oth','/oth2'] // 白名单
+
+const whiteList = ['/login'] // 白名单
 
 // router.beforeEach((to, from, next) => {
 //   // ...

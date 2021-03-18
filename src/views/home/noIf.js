@@ -1,9 +1,9 @@
-// import {
-//   addMyMarker,
-//   addPolygon, addStationDom,
-//   customMarker,
-//   mapComopentFun
-// } from './mapComponentFactory'
+import {
+  addMyMarker,
+  addPolygon, addStationDom,
+  customMarker,
+  mapComopentFun
+} from './mapComponentFactory'
 import { bd09towgs84, wgs84ToBD } from '../../utils/coordinateConvert'
 
 // export function exportMethod(data) {

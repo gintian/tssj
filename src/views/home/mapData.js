@@ -23,6 +23,7 @@ const ship={
   shipFusion:true,//融合目标
 
   myMovingMarker:'',//轨迹线
+  backMarker:'',//轨迹线测试
 
   wharf : true, //码头
   peer : true, //锚地
@@ -56,7 +57,7 @@ const button={
   objectArea:'', type:'', //目标区域
 
   // 高级搜索的5个筛选类型弹窗
-  dialogVisible1:false, namelist:'', //目标名称
+  dialogVisible1:false, objectnamelist:'', //目标名称
   dialogVisible2:false, mmsilist:'', //目标编号
   dialogVisible3:false,   typelist:'',//目标类型
   dialogVisible4:false,  beginTime:'', endTime:'', timelist:'',//目标时间
@@ -93,6 +94,9 @@ const button={
     },
     focus:[],
   },
+  
+
+
   planeID:{id:undefined,class:undefined,layer:undefined}, //当前点击的飞机ID
   showInfo:{
     ship:false,//船舶开关
@@ -101,6 +105,8 @@ const button={
     anchorage:false,//锚地开关
     berth:false, //码头泊位开关
     port:false, //港区开关
+    customArea:false, //自定义区域开关
+   
 
     navy:false, //海军开关
     mary:false,//海警军开关
@@ -111,7 +117,6 @@ const button={
     ofa:false, //海洋与渔业局
     fi:false,//边检开关
     customs:false,//海关开关
-
     seaLine:false, //海底光缆开关
     station:false, //资源站开关
     radar:false, //雷达开关
@@ -236,7 +241,7 @@ const area={
   showDrawView: false,//描绘区域是否展示
   isDrawType: undefined,//判断选中的类型
   DrawType: [{ label: '圆', value: 1 }, { label: '矩形', value: 2 }, { label: '多边形', value: 3 }],
-  drawData: {
+  drawData: {   //自定义区域数据
     preview:false,
     lever: '1',
     name: '',
@@ -247,6 +252,7 @@ const area={
     positions: [],
     groupId: ''
   },
+
   // drawData:{
   //   level: '',
   //   name: '',

@@ -85,9 +85,13 @@
             <el-form-item label="纬度" prop="lat">
             <el-input v-model="addsForm.lat" />
           </el-form-item>
-          <el-form-item label="运行状态（boole）" prop="status">
-              <el-input v-model="addsForm.status" />
-            </el-form-item>
+          <el-form-item label="运行状态" prop="status">
+              <!-- <el-input v-model="addsForm.status" /> -->
+              <el-select  v-model="addsForm.status"  class="selectInput"  :popper-append-to-body="false"  style="width: 301px;">
+                  <el-option   v-for="item in options"  :value="item.value"   :label="item.label" :key="item.value">        
+                  </el-option>
+              </el-select>
+          </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible1 = false">
@@ -201,7 +205,14 @@ export default {
         status:'',
       },
       Business_exception:null,
-       update:''
+      update:'',
+      options:[{
+        value:'正常',
+        lable:'正常'
+      },{
+        value:'异常',
+        lable:'异常'
+      }]
       
     }
   },
@@ -222,7 +233,7 @@ export default {
         this.temp.status=true
       }else if(val=='正常'){
         this.temp.status=false
-        console.log("this.temp.status",this.temp.status)
+        // console.log("this.temp.status",this.temp.status)
       }
     },
     getList(){  //获取数据
@@ -310,6 +321,12 @@ export default {
       this.dialogFormVisible1 = true; //弹层显示
     },
      AddData(){
+        // console.log("this.addsForm",this.addsForm)
+        if(this.addsForm.status=='正常'){
+          this.addsForm.status='false'
+        }else if(this.addsForm.status=='异常'){
+          this.addsForm.status='true'
+        }
         let userList=this.addsForm;  
         let {station,name,lat,lon,status} = userList;
           this.service.post('/ais/save',this.addsForm).then(res => {

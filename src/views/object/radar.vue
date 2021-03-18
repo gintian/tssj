@@ -98,7 +98,11 @@
             <el-input v-model="addsForm.range" />
           </el-form-item>
           <el-form-item label="运行状态" prop="status">
-              <el-input v-model="addsForm.status" />
+              <!-- <el-input v-model="addsForm.status" /> -->
+              <el-select  v-model="addsForm.status"  class="selectInput"  :popper-append-to-body="false"  style="width: 301px;">
+                  <el-option   v-for="item in options"  :value="item.value"   :label="item.label" :key="item.value">        
+                  </el-option>
+              </el-select>
             </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -221,7 +225,14 @@ export default {
         band:''
       },
       Business_exception:null,
-      update:''
+      update:'',
+       options:[{
+        value:'正常',
+        lable:'正常'
+      },{
+        value:'异常',
+        lable:'异常'
+      }]
     }
   },
   filters:{},
@@ -316,9 +327,9 @@ export default {
     handleUpdate(index,row){
      this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
        if(this.temp.status==true){
-        this.update = "正常"
+        this.update = "异常"
       }else if(this.temp.status==false){
-       this.update = "异常"
+       this.update = "正常"
       }
       this.dialogFormVisible = true; //弹层显示
     },
@@ -327,6 +338,12 @@ export default {
       this.dialogFormVisible1 = true; //弹层显示
     },
      AddData(){
+         console.log("this.addsForm",this.addsForm)
+        if(this.addsForm.status=='正常'){
+          this.addsForm.status='false'
+        }else if(this.addsForm.status=='异常'){
+          this.addsForm.status='true'
+        }
         let userList=this.addsForm;  
         let {station,name,lat,lon,range,band,status} = userList;
       

@@ -7,7 +7,7 @@
                 </button>
                  <el-dialog
                         :visible.sync="dialogVisible"
-                        width="23%"
+                        width="16%"
                         top="8vh"
                         custom-class="countrydialog"
                         :append-to-body="true">
@@ -17,7 +17,9 @@
                           highlight-current
                           lazy
                           show-checkbox
-                          @check-change="handleCheckChange">
+                          @check-change="handleCheckChange"
+                           @node-click="handleTreeNodeClick"
+                          >
                         </el-tree>
                 </el-dialog>
             </div>
@@ -31,6 +33,7 @@
     data() {
       return {
         dialogVisible:false,
+        item:'',
         props: {
           label: 'name',
           children: 'zones',
@@ -46,6 +49,10 @@
       this.loadData()
     },
     methods: {
+       // 点击树节点事件处理
+      handleTreeNodeClick(data, node, elem){
+                // data.id即为科室id，根据这个科室id触发医生表格数据的查询...
+     },
       // 加载一级菜单数据
       loadData(){
             this.service.get('/ship/flag').then(res=>{
@@ -101,6 +108,15 @@
              res.shipList.map(f => {
                shipList.push({name:f.mmsi, leaf: true})
             })
+            //  console.log('shipList',shipList)
+            var shipname=[]
+             res.shipList.map(f=>{
+              shipname.push({mmsi:f.mmsi})
+            })
+
+            // console.log('shipname',shipname)
+              // ship_detail(shipList)
+              //  this.$emit('ship_detail',shipname);
               resolve(shipList)
             // console.log('船舶类型中的船舶信息',res)  
           })
@@ -124,6 +140,9 @@
     left: 20%;
   }
 }
+/deep/.el-tree-node__content:hover {
+    background-color: #E3EFFB;
+}
 // 树形内容滚动条
 /deep/.el-tree-node>.el-tree-node__children {
         /* overflow: hidden; */
@@ -139,10 +158,22 @@
                   left: 38px;
           .el-dialog__header{   
             background: rgb(39, 112, 212);
-            padding: 39px 20px 10px;
+            padding: 24px 20px 10px;
             .el-dialog__title{
                 // color: white;
             }
+            // 关闭的图标
+            .el-dialog__headerbtn {
+              position: absolute;
+              top: 10px;
+              right: 20px;
+              padding: 0;
+              background: 0 0;
+              border: none;
+              outline: 0;
+              cursor: pointer;
+              font-size: 16px;
+          }
           .el-dialog__headerbtn .el-dialog__close {
                  color: #ffffff;
             }

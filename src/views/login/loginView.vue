@@ -29,6 +29,14 @@
         <p class="footer-msg">支持单位：中船（浙江）海洋科技有限公司</p>
     </div>
 </template>
+<script  type="text/javascript">
+// if(window.screen.width>1427&&window.screen.width<=1920){  
+//    document.write("<link href='${ctx}/resources/css/party-service/party-self-building-css2.css' rel='stylesheet'>");  
+// }  
+// if(window.screen.width<=1427){  
+//    document.write("<link href='${ctx}/resources/css/party-service/party-self-building-css1.css' rel='stylesheet'>");  
+// }  
+</script>
 <script>
   import { sha512 } from 'js-sha512'
   // import service from '../../tools/request'
@@ -77,6 +85,9 @@
 </script>
 
 <style scoped lang="less">
+
+@media  screen and (min-width: 750px) and (max-width: 1920px){
+  
   .login-mian {
       background: url("../../assets/login.jpg")  81% -31% ;
       // height:97.3%;
@@ -91,7 +102,7 @@
     .loginView {   
       .content{
           /*width: auto;*/
-            width: 466px;
+          width: 466px;
           padding: 233px 35px 15px 35px;
           background: #fff;
           border: 1px solid #eaeaea;
@@ -112,8 +123,10 @@
             border-radius: 3px;
             content: "";
             position: absolute;
-            top: 34%;
-            left: 45%;
+            // top: 34%;
+            // left: 45%;
+            top: 264px;
+            left: 210px;
         }
           div{
               margin-bottom: 1%;
@@ -138,4 +151,5 @@
       }
     }
   }
+}
 </style>
