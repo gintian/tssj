@@ -1,13 +1,13 @@
 <template>
     <div id="selectShipDom">
-        <div class="title" @click="selecarea()" >
+        <div class="title"  >
             <h4  @click="selecship()">筛船信息 </h4>
              <!-- <h4  @click="selecarea()">信息 </h4> -->
             <i class="el-icon-close" @click="$emit('hide')"></i>
         </div>
         <div class="content" style="overflow: auto;height: calc(100% - 40px)">
             <div class="item" v-for="(item,index1) in base" :key="index1">
-                <p style="line-height: 20px"> 
+                <p style="line-height: 20px">
                 <!-- 父级标题 -->
                     {{item.name}}
                     <i class="el-icon-view" style="font-size: 16px;vertical-align: middle;cursor: pointer" v-show="item.is" @click="selectAll(item)"></i>
@@ -15,7 +15,7 @@
                 </p>
                 <!-- 父级里的子内容 -->
                <div class="btn">
-                   <a href="javascript:void(0)" v-for="(i,index2) in item.children"  :key="index2" 
+                   <a href="javascript:void(0)" v-for="(i,index2) in item.children"  :key="index2"
                     :class="[i.is?'':'choose']" @click="clickShip(i)">{{i.name}}</a>
                </div>
             </div>

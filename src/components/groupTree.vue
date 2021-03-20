@@ -617,6 +617,7 @@
           console.log(data)
           if (data.name) {
             console.log('删除区域')
+              // console.log('this.',this)
             this.$emit('removeArea', { id: data.id})
           }
           // else {

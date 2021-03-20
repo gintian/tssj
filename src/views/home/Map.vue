@@ -319,6 +319,7 @@
              v-show="showInfo.customArea">
             <CustomArea
                     :tabObj='dialogInfo.customArea'
+                    :points="dialogInfo.points"
                     titleName=''
                     @remove='showInfo.customArea=false'
             />
@@ -514,7 +515,7 @@
                 <div class="mainContent" style="padding:15px;">
                     <group-tree @openDrawView="openDrawView" :map="map" :groupData="groupData" :areaLayer="areaLayer"
                                 @allowDrop="" @updateGroupName=""
-                                :areaData="areaData" ref="groupTree" @removeArea='' ></group-tree>
+                                :areaData="areaData" ref="groupTree" @removeArea='removeArea' ></group-tree>
                 </div>
             </div>
         </div>
@@ -781,8 +782,8 @@
                 this.websocketsend(JSON.stringify({action: 'allRadar', data: {}}))
             }, 500)
 
-            this.loadShip1()
-            this.selecarea2()
+            this.loadShip()
+            this.selecarea()
         },
         methods: {
 
@@ -947,7 +948,7 @@
                 this.service.post('/ship/areaList', {
                     ...d
                 }).then(res => {
-                    console.log("cl", res)
+                    console.log("区域内船舶加载", res)
                     if (this.map.getZoom() >= this.maxMapZoom) {
                         this.areaShipData = [...res.list]
                         //   console.log('areaShipData', this.areaShipData)

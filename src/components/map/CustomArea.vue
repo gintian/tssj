@@ -19,8 +19,37 @@
                      <tr v-if='ordArr.length%2===1'>
                         <td class="title">{{ordArr[ordArr.length-1].name}}：</td>
                         <td class="value">{{tabObj[ordArr[ordArr.length-1].prop]}}</td>
-                    </tr>    
+                    </tr>
                 </table>
+                <!--<h4 style="margin: 5px 12px;color: red;" v-if="tabObj.type==0"></h4>-->
+                <!--<table style="width: 100%;"  v-if="tabObj.type==0">-->
+                    <!--<tr v-for="(item,index) in ordArr" :key="index">-->
+                        <!--<td class="title">经度：</td>-->
+                        <!--<td class="value">{{item.lon}}</td>-->
+                        <!--<td class="title">纬度：</td>-->
+                        <!--<td class="value">{{item.lat}}</td>-->
+                    <!--</tr>-->
+                <!--</table>-->
+                <h4 style="margin: 5px 12px;color: red;" v-if="tabObj.type!=0">区域坐标点集合如下：</h4>
+                <table style="width: 100%;" v-if="tabObj.type!=0">
+                    <tr v-for="(item,index) in points" :key="index">
+                        <td class="title">经度：</td>
+                        <td class="value">{{item.lon}}</td>
+                        <td class="title">纬度：</td>
+                        <td class="value">{{item.lat}}</td>
+                    </tr>
+                </table>
+                <!--<el-table-->
+                        <!--:data="points"-->
+                        <!--style="width: 100%">-->
+                    <!--<el-table-column-->
+                            <!--v-for="(item,index) in tableTop"-->
+                            <!--:key="index"-->
+                            <!--:prop="item.prop"-->
+                            <!--:label="item.name"-->
+                    <!--&gt;-->
+                    <!--</el-table-column>-->
+                <!--</el-table>-->
             </div>
         </div>
     </div>
@@ -33,6 +62,10 @@
       ShipTab
     },
     props: {
+        points:{
+            type:Array,
+            default: () => []
+        },
       tabObj: {
         type: Object,
         default: ()=>{ return {} }
@@ -49,11 +82,13 @@
     },
     watch: {
         tabObj(val){
-          // console.log('zzhi',val)
         // this.tabObj=val
         // this.tabObj.showed=false
         console.log('自定义区域TabObj',val)
-      }
+      },
+        points(val){
+            console.log('points',val)
+        }
     },
     mounted() {
       console.log('自定义区域TabObj',this.tabObj)
@@ -63,16 +98,18 @@
     },
     data() {
       return {
-        ordArr: [
-          { id: 2, name: '经度', prop: 'lon' },
-          { id: 3, name: '纬度', prop: 'lat' },
-          // { id: 0, name: '类型', prop: 'type' },
-          { id: 4, name: '描述', prop: 'description' },
-          { id: 5, name: '区域名称', prop: 'name' },
-          // { id: 6, name: '等级', prop: 'level' },
-          // { id: 7, name: '码头设备', prop: 'equipment' },
-          // { id: 8, name: '引航方式', prop: 'pilotagWay' },
-          // { id: 9, name: '航法', prop: 'sailing' }
+
+          tableTop:[
+            { id: 0, name: '纬度', prop: 'lat' },
+            { id: 1, name: '经度', prop: 'lon' },
+          ],
+          ordArr: [
+            { id: 0, name: '区域名称', prop: 'name' },
+            { id: 1, name: '海域半径', prop: 'radius' },
+            { id: 2, name: '描述', prop: 'descriptions' },
+            { id: 3, name: '类型', prop: 'type' },
+            { id: 4, name: '中心点纬度', prop: 'lat' },
+            { id: 5, name: '中心点经度', prop: 'lon' },
         ],
         dialogVisible: false,
         description: ''
@@ -123,7 +160,8 @@
 
         display: grid;
        grid-template-rows: 20% 80%;
-        height: 150px;
+        /*height: 150px;*/
+        height: 195px;
         width: auto;
         /* background: #305071; */
          background: white;
@@ -135,6 +173,7 @@
         color: black;
         font-size: 14px;
         font-weight: 400;
+        width: 180px;
     }
 
     .value {
@@ -142,6 +181,7 @@
         color: black;
         font-size: 14px;
         font-weight: 400;
+        width: 131px;
     }
 
     .down {

@@ -301,7 +301,10 @@ const area={
 //关于地图的变量
 const map={
   shipselect:[],
-  timeselect:['00:00-05:00','05:00-10:00','10:00-15:00','15:00-20:00','20:00-24:00'],
+  // timeselect:[{mintime:'00:00',maxtime:'05:00'},{mintime:'05:00',maxtime:'10:00'},{mintime:'10:00',maxtime:'15:00'},
+  //   {mintime:'15:00',maxtime:'20:00'},{mintime:'20:00',maxtime:'24:00'}],
+    // '05:00-10:00','10:00-15:00','15:00-20:00','20:00-24:00'],
+  timeselect:[],
   areaselect:[],
   loadShipData:[],
   selectAreaData:[],

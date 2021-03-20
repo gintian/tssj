@@ -287,19 +287,18 @@ const menu = {
   },
   // 筛船功能
   selectMarker(val) {
-    console.log("sele",val,this.shipselect,this.areaselect)
+    console.log("sele",val,this.shipselect,this.areaselect,this.timeselect)
     // 船舶类型筛选
     if(val.parShip){
       if(val.is){
         val.children.forEach(e=>{
           this.shipselect.push(e.name)
         })
-        // this.shipselect=["散货船", "集装箱船", "油轮", "客船", "渔船", "拖轮","其他"]
-        console.log('拼接的',this.shipselect)
-        this.loadAreaShip(1,[],this.shipselect,[])
+        // console.log('拼接的',this.shipselect)
+        this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
       }else{
         this.shipselect=[]
-        console.log('拼接的',this.shipselect)
+        // console.log('拼接的',this.shipselect)
         this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
       }
     }
@@ -308,7 +307,7 @@ const menu = {
       if(val.is){
         this.shipselect.push(val.name)
         // console.log('拼接的',this.shipselect)
-        this.loadAreaShip(1,[],this.shipselect,[])
+        this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
       }else{
         this.shipselect.splice(this.shipselect.findIndex((item)=>{return item===val.name}),1);
         // console.log('拼接的', this.shipselect)
@@ -334,19 +333,21 @@ const menu = {
     // }
      // 出现时间筛选
       if(val.parTime){
+        console.log("etime",val.parTime)
         if(val.is){
           val.children.forEach(e=>{
+            // console.log("etime",e)
             let maxtime,mintime
             mintime=e.name.split('-')[0].replace('：','')
             maxtime=e.name.split('-')[1].replace(':','')
-            // console.log(mintime,maxtime,'1111111111111111111111111111111111111111111111111111')
+            console.log(mintime,maxtime,'1111111111111111111111111111111111111111111111111111')
             this.timeselect.push({mintime:mintime,maxtime:maxtime})
           })
-          // console.log('拼接的',this.timeselect)
+          console.log('拼接的时间',this.timeselect)
           this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
         }else{
           this.timeselect=[]
-          // console.log('拼接的',this.timeselect)
+          console.log('拼接的时间',this.timeselect)
           this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
         }
       }
@@ -358,12 +359,12 @@ const menu = {
           maxtime=val.name.split('-')[1].replace(':','')
           // console.log(mintime,maxtime,'1111111111111111111111111111111111111111111111111111')
           this.timeselect.push({mintime:mintime,maxtime:maxtime,index:val.index})
-          // console.log('拼接的',this.timeselect)
+          console.log('拼接的',this.timeselect)
           this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
         }else{  
          
           this.timeselect.splice(this.timeselect.findIndex((item)=>{return item.index===val.index}),1);
-          // console.log('拼接的', this.timeselect)
+          console.log('拼接的', this.timeselect)
           this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
         }
       }
@@ -404,22 +405,24 @@ const menu = {
       // }
     
   },
-  loadShip1(){
+  loadShip(){
     this.service.get('/ship/shipType',{parmas:{
       }}).then(res=>{
       console.log("shipflag",res)
       this.loadShipData=res.flags
-      for( var i in this.loadShipData){
-        this.areaselect.push(i.shipType)
-        // this.selectAreaData.push(i.shipType)
+      for( var i of this.loadShipData){
+        this.shipselect.push(i.shipType)
       }
     })
   },
-  selecarea2(){
+  selecarea(){
     this.service.get('/water/allList',{parmas:{
       }}).then(res=>{
       console.log("allList",res)
      this.selectAreaData=res.list
+      for( var i of this.selectAreaData){
+        this.areaselect.push(i.id)
+      }
     })
   },
   // 目标筛选
@@ -2139,7 +2142,7 @@ const area={
         i.lat2=i.points[1].lat
         i.lon2=i.points[1].lon
       }
-        // console.log('i.type',i)         
+        console.log('i.type',i)
 
       var createPolygon=  this.createPolygon(m[i.type], i,'area' +i.id,
           this.areaTypeStyle[i.level],
@@ -2149,9 +2152,10 @@ const area={
         // console.log('areaTypeStyle',createPolygon),
         createPolygon.on('click', (e) =>{
           // alert(1231)
-          // console.log('e',e)
+          console.log('e',e)
           this.showInfo.customArea=true
           this.dialogInfo.customArea = i
+          this.dialogInfo.points=i.points
           })
       }
     } else {
@@ -2604,6 +2608,7 @@ const area={
         this.loadGroupData()
         this.drawLayer.clearLayers()
         console.log('删除区域',res)
+        // this.closeDraw()
       })
     // }
   },
