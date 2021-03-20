@@ -93,9 +93,13 @@ function out_of_china(lng, lat) {
 /**
  *  84坐标系   转 百度
  */
-function wgs84ToBD(lng,lat){
+function wgs84ToBD(lng,lat,type=true){
+  if(type){
+    return [lng,lat]
+  }else{
 	var jo2=wgs84togcj02(lng,lat);
-	return gcj02tobd09(jo2[0],jo2[1]);
+  return gcj02tobd09(jo2[0],jo2[1]);
+  }
 	 
 }
 /**
