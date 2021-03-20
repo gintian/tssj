@@ -9,6 +9,7 @@
                         title="图例"
                         :visible.sync="dialogVisible"
                         width="23%"
+                        top="0vh"
                         :append-to-body="true">
                           <h4>基础设施</h4>
                          <div class="signChild" >
