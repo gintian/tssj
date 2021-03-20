@@ -40,11 +40,31 @@
         type:Number,
         default:0
       },
+        loadShip:{
+            type:Array,
+            default:()=>[]
+        },
+        selecarea:{
+            type:Array,
+            default:()=>[]
+        },
     },
     watch:{
       ship(val){
         this.ship=val
-      }
+      },
+        loadShip(val){
+          console.log('asddddddddd',val)
+
+            for(let i of val){
+                this.base[0].children.push({name:i.shipType,is:true,ship:true})
+            }
+        },
+        selecarea(val){
+            for(let i of val){
+                this.base[2].children.push({name:i.name,is:true,selectarea:true,id:i.id})
+            }
+        }
     },
 
     data(){
@@ -74,30 +94,11 @@
       }
     },
     mounted(){
-      this.loadShip()
-      this.selecarea()
+      // this.loadShip()
+      // this.selecarea()
     },
     methods:{
-      loadShip(){
-           this.service.get('/ship/shipType',{parmas:{
-        }}).then(res=>{
-          // console.log("shipflag",res)
-          for(let i of res.flags){
-            this.base[0].children.push({name:i.shipType,is:true,ship:true})
-          }
-        })
-      },
-      selecarea(){
-           this.service.get('/water/allList',{parmas:{
-        }}).then(res=>{
-          // console.log("allList",res)
-          // console.log('this.base[1]',this.base[1])//出现时间
-          // console.log('this.base[2]',this.base[2])//出现区域
-          for(let i of res.list){
-            this.base[2].children.push({name:i.name,is:true,selectarea:true,id:i.id})
-          }
-        })
-      },
+
       clickShip(i){
         i.is=!i.is
         // console.log("选中点击",i)
@@ -112,6 +113,8 @@
           // this.$emit('selectMarker',i)
         }
         this.$emit('selectMarker',v)
+          this.$emit('loadShip',v)
+          this.$emit('selecarea',v)
       }
     }
   }

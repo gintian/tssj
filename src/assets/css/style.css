@@ -240,11 +240,11 @@ aside .el-submenu .el-menu-item.is-active:hover, aside .el-menu-item.is-active:h
 
 .container .main {
   /* display: -ms-flexbox;  //兼容ie10 */
-  display: flex;
-  position: absolute;
-  top: 50px;
-  bottom: 0px;
-  overflow: hidden;
+  /*display: flex;*/
+  /*position: absolute;*/
+  /*top: 50px;*/
+  /*bottom: 0px;*/
+  /*overflow: hidden;*/
 }
 
 .container .warp-main {

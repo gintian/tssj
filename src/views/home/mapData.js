@@ -300,9 +300,11 @@ const area={
 
 //关于地图的变量
 const map={
-  shipselect:[ "散货船", "集装箱船", "油轮", "客船", "渔船", "拖轮","其他"],
-  timeselect:[],
+  shipselect:[],
+  timeselect:['00:00-05:00','05:00-10:00','10:00-15:00','15:00-20:00','20:00-24:00'],
   areaselect:[],
+  loadShipData:[],
+  selectAreaData:[],
   map: null,
   ciLayer: null,//船舶覆盖物图层
   focusShipLayer: null,//关注船舶图层

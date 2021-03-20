@@ -10,17 +10,9 @@
       </div>
       <div class="topbar-title">
         <!-- 注意：topNavState：根据当前路由所在根路由的type值判断显示不同顶部导航菜单 -->
-        <el-row v-show="$store.state.topNavState==='home'">
-          <el-col :span="24">
-            <el-menu :default-active="defaultActiveIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
-              <el-menu-item index="/map">首页</el-menu-item>
-              <el-menu-item index="/objectManager">系统管理</el-menu-item>
-            </el-menu>
-          </el-col>
-        </el-row>
-        <el-row v-show="$store.state.topNavState==='enterprise'">
-          <el-col :span="24">
-            <el-menu :default-active="defaultActiveIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
+        <el-row >
+    <el-col>
+            <el-menu  class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
               <el-menu-item index="/map">首页</el-menu-item>
               <el-menu-item index="/objectManager">目标管理</el-menu-item>
               <el-menu-item index="/Suspicious">可疑事件</el-menu-item>
@@ -36,7 +28,7 @@
       </div>
     </el-col>
 
-    <!--中间-->
+    <!--&lt;!&ndash;中间&ndash;&gt;-->
     <transition name="fade" mode="out-in">
       <!-- <div class="router" > -->
           <router-view></router-view>
@@ -130,7 +122,7 @@ import '@/assets/iconfont/iconfont.css'
       }
     },
     watch: {
-      '$route': 'fetchNavData'  //监听router值改变时，改变导航菜单激活项
+      '$route': 'fetchNavData',  //监听router值改变时，改变导航菜单激活项
     }
   }
 </script>

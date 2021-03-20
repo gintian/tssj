@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npm run dev",
     "serve": "vue-cli-service serve",
-    "dev": "vue-cli-service serve --mode development",
+    "dev": "vue-cli-service serve --mode development ",
     "build": "vue-cli-service build",
     "brod": "vue-cli-service build --mode production"
   },
@@ -35,7 +35,6 @@
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0",
     "vuex-persistedstate": "^3.0.1"
-  
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

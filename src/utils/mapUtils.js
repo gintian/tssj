@@ -71,7 +71,7 @@ export  default {
   createPolygon(type,waters,signal,style){
     let map = {
       'circle': (wgs84ToBD) => {
-        console.log('circle',waters)
+        // console.log('circle',waters)
 
         // this.showInfo.customArea = true
         // this.dialogInfo.customArea=waters
@@ -86,7 +86,7 @@ export  default {
         return circle
       },
       'polygon': (wgs84ToBD) => {
-        console.log('polygon',waters)
+        // console.log('polygon',waters)
 
         // this.showInfo.customArea = true
         // this.dialogInfo.customArea=waters
@@ -102,7 +102,7 @@ export  default {
         return polygon
       },
       'rectangle': (wgs84ToBD) => {
-        console.log('rectangle',waters)
+        // console.log('rectangle',waters)
         
         // this.showInfo.customArea = true
         // this.dialogInfo.customArea=waters

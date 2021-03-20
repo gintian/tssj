@@ -1,7 +1,11 @@
 <template>
-  <el-col :span="24" class="main">
+  <el-col :span="24" class="main1"  style="display: flex;
+  position: absolute;
+  top: 50px;
+  bottom: 0px;
+  overflow: hidden;">
     <!--左侧导航-->
-    <aside :class="{showSidebar:!collapsed}">
+    <aside :class="{showSidebar:!collapsed}" v-show="showNav">
       <!--展开折叠开关-->
       <div class="menu-toggle" @click.prevent="collapse">
         <i class="iconfont icon-shouqi" v-show="!collapsed" title="收起"></i>
@@ -45,6 +49,7 @@
     name: 'leftNav',
     data () {
       return {
+        showNav:true,
         collapsed: this.$store.state.collapsed
       }
     },
@@ -87,7 +92,15 @@
     },
     mounted() {
       this.defaultLeftNavOpened();
-    }
+    },
+    watch:{
+      $route( to , from ){
+          // console.log( to,'++++++++++++++++++++++++++++++++++++++++++++++++++++++++++' )
+        this.defaultLeftNavOpened();
+          this.showNav=!(to.path==='/Suspicious/list'||to.path==='/dept/list')
+        // console.log(to.path!=='/Suspicious/list',to.path!=='/dept/list')
+      }
+    },
   }
 </script>
 <style lang="less" scoped>

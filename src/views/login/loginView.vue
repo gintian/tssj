@@ -29,14 +29,7 @@
         <p class="footer-msg">支持单位：中船（浙江）海洋科技有限公司</p>
     </div>
 </template>
-<script  type="text/javascript">
-// if(window.screen.width>1427&&window.screen.width<=1920){  
-//    document.write("<link href='${ctx}/resources/css/party-service/party-self-building-css2.css' rel='stylesheet'>");  
-// }  
-// if(window.screen.width<=1427){  
-//    document.write("<link href='${ctx}/resources/css/party-service/party-self-building-css1.css' rel='stylesheet'>");  
-// }  
-</script>
+
 <script>
   import { sha512 } from 'js-sha512'
   // import service from '../../tools/request'
@@ -72,7 +65,7 @@
           if(res.data.error===0){
           this.$store.dispatch('setUserData', res)
           this.$store.commit('setJSESSIONID', res.data.JSESSIONID)
-          this.$router.push({ path: '/map2' })
+          this.$router.push({ path: '/map' })
           }
          
         }).catch(err => {

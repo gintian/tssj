@@ -138,10 +138,15 @@
     props: {
       shipTabObj: {
         type: Object,
-        default: {}
+        // default: {}
+        default:()=>{}
       }
     },
-
+    data(){
+      return{
+        shipTabObj:{}
+      }
+    },
     mounted() {
       console.log('shipTabObj',this.shipTabObj)
     },
@@ -150,8 +155,8 @@
 
         console.log('数据变化shipTabObj',val)
         if(val.archivesShip){
-          val.archivesShip.lAST_UPD_DT=new Date(val.archivesShip.lAST_UPD_DT).toISOString().split('T')[0] + ' ' +  new Date(val.archivesShip.lAST_UPD_DT).toTimeString().split(' ')[0];
-          val.archivesShip.lAST_UPD_DT_LONG=new Date(parseFloat(val.archivesShip.lAST_UPD_DT_LONG+'000')).toISOString().split('T')[0] + ' ' +  new Date(parseFloat(val.archivesShip.lAST_UPD_DT_LONG+'000')).toTimeString().split(' ')[0];
+          // val.archivesShip.Last_Upd_Dt=new Date(val.archivesShip.Last_Upd_Dt).toISOString().split('T')[0] + ' ' +  new Date(val.archivesShip.Last_Upd_Dt).toTimeString().split(' ')[0];
+          // val.archivesShip.Last_Upd_Dt_long=new Date(parseFloat(val.archivesShip.Last_Upd_Dt_long+'000')).toISOString().split('T')[0] + ' ' +  new Date(parseFloat(val.archivesShip.Last_Upd_Dt_long+'000')).toTimeString().split(' ')[0];
           for(let i of this.ship){
             let archivesShip=val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)]
             // console.log(this.base[i.prop],val.ship[this.base[i.prop]])
@@ -172,7 +177,7 @@
         // console.log(val.archivesShip)
         if(val.archivesCommunicationList){
           for(let i of val.archivesCommunicationList){
-            i.lAST_UPD_DT=new Date(val.archivesShip.lAST_UPD_DT).toISOString().split('T')[0] + ' ' +  new Date(val.archivesShip.lAST_UPD_DT).toTimeString().split(' ')[0];
+            i.Last_Upd_Dt=new Date(val.archivesShip.Last_Upd_Dt).toISOString().split('T')[0] + ' ' +  new Date(val.archivesShip.Last_Upd_Dt).toTimeString().split(' ')[0];
           }
         }
       }
@@ -198,9 +203,9 @@
           'DATASOURCE':'status',
           'REMARK':'null',
           'SPEED':'speed',
-          'LAST_UPD_DT':'null',
+          'Last_Upd_Dt':'null',
           'ClassKey':'null',
-          'LAST_UPD_DT_LONG':'null',
+          'Last_Upd_Dt_long':'null',
         },
         ship: [
           { id: 1, name: 'IMO', prop: 'IMO' },
@@ -218,9 +223,9 @@
           { id: 14, name: '数据来源', prop: 'DATASOURCE' },
           { id: 15, name: '备注', prop: 'REMARK' },
           { id: 16, name: '设计航速', prop: 'SPEED' },
-          { id: 17, name: '更新日期', prop: 'LAST_UPD_DT' },
+          { id: 17, name: '更新日期', prop: 'Last_Upd_Dt' },
           { id: 18, name: '所属船级社', prop: 'ClassKey' },
-          { id: 19, name: '更新时间', prop: 'LAST_UPD_DT_LONG' }
+          { id: 19, name: '更新时间', prop: 'Last_Upd_Dt_long' }
         ],
         communication: [
           { id: 1, name: '终端类型', prop: 'TERMINAL_TYPE' },
@@ -230,7 +235,7 @@
           { id: 5, name: '卫星使用类型', prop: 'USE_TYPE_CD' },
           { id: 6, name: '备注', prop: 'DESC' },
           { id: 7, name: '来源', prop: 'SUPPLIER' },
-          { id: 8, name: '更新时间', prop: 'LAST_UPD_DT' }
+          { id: 8, name: '更新时间', prop: 'Last_Upd_Dt' }
 
         ],
         consumption: [
@@ -263,16 +268,16 @@
           { id: 9, name: '备注', prop: 'REMARK' }
         ],
         dry: [
-          // { id: 1, name: '捆包货物容量', prop: 'BALE' },
-          // { id: 2, name: '谷物容量', prop: 'GRAIN' },
-          // { id: 3, name: '集装箱容量', prop: 'TEU' },
-          // { id: 4, name: '仓内轻便梯', prop: 'RAMPSINTERNAL' },
-          // { id: 5, name: '货仓数量情况', prop: 'HOLDS' },
-          // { id: 6, name: 'DryDes', prop: 'DRYDES' },
-          // { id: 7, name: '最大舱盖尺寸', prop: 'HATCHESSIZEMAX' },
-          // { id: 8, name: '舱盖情况', prop: 'HATCHES' },
-          // { id: 9, name: '冷藏箱TEU', prop: 'REEFER_TEU' },
-          // { id: 10, name: '冷藏箱CAPACITY', prop: 'REEFER_CAPACITY' }
+          { id: 1, name: '捆包货物容量', prop: 'BALE' },
+          { id: 2, name: '谷物容量', prop: 'GRAIN' },
+          { id: 3, name: '集装箱容量', prop: 'TEU' },
+          { id: 4, name: '仓内轻便梯', prop: 'RAMPSINTERNAL' },
+          { id: 5, name: '货仓数量情况', prop: 'HOLDS' },
+          { id: 6, name: 'DryDes', prop: 'DRYDES' },
+          { id: 7, name: '最大舱盖尺寸', prop: 'HATCHESSIZEMAX' },
+          { id: 8, name: '舱盖情况', prop: 'HATCHES' },
+          { id: 9, name: '冷藏箱TEU', prop: 'REEFER_TEU' },
+          { id: 10, name: '冷藏箱CAPACITY', prop: 'REEFER_CAPACITY' }
         ],
         engine: [
           { id: 1, name: '序号', prop: 'SEQNO' },

@@ -385,11 +385,11 @@ const menu = {
         //  console.log('val.selectarea',val.selectarea)
         if(val.is){
           this.areaselect.push(val.id)
-          // console.log('拼接的',this.areaselect)
+          console.log('拼接的1',this.areaselect)
           this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
         }else{
           this.areaselect.splice(this.areaselect.findIndex((item)=>{return item===val.id}),1);
-          // console.log('拼接的', this.areaselect)
+          console.log('拼接的2', this.areaselect)
           this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
         }
       }
@@ -403,6 +403,24 @@ const menu = {
       //   this.loadAreaShip(1,'','',areaselect)
       // }
     
+  },
+  loadShip1(){
+    this.service.get('/ship/shipType',{parmas:{
+      }}).then(res=>{
+      console.log("shipflag",res)
+      this.loadShipData=res.flags
+      for( var i in this.loadShipData){
+        this.areaselect.push(i.shipType)
+        // this.selectAreaData.push(i.shipType)
+      }
+    })
+  },
+  selecarea2(){
+    this.service.get('/water/allList',{parmas:{
+      }}).then(res=>{
+      console.log("allList",res)
+     this.selectAreaData=res.list
+    })
   },
   // 目标筛选
   ObjectSelect(val) {
@@ -1694,21 +1712,11 @@ const ship={
   // 船舶详细信息框的船舶详情
   shipDetail(data){
     console.log('shipDetail',data)
-    // this.removeMapDom('ShipDetail')
-    // this.service.get('/ship/view', {
-    //  params:{mmsi: data} 
-    // }).then(res => {
-    //   console.log(res)
-    //   this.dialogInfo.shipDetail = res.ais
-    //   this.showInfo.shipDetail=true
-    // })
      this.service.get('/ship/archives', {
      params:{mmsi: data} 
     }).then(res => {
       console.log("船舶详细信息",res)
-      // this.$store.dispatch('setUserData', res)
-      // this.$store.commit('setJSESSIONID', res.JSESSIONID)
-      this.dialogInfo.shipDetail = res.ais
+      this.dialogInfo.shipDetail = res.archivesShip
       this.showInfo.shipDetail=true
     })
 
@@ -2095,7 +2103,7 @@ const area={
   },
   showAllArea()/*显示隐藏所有区域*/ {
 
-    console.log('1231313',this.showOrHide)
+    // console.log('1231313',this.showOrHide)
     if (this.showOrHide ==='1') {
       console.log('显示所有')
       console.log('areaData',this.areaData)
@@ -2582,27 +2590,22 @@ const area={
       })
     }
   },
+  // test(i){
+  //   console.log('hufgcfgcfgcycvghcgfggh',i)
+  // },
   removeArea(data)/*删除区域/分组*/ {
     // 删除区域
-    // console.log(data)
-    if (data.type === 0) {
+    console.log('删除区域',data)
+    // if (data.type === 0) {
       // this.$emit('removeArea',{id:data.id,tpye:1})
-      this.service.get('/water/delete ', {
+      this.service.get('/water/delete', {
         params:{'id': data.id}
       }).then(res => {
         this.loadGroupData()
+        this.drawLayer.clearLayers()
         console.log('删除区域',res)
       })
-    } else {
-      // 删除分组
-      
-      // this.service.post('/region/deleteGroup', {
-      //   'id': data.id,
-      //   'name': data.label
-      // }).then(res => {
-      //   this.loadGroupData()
-      // })
-    }
+    // }
   },
 }
 export default {

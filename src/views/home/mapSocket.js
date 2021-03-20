@@ -37,6 +37,7 @@ export default {
         }
       }
     } else if (redata.action === 'criminal') {
+      const h = this.$createElement
       this.socketEventData = redata.data.list
       if(redata.data.list.length>0){
         for(let i in redata.data.list){
@@ -46,8 +47,38 @@ export default {
             // offset: 200,
             type: 'warning',
             position: 'bottom-left',
-            message: redata.data.list[i].message,
-            customClass:'notify-success'
+            message:
+                h('div', { class: 'message' }, [
+                          h('div', {class: 'btnList'} ,redata.data.list[i].message, [
+                            h('span',
+                                {
+                                  on:{
+                                    click:  redata.data.list[i].mmsi,
+                                      // click: this.ship_detail(redata.data.list[i].mmsi)
+                                    }
+                                },
+                                // redata.data.list[i].mmsi,
+                            ),
+                          ])
+                        ]),
+
+            // h('div', { class: 'message' }, [
+          //             h('div', { class: 'btnList' }, [
+          //               h('span', {on: {click: this.doSomeThing(val)}}, '你导出的数据报表已生成，点击'),
+          //               h(
+          //                 'span',
+          //                 {
+          //                   class: 'later',
+          //                   on: {
+          //                     click: this.doSomeThing
+          //                   }
+          //                 },
+          //                 '下载文件'
+          //               )
+          //             ])
+          //           ]),
+          //   message: [redata.data.list[i].message, redata.data.list[i].mmsi],
+            // customClass:'notify-success'
         }); 
         }
       }

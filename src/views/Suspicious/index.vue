@@ -222,7 +222,7 @@ export default {
   },
   filters:{
   },
-  created() {
+  mounted() {
     this.getList();
     this.statistical();
     },

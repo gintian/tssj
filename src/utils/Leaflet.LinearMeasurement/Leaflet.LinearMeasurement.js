@@ -5,7 +5,8 @@
     options: {
       position: 'topleft',
       unitSystem: 'imperial', // imperial | metric
-      color: '#4D90FE',
+      // color: '#4D90FE',
+      color:'#FF0000',
       contrastingColor: '#fff',
       show_last_node: false,
       show_azimut: false,
@@ -60,7 +61,8 @@
       if(this.options.color && this.options.color.indexOf('#') === -1){
         this.options.color = '#' + this.options.color;
       } else if(!this.options.color){
-        this.options.color = '#4D90FE';
+        // this.options.color = '#4D90FE';
+        this.options.color = '#000000';
       }
 
       var originalColor = this.options.color.replace('#', '');
@@ -354,10 +356,10 @@
       p_latLng = this._map.containerPointToLatLng(b);
 
       if(label){
-        console.log('label',label)
+        // console.log('label',label)
         var cicon = L.divIcon({
           className: 'total-popup-label ' + nodeCls,
-          html: '<span style="color: '+color+';">'+label +this.measure.f+this.measure.angle +this.measure.a +'<br/>'
+          html: '<span style="color: #000000;">'+label +this.measure.f+this.measure.angle +this.measure.a +'<br/>'
           +this.measure.eLat+'</span>'
         });
 
@@ -399,7 +401,8 @@
 
     renderPolyline: function(latLngs, dashArray, layer) {
       var poly = L.polyline(latLngs, {
-        color: this.options.color,
+        // color: this.options.color,
+        color:'#FF0000',
         weight: 2,
         opacity: 1,
         dashArray: dashArray
@@ -416,14 +419,16 @@
 
       if(L.version.startsWith('0')){
         multi = L.multiPolyline(latLngs, {
-          color: this.options.color,
+          // color: this.options.color,
+          color:'#FF0000',
           weight: 2,
           opacity: 1,
           dashArray: dashArray
         });
       } else {
         multi = L.polyline(latLngs, {
-          color: this.options.color,
+          // color: this.options.color,
+          color:'#FF0000',
           weight: 2,
           opacity: 1,
           dashArray: dashArray

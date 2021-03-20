@@ -235,31 +235,7 @@ export default {
     //   }
     // }
   },
-  socketRadarData(val) {
 
-    // if (this.stationCheck.radar) {
-    //   // console.log('socketRadarData',val)
-    //   for (let i of val) {
-    //     console.log('socketRadarData',i)
-    //     if(i.status==false){
-    //       // for(let s of this.stationMarker){
-    //        if(i.id){
-    //          // console.log(i)
-    //          let bd09Arr = wgs84ToBD(parseFloat(i.lon), parseFloat(i.lat))
-    //          setTimeout(() => {
-    //            console.log(this.$refs['radarMain' + i.id][0])
-    //            this.map.addLayer()
-    //          }, 1200)
-    //        }
-    //       // }
-    //     }
-    //   }
-    // } 
-    // else {
-    //   this.removeOverlay('雷达')
-    // }
-
-  },
   async socketFlyData(val) {
     // console.log('数据变化',val)
     this.planeLayer.clearLayers()

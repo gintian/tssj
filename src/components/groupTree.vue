@@ -4,14 +4,14 @@
             <div class="tree_filter">
                 <el-input
                         placeholder="请输入区域名称搜索"
-                        v-model="filterText" 
+                        v-model="filterText"
                         :input="valueChange">
                 </el-input>
 
                 <span @click="openDrawView" class="selectAdd">+</span></div>
                 <el-upload
                       class="upload-demo"
-                      :http-request="uploadSectionFile" 
+                      :http-request="uploadSectionFile"
                       accept=".xls"
                       multiple
                       :action="uploadUrl"
@@ -33,7 +33,7 @@
                           style="width: 100%"
                           :header-cell-style="tableHeaderColor">
                           <el-table-column
-                              v-for="(item,index) in tableTop" 
+                              v-for="(item,index) in tableTop"
                               :key="index"
                               :prop="item.prop"
                               :label="item.name"
@@ -48,7 +48,7 @@
                               <template slot-scope="scope">
                                 <el-button
                                   type="text" size="small" class="btn-upt" @click="handleUpdate(scope.row,index)"   v-show="tableData[scope.row.id].show"  >导入</el-button>
-                                 
+
                                 <el-button
                                   type="text" size="small" class="btn-upt" @click="handleDel(scope.row)"  v-show="tableData[scope.row.id].show"  >删除</el-button>
 
@@ -59,7 +59,7 @@
                     <el-button  type="primary" size="small" :import='tableData' @click="clickImport()">一键导入</el-button>
               </div>
         </el-dialog>
-       
+
         <el-tree
                 :data="groupData"
                 node-key="id"
@@ -123,7 +123,7 @@
       },
     },
     data() {
-     
+
       const data = [{
         id: 1,
         label: '一级 1',
@@ -314,7 +314,7 @@
         importdata:'',
         uploadUrl:'water/pushExcel',
         showSearch:false,
-      
+
       temp:{  //表单字段
         id:'',
         station:'',
@@ -325,7 +325,7 @@
         status:'',
       },
         dialogDelVisible:false, //删除弹层显隐
-        delid:'', 
+        delid:'',
         importdialog:false,
         data: JSON.parse(JSON.stringify(data)),
         labels:[],
@@ -370,9 +370,12 @@
           }
         }
       }
-     
+
     },
     watch: {
+        // removeArea(val){
+        //     console.log('removeArea',val)
+        // },
       filterText(val) {
           // console.log("val",val)
           // this.filterText=val
@@ -390,10 +393,21 @@
         // console.log(val,"val")
         this.areaLayer=val
       },
-     
+      tableData(val){
+        // console.log(val,"val")
+
+        for(let i in val){
+              val[i].id=i
+              val[i].show=true
+              }
+              this.tableData=val
+      },
+
     },
-   
-    mounted() {},
+
+    mounted() {
+
+    },
     updated() {
       // console.log(this.groupData)
       // console.log(this.areaData)
@@ -412,7 +426,7 @@
     handleUpdate(row,index){
       console.log('handleUpdate',row,index)
       // console.log('this.tableData[row.id]',this.tableData[row.id])
-      if(row){    
+      if(row){
         let [level,type,points,radius,lat,lon]=[row.level,row.type,row.points,row.radius,row.lat,row.lon]
         console.log('level,type',level,type)
          this.service.post( '/water/save',{
@@ -435,7 +449,7 @@
             }
              this.$set(this.tableData,_index,{...row})
           }
-        }) 
+        })
       }
     },
     //一键导入
@@ -445,7 +459,7 @@
           // console.log("i",i)
           if(this.tableData[i].show){
               console.log("tableData",this.tableData[i])
-            let [level,type,points,radius,lat,lon]=[this.tableData[i].level,this.tableData[i].type,this.tableData[i].points,this.tableData[i].radius,this.tableData[i].lat,this.tableData[i].lon] 
+            let [level,type,points,radius,lat,lon]=[this.tableData[i].level,this.tableData[i].type,this.tableData[i].points,this.tableData[i].radius,this.tableData[i].lat,this.tableData[i].lon]
               this.service.post( '/water/save',{
                     level: level,
                     type: type,
@@ -461,9 +475,9 @@
                         this.$set(this.tableData,i,this.tableData[i])
                       console.log("表格数据更新后",this.tableData);
                   }
-              }) 
+              })
           }
-        } 
+        }
       },
           //删除弹层
         handleDel(row){
@@ -472,7 +486,7 @@
           //  this.tableData.splice(row.index, 1);
             this.tableData.splice(row.index, 1);
             row.show=false
-          
+
             //  this.$set(this.tableData,_index,{...row})
           console.log("this.tableData",this.tableData)
         },
@@ -481,7 +495,7 @@
           if (rowIndex === 0) {
             return 'background-color: #e7f3ff;color: #000;font-weight: 500;'
           }
-        }, 
+        },
        // 导入数据
        uploadSectionFile(item){
         //  console.log("导入的数据",item,process.env.VUE_APP_BASE_API+this.uploadUrl)
@@ -489,7 +503,7 @@
         // FormData 对象
           const form = new FormData();
           // 文件对象
-          form.append('file', fileObj);  
+          form.append('file', fileObj);
            this.$axios({
             method: 'post',
             url: 'http://192.168.1.36:8093/'+this.uploadUrl,
@@ -498,7 +512,7 @@
             },
             data: form,
           }).then((res) => {
-            
+
             var importdata=res
             // console.log("接收数据：",importdata);
             // console.log("返回数据：",res.data);
@@ -513,8 +527,8 @@
               }
             // console.log("原始excel:",this.tableData)
           });
-          
-      } ,  
+
+      } ,
        handleChange(file, fileList) {
         this.fileList = fileList.slice(-3);
       },
@@ -547,8 +561,8 @@
       openDrawView() {
         this.$emit('openDrawView', true)
       },
-     
-      
+
+
       filterNode(value, data) {
         if (!value) return true
         return data.name.indexOf(value) !== -1
@@ -561,36 +575,37 @@
         data.children.push(newChild)
       },
       moverView(ev, store, data)/*移动视野*/{
-        // console.log('move',data)
+        console.log('move',data)
         // this.map.setView([30.37892927824675,122.19491755725795], 12);
         // this.map.panTo(mp[marker.tp]().pos)
         // let tp={
         //   0:()=>{return}
+        // // }
+        // let point=[]
+        // for(let marker of this.areaData){
+        //   if(marker.id===data.id){
+        //     // console.log(marker)
+        //     // if(marker.type===0){
+        //       let bd09Arr=wgs84ToBD(parseFloat(marker.centerLon),parseFloat(marker.centerlat))
+        //       point.push(bd09Arr[1], bd09Arr[0])
+        //     // }else if(marker.type===1){
+        //     //   for (let i of marker.points) {
+        //     //     let bd09Arr=wgs84ToBD(parseFloat(marker.centerLon),parseFloat(marker.centerlat))
+        //     //     point.push(bd09Arr[1], bd09Arr[0])
+        //     //   }
+        //     // }else if(marker.type===2){
+        //     //   let bd09Arr=wgs84ToBD(parseFloat(marker.centerLon),parseFloat(marker.centerlat))
+        //     //   point.push(bd09Arr[1], bd09Arr[0])
+        //     // }
+        //   }
         // }
-        let point=[]
-        for(let marker of this.areaData){
-          if(marker.id===data.id){
-            // console.log(marker)
-            // if(marker.type===0){
-              let bd09Arr=wgs84ToBD(parseFloat(marker.centerLon),parseFloat(marker.centerlat))
-              point.push(bd09Arr[1], bd09Arr[0])
-            // }else if(marker.type===1){
-            //   for (let i of marker.points) {
-            //     let bd09Arr=wgs84ToBD(parseFloat(marker.centerLon),parseFloat(marker.centerlat))
-            //     point.push(bd09Arr[1], bd09Arr[0])
-            //   }
-            // }else if(marker.type===2){
-            //   let bd09Arr=wgs84ToBD(parseFloat(marker.centerLon),parseFloat(marker.centerlat))
-            //   point.push(bd09Arr[1], bd09Arr[0])
-            // }
-          }
-        }
-        this.map.setView(point, 13);
+        this.map.setView([data.lat,data.lon], 12);
       },
       remove(node, data) /*删除区域*/ {
+          // console.log('remove',data)
         // children.splice(index, 1)
-
-        this.$MessageBox.confirm('此操作将永久删除, 是否继续?', '提示', {
+        console.log('remove',node,data)
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -600,14 +615,14 @@
           const index = children.findIndex(d => d.id === data.id)
           children.splice(index, 1)
           console.log(data)
-          if (data.className) {
+          if (data.name) {
             console.log('删除区域')
-            this.$emit('removeArea', { id: data.id, type: 0 })
-          } else {
-            console.log('删除分组')
-
-            this.$emit('removeArea', { id: data.id, label: data.label, type: 1 })
+            this.$emit('removeArea', { id: data.id})
           }
+          // else {
+          //   console.log('删除分组')
+          //   // this.$emit('removeArea', { id: data.id, label: data.label, type: 1 })
+          // }
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -620,24 +635,22 @@
       renderContent(h, { node, data, store }) {
         return (
           <span class="custom-tree-node" style="width:100%">
-                        <i class={data.className} style="width:20px"> &nbsp;</i>
+                        <i class='el-icon-bell' style="width:20px;color:#2770D4;"> &nbsp;</i>
             <span class="tree_node_top" on-click={(ev) => this.moverView(ev, store, data)}> {this.showOrEdit(data)}</span>
-            <span class="tree_node_op " style="font-size: 14px;float:right;color:red;">
-                  <i class={this.showOrdHide(data)} on-click={(ev) => this.showArea(ev, store, data)} style="margin-left:5px"></i>
-                  <i class={this.isFocus(data)} style="margin-left:5px"   on-click={(ev) => this.focusArea(ev, store, data)}></i>
-                  <i class={this.editStyle(data)} style="margin-left:5px"
-                     on-click={(ev) => this.nodeEdit(ev, store, data)}></i>
-                  <i class={this.deleteStyle(data)} style="margin-left:5px"
-                     on-click={() => this.remove(node, data)}></i>
+            <span class="tree_node_op " style="font-size: 14px;float:right;color:#2770D4;">
+                  <i class='el-icon-view' on-click={(ev) => this.showArea(ev, store, data)} style="margin-left:5px"></i>
+                  <i class='el-icon-s-claim' style="margin-left:5px"  on-click={(ev) => this.nodeEdit(ev, store, data)}></i>
+                  <i class='el-icon-delete' style="margin-left:5px"  on-click={() => this.remove(node, data)}></i>
             </span>
         </span>)
       },
       showOrEdit(data) {
-        console.log('showOrEdit',data)
+        // console.log('showOrEdit',data)
         if (data.edit) {
           console.log('data.edit',data.edit)
           return (
             <input type="text" class="node_labe" value={data.name}
+            // onclick='ship_detail(item)'
                    on-blur={ev => this.edit_sure(ev, data)}/>
           )
         } else {
@@ -706,7 +719,7 @@
         // i.typeLabel=type[this.areaData.lever]
         // console.log('showAllArea')
         // console.log(data,type)
-        
+
         // for(let i of this.groupData){ //设置分组的所有区域眼睛icon为亮
         // console.log(i,this.groupData)
         //   if(i.children.length>0){
@@ -826,21 +839,21 @@
       },
       showArea(ev, store, data) {
 
-        // console.log(data)
-        let market = {}
-        const m = {
-          '0': 'circle',
-          '1': 'polygon',
-          '2': 'rectangle'
-        }
-        for (let mark of this.areaData) {
-          if (mark.id == data.id) {
-            market = mark
-            market.tp = m[mark.type]
-          }
-        }
-        // console.log(market)
-        // console.log(this.map)
+        console.log('showArea',data)
+        // let market = {}
+        // const m = {
+        //   '0': 'circle',
+        //   '1': 'polygon',
+        //   '2': 'rectangle'
+        // }
+        // for (let mark of this.areaData) {
+        //   if (mark.id == data.id) {
+        //     market = mark
+        //     market.tp = m[mark.type]
+        //   }
+        // }
+        // // console.log(market)
+        // // console.log(this.map)
 
         if (data.show) {
           console.log('hide')
@@ -999,6 +1012,7 @@
       },
 
       nodeEdit(ev, store, data) /*修改区域名称*/ {
+          // console.log('ev',ev)
         data.edit = true
         this.$nextTick(() => {//得到input
           const $input =
@@ -1028,7 +1042,7 @@
 
 <style scoped lang="less">
 /* 操作部分 */
-  .btn-upt{   
+  .btn-upt{
     margin: 0 .5rem 0 0!important;
     color: #0075EE;
     padding-left: 14px;
@@ -1043,7 +1057,7 @@
     background: #2770D4;
      color: white;
      .el-dialog__title{
-        color: white; 
+        color: white;
      }
     .el-dialog__headerbtn .el-dialog__close {
         color: white;
@@ -1113,7 +1127,7 @@
     }
 
     .custom-tree-container /deep/ .selectAdd {
-        
+
     text-align: center;
     margin-left: -1px;
     width: 3.2rem;
