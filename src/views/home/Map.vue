@@ -820,11 +820,17 @@
                 }).then(res => {
                     console.log('所有区域目标', res)
                     this.objectArea = res.list
-                    //  console.log("objectArea",this.objectArea)
+                    if(!this.objectArea){
+                        return  '暂无数据'
+                    }
+                    else{
+                        //  console.log("objectArea",this.objectArea)
                     this.objectArea.forEach(function (item, index) {
                         var otype = item.type
                         // console.log('item', otype);
                     });
+                }
+                    
                 })
             },
             queryName() {

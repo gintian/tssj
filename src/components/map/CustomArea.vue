@@ -161,7 +161,7 @@
         display: grid;
        grid-template-rows: 20% 80%;
         /*height: 150px;*/
-        height: 195px;
+        height: 211px;
         width: auto;
         /* background: #305071; */
          background: white;

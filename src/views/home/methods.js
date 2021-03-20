@@ -255,7 +255,7 @@ const menu = {
 
         console.log(this.markerLayersGroup.item)
         this.service.get('/project/focusType',).then(res=>{
-          console.log(res.data)
+          // console.log(res.data)
           m=res.data
           m.splice(8,1)
         })
@@ -333,7 +333,7 @@ const menu = {
     // }
      // 出现时间筛选
       if(val.parTime){
-        console.log("etime",val.parTime)
+        // console.log("etime",val.parTime)
         if(val.is){
           val.children.forEach(e=>{
             // console.log("etime",e)
@@ -343,28 +343,28 @@ const menu = {
             console.log(mintime,maxtime,'1111111111111111111111111111111111111111111111111111')
             this.timeselect.push({mintime:mintime,maxtime:maxtime})
           })
-          console.log('拼接的时间',this.timeselect)
+          // console.log('拼接的时间',this.timeselect)
           this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
         }else{
           this.timeselect=[]
-          console.log('拼接的时间',this.timeselect)
+          // console.log('拼接的时间',this.timeselect)
           this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
         }
       }
       if(val.appear_time){
-        console.log('val.appear_time',val.appear_time)
+        // console.log('val.appear_time',val.appear_time)
         if(val.is){
           let maxtime,mintime
           mintime=val.name.split('-')[0].replace(':','')
           maxtime=val.name.split('-')[1].replace(':','')
           // console.log(mintime,maxtime,'1111111111111111111111111111111111111111111111111111')
           this.timeselect.push({mintime:mintime,maxtime:maxtime,index:val.index})
-          console.log('拼接的',this.timeselect)
+          // console.log('拼接的',this.timeselect)
           this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
         }else{  
          
           this.timeselect.splice(this.timeselect.findIndex((item)=>{return item.index===val.index}),1);
-          console.log('拼接的', this.timeselect)
+          // console.log('拼接的', this.timeselect)
           this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
         }
       }
@@ -386,11 +386,11 @@ const menu = {
         //  console.log('val.selectarea',val.selectarea)
         if(val.is){
           this.areaselect.push(val.id)
-          console.log('拼接的1',this.areaselect)
+          // console.log('拼接的1',this.areaselect)
           this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
         }else{
           this.areaselect.splice(this.areaselect.findIndex((item)=>{return item===val.id}),1);
-          console.log('拼接的2', this.areaselect)
+          // console.log('拼接的2', this.areaselect)
           this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
         }
       }
@@ -405,20 +405,22 @@ const menu = {
       // }
     
   },
+  //获取船舶类型
   loadShip(){
     this.service.get('/ship/shipType',{parmas:{
       }}).then(res=>{
-      console.log("shipflag",res)
+      // console.log("shipflag",res)
       this.loadShipData=res.flags
       for( var i of this.loadShipData){
         this.shipselect.push(i.shipType)
       }
     })
   },
+  //获取区域类型
   selecarea(){
     this.service.get('/water/allList',{parmas:{
       }}).then(res=>{
-      console.log("allList",res)
+      // console.log("allList",res)
      this.selectAreaData=res.list
       for( var i of this.selectAreaData){
         this.areaselect.push(i.id)
@@ -441,7 +443,8 @@ const menu = {
     if(val.name=='融合目标'){
       this.shipFusion=val.is
     }
-   this.loadAreaShip(1,'',this.shipselect.toString(),'')
+   // this.loadAreaShip(1,'',this.shipselect.toString(),'')
+    this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
   },
   // 图层筛选
   layerSelect(val) {
@@ -2511,18 +2514,9 @@ const area={
   drawArea(id, index) /*三种图形绘制*/ {
 
     this.disabledDraw=true
-    // var b = (JSON.stringify(this.currentDraw));
-    // console.log(this.currentDraw)
-    // this.map.removeOverlay(this.currentDraw)//切换图形 删除之前的图形
-    // this.map.removeOverlay(this.currentDrawLabel)//切换图形 删除之前的图形文字
     this.drawData.radius = ''
     // this.drawData.groupId=this.groupData[0].id
     this.isDrawType = index
-    // this.map.on('pm:drawstart', ({ workingLayer }) => {
-    //   workingLayer.on('pm:vertexadded', e => {
-    //     console.log(e);
-    //   });
-    // })
     this.drawLayer.clearLayers()
     // this.drawLayer.
 

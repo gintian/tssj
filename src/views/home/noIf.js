@@ -423,7 +423,7 @@ actions = () => {
 
     [/^true_(锚地|码头|ais|雷达)$/, function() {
       // this.peer = true
-      console.log( " this.markerLayersGroup",this.markerLayersGroup)
+      console.log( "markerLayersGroup",this.markerLayersGroup)
       this.markerLayersGroup.eachLayer(item=>{
         if(item.signal===this.clickedMarker.name){
           item.setOpacity(1)
@@ -469,32 +469,6 @@ actions = () => {
       return {}
     }],
     
-    // [/^true_(停机坪|执勤道路|执勤码头|港区|锚地|码头泊位|海底光缆)/, function() {
-
-    //   if(this.clickedMarker.name==='执勤道路') this.markerLayersGroup.addLayer(this.roadLayer)
-    //   else if(this.clickedMarker.name==='海底光缆') this.markerLayersGroup.addLayer(this.seaLineLayer)
-    //   else{
-    //     this.markerLayersGroup.eachLayer(item=>{
-    //       if(item.signal===this.clickedMarker.name){
-    //         item.setOpacity(1)
-    //       }
-    //     })
-    //   }
-    //   return {}
-    // }],
-    // [/^false_(停机坪|执勤道路|执勤码头|港区|锚地|码头泊位|海底光缆)/, function() {
-
-    //   if(this.clickedMarker.name==='执勤道路') this.markerLayersGroup.removeLayer(this.roadLayer)
-    //   else if(this.clickedMarker.name==='海底光缆') this.markerLayersGroup.removeLayer(this.seaLineLayer)
-    //   else{
-    //     this.markerLayersGroup.eachLayer(item=>{
-    //       // console.log(item)
-    //       if(item.signal===this.clickedMarker.name){
-    //         item.setOpacity(0)
-    //       }
-    //     })
-    //   }
-    //   return {}
-    // }]
+   
   ])
 }

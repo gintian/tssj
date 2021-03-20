@@ -53,6 +53,22 @@
 
         console.log(sha512(val))
       },
+      open(e) {
+        this.$alert('您输入的用户名/密码不正确，请重新输入', '提示', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: e
+            });
+          }
+        });
+        // this.$notify({
+        //   title: '警告',
+        //   message: '您输入的用户名/密码不正确，请重新输入',
+        //   type: 'warning'
+        // });
+      },
       loginReq() {
         let _this = this
         this.isInLogin = true
@@ -64,13 +80,13 @@
           console.log("登录返回的数据",res.data)
           if(res.data.error===0){
           this.$store.dispatch('setUserData', res)
+
           this.$store.commit('setJSESSIONID', res.data.JSESSIONID)
           this.$router.push({ path: '/map' })
-          }
-         
-        }).catch(err => {
-          console.log(err)
-          this.isInLogin = false
+          }else if(res.data.error===-1){
+            this.isInLogin = false
+            this.open(res.data.message)
+          } 
         })
       }
     }

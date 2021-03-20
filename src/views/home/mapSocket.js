@@ -50,10 +50,11 @@ export default {
             message:
                 h('div', { class: 'message' }, [
                           h('div', {class: 'btnList'} ,redata.data.list[i].message, [
-                            h('span',
+                            h('span',{on:{click: this.ship_detail(redata.data.list[i].mmsi)}},
                                 {
+                                  class: 'later',
                                   on:{
-                                    click:  redata.data.list[i].mmsi,
+                                    click:  this.ship_detail(),
                                       // click: this.ship_detail(redata.data.list[i].mmsi)
                                     }
                                 },

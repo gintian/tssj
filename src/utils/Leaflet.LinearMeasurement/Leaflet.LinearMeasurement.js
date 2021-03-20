@@ -62,7 +62,7 @@
         this.options.color = '#' + this.options.color;
       } else if(!this.options.color){
         // this.options.color = '#4D90FE';
-        this.options.color = '#000000';
+        this.options.color = '#ff0000';
       }
 
       var originalColor = this.options.color.replace('#', '');
@@ -359,7 +359,7 @@
         // console.log('label',label)
         var cicon = L.divIcon({
           className: 'total-popup-label ' + nodeCls,
-          html: '<span style="color: #000000;">'+label +this.measure.f+this.measure.angle +this.measure.a +'<br/>'
+          html: '<span style="color: #ff0000;">'+label +this.measure.f+this.measure.angle +this.measure.a +'<br/>'
           +this.measure.eLat+'</span>'
         });
 
@@ -525,7 +525,7 @@
 
         this.latlngs = [this.prevLatlng, e.latlng];
         
-        var  eLat=[e.latlng.lat.toFixed(6) ,e.latlng.lng.toFixed(6)]
+        var  eLat=[e.latlng.lat.toFixed(2) ,e.latlng.lng.toFixed(2)]
         // console.log(' 当前的经纬度', eLat )
         // console.log('鼠标移动经纬度：',this.prevLatlng, e.latlng);
 
