@@ -164,17 +164,17 @@
       :page-sizes="[10, 20, 30, 40]"
       :page-size="listQuery.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="rows">
+      :total="total">
     </el-pagination>
  </div>
 </template>
 
 <script>
 
-import TableMap from '../../../src/components/TableMap'
+// import TableMap from '../../../src/components/TableMap'
 export default {
   name: 'ComplexTable',
-  components:{'table-map':TableMap},
+  // components:{'table-map':TableMap},
   data() {
     return {
      dialog: {
@@ -187,7 +187,7 @@ export default {
       mapData:[],
       tableData: [], //表格展示的数据
       pages:1, //总页数
-      rows:1, //总条数
+        total:1, //总条数
       listQuery:{
         pageNumber:1, //当前页面
         pageSize:10, //条数
@@ -239,7 +239,8 @@ export default {
                   name: this.listQuery.name}
          }).then(req => {
           console.log("锚地数据",req)
-          this.tableData = req.page.list
+             this.tableData = req.page.list
+             this.total = req.page.totalRow //总条数
         }) 
     },
      handleClickView(row) {
@@ -287,11 +288,21 @@ export default {
     },
     //删除弹层
     handleDel(row){
-      this.temp = {...row};
-      this.dialogDelVisible = true; //弹层显示
+      // this.temp = {...row};
+        this.delid=row.id
+        console.log("这行数据的id",this.delid)
+        this.temp = {...row};
+        this.dialogDelVisible = true; //弹层显示
     },
     //删除提交
-    delData(){},
+    delData(){
+        this.service.get( '/anchorage/delete?id='+this.delid,{
+        }).then(req => {
+            console.log("删除AIS数据",req)
+            this.getList();
+            this.dialogDelVisible = false;
+        })
+    },
      //编辑弹层
     handleUpdate(index,row){
      this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
@@ -321,6 +332,7 @@ export default {
        }).then(req => {
           console.log("编辑锚地信息",req)
           this.getList();
+           this.dialogFormVisible = false;
       })
     }
   }
