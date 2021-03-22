@@ -373,9 +373,6 @@
 
     },
     watch: {
-        // removeArea(val){
-        //     console.log('removeArea',val)
-        // },
       filterText(val) {
           // console.log("val",val)
           // this.filterText=val
@@ -390,7 +387,7 @@
         // console.log('areaData',val)
       },
       areaLayer(val){
-        // console.log(val,"val")
+        console.log(areaLayer,"val")
         this.areaLayer=val
       },
       tableData(val){
@@ -617,13 +614,8 @@
           console.log(data)
           if (data.name) {
             console.log('删除区域')
-              // console.log('this.',this)
             this.$emit('removeArea', { id: data.id})
           }
-          // else {
-          //   console.log('删除分组')
-          //   // this.$emit('removeArea', { id: data.id, label: data.label, type: 1 })
-          // }
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -644,6 +636,7 @@
                   <i class='el-icon-delete' style="margin-left:5px"  on-click={() => this.remove(node, data)}></i>
             </span>
         </span>)
+       
       },
       showOrEdit(data) {
         // console.log('showOrEdit',data)

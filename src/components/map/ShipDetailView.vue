@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <div style="display: grid;grid-template-columns: 88% 12%;background: #2770D4;color: #eee;    padding: 3px;">
+        <div style="display: grid;grid-template-columns: 88% 12%;background: #2770D4;color: #eee;align-items: center; padding: 3px;">
             <div style="padding-left: 10px;">船舶详细信息</div>
             <div style="padding-right: 5px;text-align: right;">
                 <el-button type="text" @click="remove" style="padding: 0;color: #eee;">X
@@ -12,7 +12,7 @@
             </div>
             <div v-else>
                 <div v-if="shipTabObj.archivesShip">
-                    <p>基本信息</p>
+                    <p >基本信息</p>
                     <ul style=" list-style-type:none;overflow: hidden">
                         <li v-for="i in ship"  :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesShip[i.prop.charAt(0).toLowerCase()
                             + i.prop.slice(1)]}}
@@ -40,7 +40,7 @@
                 <div v-if="shipTabObj.archivesConsumption" style="margin-top: 10px">
                     <p>消耗信息</p>
                     <ul style=" list-style-type:none;overflow: hidden">
-                        <li v-for="i in consumption" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesConsumption[i.prop.charAt(0).toLowerCase()
+                        <li v-for="i in consumption" style="width: 43%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesConsumption[i.prop.charAt(0).toLowerCase()
                             + i.prop.slice(1)]}}
                         </li>
                     </ul>
@@ -56,7 +56,7 @@
                 <div v-if="shipTabObj.archivesDimension" style="margin-top: 10px">
                     <p>船舶尺寸</p>
                     <ul style=" list-style-type:none;overflow: hidden">
-                        <li v-for="i in dimension" style="width: 40%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesDimension[i.prop.charAt(0).toLowerCase()
+                        <li v-for="i in dimension" style="width: 43%;float: left;" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesDimension[i.prop.charAt(0).toLowerCase()
                             + i.prop.slice(1)]}}
                         </li>
                     </ul>
@@ -368,7 +368,9 @@
 
     p {
         margin: 0;
-        padding: 0;
+        padding:10px;
+        background:#E3EFFB;
+        font-weight:900;
     }
 
     ul {

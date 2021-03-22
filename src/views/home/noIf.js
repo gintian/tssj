@@ -356,26 +356,15 @@ actions = () => {
     }],
     
    
-   
 
-
-    // [/^false_雷达$/, function(){
-    //   this.radarLayer.clearLayers()
-    //   return{}
-    // }],
-    // [/^true_雷达$/, function(){
-    //   this.radarLayer.clearLayers()
-    //   return{}
-    // }],
-    // [/^false_ais$/, function(){
-    //   this.radarLayer.clearLayers()
-    //   return{}
-    // }],
-    // [/^true_雷达$/, function(){
-    //   this.radarLayer.clearLayers()
-    //   return{}
-    // }],
-
+    [/^false_雷达$/, function(){
+      this.radarLayer.clearLayers()
+      return{}
+    }],
+    [/^true_雷达$/, function(){
+      this.radarLayer.clearLayers()
+      return{}
+    }],
      
     
    
@@ -421,7 +410,7 @@ actions = () => {
       return {}
     }],
 
-    [/^true_(锚地|码头|ais|雷达)$/, function() {
+    [/^true_(锚地|码头|ais)$/, function() {
       // this.peer = true
       console.log( "markerLayersGroup",this.markerLayersGroup)
       this.markerLayersGroup.eachLayer(item=>{

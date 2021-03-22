@@ -252,15 +252,6 @@ const area={
     positions: [],
     groupId: ''
   },
-
-  // drawData:{
-  //   level: '',
-  //   name: '',
-  //   type: '',
-  //   lat: '',
-  //   lon: '',
-  //   radius: ''
-  // },
   disabledDraw:true,
   showGroupView: false,//是否展示绘制分组界面
   showAddGroup: false,//是否展示添加分组界面
@@ -311,8 +302,9 @@ const map={
   map: null,
   ciLayer: null,//船舶覆盖物图层
   focusShipLayer: null,//关注船舶图层
-  maxMapZoom:11,
+  maxMapZoom:9,
   mapZoom:10,//当前地图等级
+
   baseLayer:null,//海图图层
   sateLayer:null,//卫星图图层
 

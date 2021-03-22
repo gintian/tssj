@@ -44,12 +44,7 @@
          action:'aaa',
         uploadUrl:'/ship/pushExcel',
         fileList: [],
-        mapSigns: [ 
-              { img: require('../../assets/mapicon/radar.png'), isShow:true,label: '雷达' },    
-              { img: require('../../assets/mapSigns/ais.png'), isShow:true,label: 'AIS' },
-              { img: require('../../assets/mapSigns/02.png'), isShow:true,label: '码头' },
-              { img: require('../../assets/mapSigns/03.png'), isShow:true,label: '锚地' },   
-          ],
+        
       }
     },
     methods:{
@@ -103,16 +98,18 @@
             //  console.log("返回数据状态码：",res.data.error);
             if(res.data.error==0){
               //  this.$message.success('成功导入船舶离线数据' + '!');
+               this.$alert('成功导入1条船舶离线数据!');
               //  this.$message({
               //   type: 'success',
-              //   message: '成功导入船舶离线数据!'
+              //   message: '成功导入船舶离线数据!',
+              //   offset:500
               // });
-              this.$notify({
-                type: 'success',
-                message: '成功导入1条船舶离线数据!'
-                //  duration: 0
-                //  position: 'bottom-left' 默认右上角
-              });
+              // this.$notify({
+              //   type: 'success',
+              //   message: '成功导入1条船舶离线数据!'
+              //   //  duration: 0
+              //   //  position: 'bottom-left' 默认右上角
+              // });
             }
           });
       } ,  

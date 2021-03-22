@@ -54,7 +54,7 @@
         console.log(sha512(val))
       },
       open(e) {
-        this.$alert('您输入的用户名/密码不正确，请重新输入', '提示', {
+        this.$alert('您输入的用户名/密码不正确，请重新输入', '温馨提示', {
           confirmButtonText: '确定',
           callback: action => {
             this.$message({

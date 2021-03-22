@@ -47,39 +47,21 @@ export default {
             // offset: 200,
             type: 'warning',
             position: 'bottom-left',
-            message:
-                h('div', { class: 'message' }, [
-                          h('div', {class: 'btnList'} ,redata.data.list[i].message, [
-                            h('span',{on:{click: this.ship_detail(redata.data.list[i].mmsi)}},
-                                {
-                                  class: 'later',
-                                  on:{
-                                    click:  this.ship_detail(),
-                                      // click: this.ship_detail(redata.data.list[i].mmsi)
-                                    }
-                                },
-                                // redata.data.list[i].mmsi,
-                            ),
-                          ])
-                        ]),
-
-            // h('div', { class: 'message' }, [
-          //             h('div', { class: 'btnList' }, [
-          //               h('span', {on: {click: this.doSomeThing(val)}}, '你导出的数据报表已生成，点击'),
-          //               h(
-          //                 'span',
-          //                 {
-          //                   class: 'later',
-          //                   on: {
-          //                     click: this.doSomeThing
-          //                   }
-          //                 },
-          //                 '下载文件'
-          //               )
-          //             ])
-          //           ]),
-          //   message: [redata.data.list[i].message, redata.data.list[i].mmsi],
-            // customClass:'notify-success'
+            // message:
+            //     h('div', { class: 'message' }, [
+            //               h('div', {class: 'btnList'} ,redata.data.list[i].message, [
+            //                 h('span',
+            //                     {
+            //                       class: 'later',
+            //                       on:{
+            //                         // click:  this.ship_detail(),
+            //                           click: this.ship_detail(redata.data.list[i].mmsi)
+            //                         }
+            //                     },
+            //                 ),
+            //               ])
+            //             ]),
+            message: [redata.data.list[i].message, redata.data.list[i].mmsi],
         }); 
         }
       }

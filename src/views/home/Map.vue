@@ -3,32 +3,6 @@
         <div id="map" ref="map">
 
         </div>
-        <!--控制条-->
-        <!-- <div class="map-control" v-show="isActual"> -->
-        <!--播放暂停按钮-->
-        <!-- <Icon
-          v-if="!isPlay"
-          class="play-icon"
-          type="ios-play"
-          @click="isPlay=true;navgControl(playIcon)"
-        />
-        <Icon v-else class="play-icon" type="ios-pause" @click="isPlay=false;navgControl('pause')"/> -->
-        <!--已播放时间-->
-        <!-- <span class="passed-time">{{passedTime}}</span> -->
-        <!--进度条-->
-        <!-- <Slider class="map-slider" v-model="sliderVal" :tip-format="hideFormat" :step="0.0001"></Slider> -->
-        <!--倍速-->
-        <!-- <div class="map-times" @mouseenter="isTimesChoose=true" @mouseleave="isTimesChoose=false">
-          <div class="times-show">倍速 {{times}}</div>
-          <div class="choose-box">
-            <ul v-show="isTimesChoose">
-              <li v-for="item in speedList" :key="item.value" :class="{active:times==item.value}" @click="changeSpeed(item.value)">{{item.label}}</li>
-            </ul>
-          </div>
-        </div> -->
-        <!--结束时间-->
-        <!-- <span class="passed-time">{{totalTime}}</span> -->
-        <!-- </div> -->
 
         <!-- <button @click="pushMessage" style="position: absolute;top: 0%;z-index: 400;right: 8px;width:23px;height:25px;">123</button> -->
         <!-- 统计图标 -->
@@ -730,16 +704,13 @@
         },
 
         mounted() {
-            //  this.map = this.$utils.map.createMap("map");
             this.objectType()
             this.objectareaData()
-            //   this.pushMessage()
             this.mapInit()
             this.initWebSocket()
             this.map.setView([30.37892927824675, 122.19491755725795], 10);
             console.log("user", this.$store.getters.user.data)
             this.loadGroupData()   //重点目标
-//       L.circle([31.421995400095337,122.84572901429688], { radius: 30000, color: 'red', fillColor: '#f03', fillOpacity: 1 }).addTo(this.map);
             this.stationLayerGroup = new L.FeatureGroup().addTo(this.map);
             this.leftDrawerShipTypeLayer = new L.FeatureGroup().addTo(this.map);
             this.drawLayer = new L.FeatureGroup().addTo(this.map);
@@ -759,17 +730,11 @@
                 this['orgLayer' + i] = new L.FeatureGroup().addTo(this.departmentLayers)
             }
 
-            // this.map.on('click', function (e) {
-            //   //获取点击位置的坐标
-            //   var coordinate = [e.latlng.lat, e.latlng.lng];
-            //   //弹框提示点击位置的坐标
-            //   alert("地图被单击了！点击位置为：" + coordinate);
-            // })
-            //   this.loadStationMarker()
+        
             this.loadDefaultMarker()
             this.loadLeftDrawer()
             this.ShipStatistical()
-            // this.websocketsend2(JSON.stringify({ action: 'fly' ,data:{}}))
+
             setTimeout(() => {
                 this.websocketsend(JSON.stringify({
                     action: 'criminal',
@@ -786,17 +751,6 @@
             this.selecarea()
         },
         methods: {
-
-            // this.$nextTick(() => {
-            //     this.$refs["map"].map.invalidateSize(true);
-            // }),
-            // pushMessage(){
-            //      this.service.get('/script/pushMessage',{
-            //         params:{name:name}
-            //         }).then(res=>{
-            //     console.log("发送websocket",res)
-            //   })
-            // },
             choosed() {
                 // console.log(item)
                 this.searchdialog = true
@@ -959,6 +913,9 @@
                         this.areaShipData = [...res.list]
                         //   console.log('areaShipData', this.areaShipData)
                     }
+                    // else{
+                    //      this.$alert('当前层级下暂无船只，请放大层级！');
+                    // }
                     // this.leftDrawerData.row1 = res.data.targetMap.columns
                     // this.leftDrawerData.row3 = res.data.typeMap
                     // // console.log(this.leftDrawerData.row3)

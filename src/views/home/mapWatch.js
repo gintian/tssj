@@ -5,17 +5,29 @@ import { addRadarDom } from '../../../src/views/home/mapComponentFactory'
 // import { updateShipMapv, addShipPointCollection } from '../../../src/views/home/copyZfwMapFun'
 let ShipDataImgMap = {
   1:(shipType)=>{
-    if(shipType=='客船'){
+    if(shipType=='娱乐船'){
       return { imgName:'kc.png',sizeWidth:16, sizeHeight:22 };//客船
-    } else if(shipType=='货船'){
+    } else if(shipType=='引航船'){
       return { imgName:'hc.png',sizeWidth:16, sizeHeight:22 };
-    } else if(shipType=='油轮'){
+    } else if(shipType=='拖轮船'){
       return { imgName:'yl.png',sizeWidth:16, sizeHeight:22 };
-    } else if(shipType=='危险货物'){
+    } else if(shipType=='水下作业'){
       return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
-    } else if(shipType=='执法船'){
-      return { imgName:'zf.png',sizeWidth:16, sizeHeight:22 };
-    }else{
+    } 
+    // else if(shipType=='水下作业'){
+    //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
+    // } else if(shipType=='潜水作业'){
+    //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
+    // } else if(shipType=='补给船'){
+    //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
+    // } else if(shipType=='防污染'){
+    //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
+    // } else if(shipType=='顶推船'){
+    //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
+    // } else if(shipType=='执法船'){
+    //   return { imgName:'zf.png',sizeWidth:16, sizeHeight:22 };
+    // }
+    else{
       return { imgName:'another.png',sizeWidth:16, sizeHeight:22 };//其他
     } 
   },
