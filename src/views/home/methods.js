@@ -2365,16 +2365,11 @@ const area={
       this.service.get('/water/delete', {
         params:{'id': data.id}
       }).then(res => { 
-
-         console.log('drawLayer',this.drawLayer)
-        //  this.closeDraw()
-        // this.showDrawView = false
+        //  console.log('drawLayer',this.drawLayer)
         this.areaLayer.clearLayers()
         // this.drawLayer.clearLayers()
-
        this.loadGroupData()
-        // this.drawLayer.removeLayer()
-        console.log('删除区域返回',res)
+        // console.log('删除区域返回',res)
       })
   },
 }

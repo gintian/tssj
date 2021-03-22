@@ -387,7 +387,7 @@
         // console.log('areaData',val)
       },
       areaLayer(val){
-        console.log(areaLayer,"val")
+        // console.log(areaLayer,"val")
         this.areaLayer=val
       },
       tableData(val){
@@ -573,29 +573,6 @@
       },
       moverView(ev, store, data)/*移动视野*/{
         console.log('move',data)
-        // this.map.setView([30.37892927824675,122.19491755725795], 12);
-        // this.map.panTo(mp[marker.tp]().pos)
-        // let tp={
-        //   0:()=>{return}
-        // // }
-        // let point=[]
-        // for(let marker of this.areaData){
-        //   if(marker.id===data.id){
-        //     // console.log(marker)
-        //     // if(marker.type===0){
-        //       let bd09Arr=wgs84ToBD(parseFloat(marker.centerLon),parseFloat(marker.centerlat))
-        //       point.push(bd09Arr[1], bd09Arr[0])
-        //     // }else if(marker.type===1){
-        //     //   for (let i of marker.points) {
-        //     //     let bd09Arr=wgs84ToBD(parseFloat(marker.centerLon),parseFloat(marker.centerlat))
-        //     //     point.push(bd09Arr[1], bd09Arr[0])
-        //     //   }
-        //     // }else if(marker.type===2){
-        //     //   let bd09Arr=wgs84ToBD(parseFloat(marker.centerLon),parseFloat(marker.centerlat))
-        //     //   point.push(bd09Arr[1], bd09Arr[0])
-        //     // }
-        //   }
-        // }
         this.map.setView([data.lat,data.lon], 12);
       },
       remove(node, data) /*删除区域*/ {
@@ -631,7 +608,7 @@
                         <i class='el-icon-bell' style="width:20px;color:#2770D4;"> &nbsp;</i>
             <span class="tree_node_top" on-click={(ev) => this.moverView(ev, store, data)}> {this.showOrEdit(data)}</span>
             <span class="tree_node_op " style="font-size: 14px;float:right;color:#2770D4;">
-                  <i class='el-icon-view' on-click={(ev) => this.showArea(ev, store, data)} style="margin-left:5px"></i>
+                  <i class={this.showOrdHide(data)} on-click={(ev) => this.showArea(ev, store, data)} style="margin-left:5px"></i>
                   <i class='el-icon-s-claim' style="margin-left:5px"  on-click={(ev) => this.nodeEdit(ev, store, data)}></i>
                   <i class='el-icon-delete' style="margin-left:5px"  on-click={() => this.remove(node, data)}></i>
             </span>
@@ -653,12 +630,14 @@
       },
       showOrdHide(data)/* 绘制/隐藏区域   icon 样式*/ {
 
-        // console.log(data.show,'showOrdHide')
-        if (data.className) {
-          if (data.show) {
-            return 'show-icon-view el-icon-view'
+        console.log(data,'showOrdHide')
+        if (data.name) {
+          if (data.show===false) {
+            // return 'show-icon-view el-icon-view'
+            return 'el-icon-turn-off'
           } else {
-            return ' el-icon-view'
+            // return ' el-icon-view'
+            return  'el-icon-open'
           }
         } else {
           return ''
@@ -832,28 +811,14 @@
 
       },
       showArea(ev, store, data) {
-
-        console.log('showArea',data)
-        // let market = {}
-        // const m = {
-        //   '0': 'circle',
-        //   '1': 'polygon',
-        //   '2': 'rectangle'
-        // }
-        // for (let mark of this.areaData) {
-        //   if (mark.id == data.id) {
-        //     market = mark
-        //     market.tp = m[mark.type]
-        //   }
-        // }
-        // // console.log(market)
-        // // console.log(this.map)
-
+        // console.log('showArea',data)
+        data.show=true
+        console.log('树形数据',data)
         if (data.show) {
           console.log('hide')
         console.log(data)
           this.areaLayer.eachLayer(item=>{
-            // console.log(item)
+            console.log(item)
             if(item.signal===('area'+data.id)){
               this.areaLayer.removeLayer(item)
             }
@@ -871,10 +836,6 @@
             2:' ★ ',
             3:' ✷ ',
           }
-          // for (let x of this.watersLevel) {//设置文字内容
-          //   if (x.value === market.lever) market.typeLabel = icon[market.lever]+x.name
-          // }
-          // console.log(i)
           this.createPolygon(m[market.type], market,'area' +market.id,
             this.areaTypeStyle[market.lever]
           )(wgs84ToBD).addTo(this.areaLayer);

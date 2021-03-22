@@ -1,7 +1,7 @@
 <template>
     <div class="main">
-        <div style="display: grid;grid-template-columns: 88% 12%;background:#2770D4;color: #eee;    padding: 3px;">
-            <div style="padding-left: 24px;">{{titleName}}海关</div>
+        <div style="display: grid;grid-template-columns: 88% 12%;background:#2770D4;color: #eee;  align-items: center;  padding: 3px;">
+            <div style="padding-left: 12px;">{{titleName}}海关</div>
             <div style="padding:0 4px;text-align: right;">
                 <el-button type="text" @click="remove" style="padding: 0;color: #eee;">X
                 </el-button>

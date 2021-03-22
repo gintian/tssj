@@ -312,7 +312,7 @@ const map={
   
   animateLayer:null,//轨迹动画图层
   planeLayer:null,//飞机图层
-  areaLayer:null,//飞机图层
+  areaLayer:null,//自定义区域图层
   leftDrawerShipTypeLayer:null,//侧边栏船舶类型图层
   stationLayerGroup:null,//资源站覆盖物group
   stationLayer:null,//资源站图层

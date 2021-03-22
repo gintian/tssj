@@ -47,21 +47,21 @@ export default {
             // offset: 200,
             type: 'warning',
             position: 'bottom-left',
-            // message:
-            //     h('div', { class: 'message' }, [
-            //               h('div', {class: 'btnList'} ,redata.data.list[i].message, [
-            //                 h('span',
-            //                     {
-            //                       class: 'later',
-            //                       on:{
-            //                         // click:  this.ship_detail(),
-            //                           click: this.ship_detail(redata.data.list[i].mmsi)
-            //                         }
-            //                     },
-            //                 ),
-            //               ])
-            //             ]),
-            message: [redata.data.list[i].message, redata.data.list[i].mmsi],
+            message:
+                h('div', { class: 'message' }, [
+                          h('div', {class: 'btnList'} ,redata.data.list[i].message, [
+                            h('span',
+                                {
+                                  class: 'later',
+                                  on:{
+                                    // click:  this.ship_detail(),
+                                      click: this.ship_detail(redata.data.list[i].mmsi)
+                                    }
+                                },
+                            ),
+                          ])
+                        ]),
+            // message: [redata.data.list[i].message, redata.data.list[i].mmsi],
         }); 
         }
       }

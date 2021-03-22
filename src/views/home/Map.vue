@@ -132,7 +132,7 @@
                     width="20%"
                     custom-class="typedialog"
                     :append-to-body="true">
-                <h3>当前时间段内，所对应的船舶:</h3>
+                <!-- <h3>当前时间段内，所对应的船舶:</h3> -->
                 <ul class="search-result-list">
                     <li class="open-shipdialog" v-for="item in timelist" :key="item.id" @click="ship_detail(item)">
                         {{item}}
@@ -749,6 +749,7 @@
 
             this.loadShip()
             this.selecarea()
+            this.queryArea()  //区域筛选
         },
         methods: {
             choosed() {
@@ -772,7 +773,7 @@
                         name: this.objectArea
                     }
                 }).then(res => {
-                    console.log('所有区域目标', res)
+                    // console.log('所有区域目标', res)
                     this.objectArea = res.list
                     if(!this.objectArea){
                         return  '暂无数据'
@@ -783,15 +784,14 @@
                         var otype = item.type
                         // console.log('item', otype);
                     });
-                }
-                    
+                }              
                 })
             },
             queryName() {
                 this.service.get('/ship/screeningName', {
                     params: {name: this.objectname}
                 }).then(res => {
-                    console.log("目标名称筛选", res)
+                    // console.log("目标名称筛选", res)
                     this.dialogVisible1 = true
                     this.objectnamelist = res.result
                 })
@@ -823,31 +823,31 @@
                 } else if (this.type == '多边形海域') {
                     area = 2
                 }
-                console.log('区域data', this.objectArea)
+                // console.log('区域data', this.objectArea)
                 for (let i in this.objectArea) {
-                    //   console.log("i",i)
-                    if (this.objectArea[i].type === area) {
-                        console.log("this.objectArea[i]", this.objectArea[i])
+                    //   console.log("i",i,this.objectArea[i].type)
+                    // if (this.objectArea[i].type === area) {
+                        // console.log("objectArea[i]", this.objectArea[i])
                         var points = (this.objectArea[i].points)
-                        console.log('points', points)
+                        // console.log('points', points)
                         var points111 = JSON.stringify(this.objectArea[i].points)
-                        console.log('points', points111)
-                        let [radius, lat, lon] = [this.objectArea[i].radius, this.objectArea[i].lat, this.objectArea[i].lon]
+                        // console.log('points', points111)
+                        // let [radius, lat, lon] = [this.objectArea[i].radius, this.objectArea[i].lat, this.objectArea[i].lon]
+                        let [radius, lat, lon,type] = [this.objectArea[i].radius, this.objectArea[i].lat, this.objectArea[i].lon,this.objectArea[i].type]
                         this.service.post('/ship/screeningWater', {
-                            // params:{
-                            type: area,
+                            // type: area,
+                            type:type,
                             lat: lat,
                             lon: lon,
                             points: JSON.stringify(this.objectArea[i].points),
                             radius: radius,
-                            // }
                         }).then(res => {
-                            console.log("目标区域筛选", res)
+                            // console.log("目标区域筛选", res)
                             // console.log('区域data',this.objectArea)
                             this.dialogVisible5 = true
                             this.arealist = res.result
                         })
-                    }
+                    // }
 
                 }
             },
@@ -859,12 +859,22 @@
                     }
                 }).then(res => {
                     console.log("目标时间筛选", res)
-                    this.dialogVisible4 = true
-                    if (res.result) {
-                        this.timelist = res.result
-                    } else {
-                        this.$message('当前时间段内，暂无查到所对应的船舶' + '!');
-                    }
+                   
+                    // if (res.error==0) {
+                      
+                        if(res.result.length==0){
+                            this.$message('当前时间段内，暂无查到所对应的船舶' + '!');
+                        }else{
+                            this.timelist = res.result
+                            this.dialogVisible4 = true
+                        }
+                    // } 
+                    // else if(res.result===[]){
+                    //     this.$message('当前时间段内，暂无查到所对应的船舶' + '!');
+                    // }
+                    //  else {
+                    //     this.$message('当前时间段内，暂无查到所对应的船舶' + '!');
+                    // }
 
                 })
             },
