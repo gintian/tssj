@@ -113,10 +113,14 @@
              res.shipList.map(f=>{
               shipname.push({mmsi:f.mmsi})
             })
-
-            // console.log('shipname',shipname)
-              // ship_detail(shipList)
-              //  this.$emit('ship_detail',shipname);
+            console.log('shipname',shipname)
+            for(var i in shipname){
+              var mmsi=shipname[i]
+              console.log('shipname.mmsi',mmsi)
+              //  this.$emit('ship_detail',mmsi);
+            }
+              // ship_detail(shipname)
+              
               resolve(shipList)
             // console.log('船舶类型中的船舶信息',res)  
           })
@@ -131,13 +135,12 @@
   }
 </script>
 
-<style scoped lang="less">//图例样式
+<style scoped lang="less">
 #countrySigns{
-
   .signTitle img{
     position: absolute;
     top: 20%; 
-    left: 20%;
+    left: 30%;
   }
 }
 /deep/.el-tree-node__content:hover {

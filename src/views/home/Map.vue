@@ -34,7 +34,7 @@
         </div>
         <!-- 高级搜索框 -->
         <div class="query-input" style="position: absolute;top: 8%;z-index: 400; right: 2%;">
-            <el-button type="primary" @click="choosed">
+            <el-button type="primary" @click="choosed" style=" box-shadow: 4px 4px 10px #409eff;">
                 <i class="el-icon-search" style="margin-right:10px;"></i>高级搜索
             </el-button>
             <div v-drag>

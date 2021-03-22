@@ -1661,13 +1661,11 @@ const ship={
       }
      }).then(res => {
       //  console.log('船舶信息11111',res)
-       // console.log(res)
        this.dialogInfo.ship = res.ais
-
        var  latitude=res.ais.lat
        var  longitude=res.ais.lon
        if (res.error === 0) {
-        //  console.log('this.map',this.map)
+  
          this.map.setView([latitude,longitude], 12 , { 
              pan: { animate: true , duration: 0.5 }, 
              zoom: { animate: true }, 
@@ -1945,7 +1943,7 @@ const area={
         i.lat2=i.points[1].lat
         i.lon2=i.points[1].lon
       }
-        console.log('i.type',i)
+        // console.log('i.type',i)
 
         var createPolygon=  this.createPolygon(m[i.type], i,'area' +i.id,
           this.areaTypeStyle[i.level],

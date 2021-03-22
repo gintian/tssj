@@ -54,7 +54,7 @@
         this.ship=val
       },
         loadShip(val){
-          console.log('asddddddddd',val)
+          // console.log('asddddddddd',val)
 
             for(let i of val){
                 this.base[0].children.push({name:i.shipType,is:true,ship:true})

@@ -7,6 +7,7 @@
         <div class="content"  >
               <el-upload
                       class="upload-demo"
+                       ref="upload"
                       :http-request="uploadSectionFile" 
                       accept=".xls"
                       multiple
