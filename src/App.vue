@@ -32,3 +32,21 @@ import LeftNav from "./components/nav/leftNav";
 
   }
 </script>
+<style >
+/* 默认1920 */
+/* html{
+   font-size:19.20px;  
+} */
+/* 14寸电脑 */
+  @media only screen and  (max-width: 1366px) {
+   html{
+      font-size:13.66px;
+   }
+    /* .filter-container{
+      display: grid;
+    grid-template-columns: 37% 55%;
+    align-items: center;
+    margin: 16px;
+  } */
+}
+</style>

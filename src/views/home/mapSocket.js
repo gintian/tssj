@@ -1,9 +1,8 @@
 import { wgs84ToBD } from '../../utils/coordinateConvert'
 export default {
   initWebSocket() { //初始化weosocket 218.205.125.100:8091   http://192.168.1.36:8093/
-    // const wsuri = 'ws://218.205.125.100:8090/websocket'
-    // const wsuri2 = 'ws://218.205.125.100:8090/zc_data/websocket'
     const wsuri = 'ws://192.168.1.36:8093/websocket'
+    // const wsuri = 'ws://192.168.1.75:8093/websocket'
     // const wsuri2 = 'ws://192.168.1.36:8093/zc_data/websocket'
     this.websock = new WebSocket(wsuri)
     // this.websock2 = new WebSocket(wsuri2)

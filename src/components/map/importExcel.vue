@@ -134,7 +134,7 @@
         padding: 0;
     }
 #selectShipDom{
-    width: 228px;
+    width: 272px;
     height: 220px;
     background: white;
     .title{

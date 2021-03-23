@@ -12,7 +12,7 @@
         <!-- 注意：topNavState：根据当前路由所在根路由的type值判断显示不同顶部导航菜单 -->
         <el-row >
     <el-col>
-            <el-menu  class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true">
+            <el-menu  class="el-menu-demo" mode="horizontal" @select="handleSelect" :router="true" style="border:none;">
               <el-menu-item index="/map">首页</el-menu-item>
               <el-menu-item index="/objectManager">目标管理</el-menu-item>
               <el-menu-item index="/Suspicious">可疑事件</el-menu-item>

@@ -34,7 +34,7 @@
                     </el-select>
             </div>
             <div class="query-input">
-                <el-input v-model="listQuery.name" placeholder="请输入姓名" style="width: 200px;" class="filter-item" 
+                <el-input v-model="listQuery.name" placeholder="请输入姓名"  style="width:200px;"  class="filter-item" 
                 @input="query()"/>
                 <el-button class="filter-item" type="primary" icon="el-icon-search" @click="query()" >
                   搜索
@@ -170,6 +170,9 @@ export default {
 }
 </script>
 <style  lang="less" scoped>
+
+
+
 .el-pagination {
     text-align: center; 
 }
@@ -180,6 +183,9 @@ export default {
     margin: 16px;
 }
 
+// /deep/  .query-input  .filter-item  .el-input{
+//      width: 200px;
+//   }
 .filter-container .select_query{
       display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -211,7 +217,7 @@ border: 1px solid #0078FF;
        /*content: "";*/
     /*}*/
 /deep/.el-input__inner{ 
-border: 1px solid #0075EE;
+// border: 1px solid #0075EE;
 }
 /deep/.el-pager li.active{ 
 background: #0075EE;
@@ -224,5 +230,27 @@ background: #D8D8D8;
 }
 /deep/.el-select__caret{
   color: black;
+}
+
+@media  screen and  (max-width: 1366px) {
+  .filter-container .select_query {
+    display: grid;
+    grid-template-columns: 50% 25% 25%;
+    align-items: center;
+    }
+  /deep/  .el-date-editor.el-input {
+    width: 132px;
+      }
+  /deep/  .el-input__inner{
+       width: 120px;
+    }
+    .query-input {
+      display: flex;
+    justify-content: space-between;
+    }
+  /deep/   .filter-item  {
+     width: 155px;
+    
+  }
 }
 </style>

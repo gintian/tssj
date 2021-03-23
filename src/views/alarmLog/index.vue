@@ -123,6 +123,10 @@ export default {
 }
 </script>
 <style  lang="less" scoped>
+
+
+
+
 .el-pagination {
     text-align: center; 
 }
@@ -162,5 +166,21 @@ background: #D8D8D8;
 }
 /deep/.el-select__caret{
   color: black;
+}
+
+
+@media  screen and  (max-width: 1366px) {
+  .filter-container{
+      display: grid;
+    grid-template-columns: 37% 55%;
+    align-items: center;
+    margin: 16px;
+  }
+  .event_nav_msg{
+    // display: flex;
+    display: grid;
+    grid-template-columns: 23% 44%;
+    align-items: center;
+    }
 }
 </style>

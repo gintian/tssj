@@ -58,7 +58,8 @@ ul {
   color: white;
   background: #0075EE;
   display: grid;
-  grid-template-columns: 40% 40% 20%;;
+  grid-template-columns: 40% 40% 20%;
+  align-items: center;
 }
 
 .container .topbar-wrap .topbar-btn {

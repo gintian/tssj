@@ -8,6 +8,7 @@ const service = axios.create({
    // api 的 base_url
   // baseURL:process.env.VUE_APP_BASE_API ,
   baseURL: 'http://192.168.1.36:8093/',
+  // baseURL: 'http://192.168.1.75:8093/',
   timeout: 5000, // 请求超时时间
   // withCredentials:true
 })

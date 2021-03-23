@@ -61,6 +61,7 @@ const map = {
     ]
     //离线海图+天地卫星图+天地地图
     this.baseLayer = L.tileLayer('http://218.205.125.142:8001/{z}/{x}/{y}.png').addTo(this.map)//服务器上的离线海图
+    // this.baseLayer = L.tileLayer('http://192.168.1.75:8001/{z}/{x}/{y}.png').addTo(this.map)//服务器上的离线海图
 
     this.sateLayer =L.tileLayer.chinaProvider(
       'TianDiTu.Satellite.Map',
