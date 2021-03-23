@@ -299,6 +299,7 @@
         isEdit: false
       }]
       return {
+          // index:'',
         show:'',
         tableData:[],
         tableTop:[
@@ -391,15 +392,13 @@
         this.areaLayer=val
       },
       tableData(val){
-        // console.log(val,"val")
-
+        console.log(tableData111111,"val")
         for(let i in val){
               val[i].id=i
               val[i].show=true
               }
               this.tableData=val
       },
-
     },
 
     mounted() {
@@ -1013,9 +1012,12 @@
      color: white;
      .el-dialog__title{
         color: white;
+        line-height: 1px;
      }
     .el-dialog__headerbtn .el-dialog__close {
         color: white;
+        font-size: 22px;
+        line-height: 16px;
       }
   }
 }

@@ -42,6 +42,7 @@
                         :visible.sync="searchdialog"
                         custom-class="signdialog"
                         width="27%"
+                        top="18vh"
                         :append-to-body="true">
                     <div>
                         <div class="signChild">
@@ -94,8 +95,10 @@
                     :append-to-body="true">
                 <h3>当前所填的目标名称，所对应的船舶有:</h3>
                 <ul class="search-result-list">
+
                     <li class="open-shipdialog" v-for="item in objectnamelist" :key="item.id"
-                        @click="ship_detail(item)">{{item}}
+                        @click="ship_detail(item)">
+                        <img  src="../../assets/images/icon.png">{{item}}
                     </li>
                 </ul>
             </el-dialog>
@@ -107,7 +110,7 @@
                 <h3>当前所填的目标编号，所对应的船舶有:</h3>
                 <ul class="search-result-list">
                     <li class="open-shipdialog" v-for="item in mmsilist" :key="item.id" @click="ship_detail(item)">
-                        {{item}}
+                        <img  src="../../assets/images/icon.png">{{item}}
                     </li>
                 </ul>
             </el-dialog>
@@ -123,7 +126,7 @@
                 <h3>当前所选的目标类型，所对应的船舶有:</h3>
                 <ul class="search-result-list">
                     <li class="open-shipdialog" v-for="item in typelist" :key="item.id" @click="ship_detail(item)">
-                        {{item}}
+                        <img  src="../../assets/images/icon.png"> {{item}}
                     </li>
                 </ul>
             </el-dialog>
@@ -135,7 +138,7 @@
                 <!-- <h3>当前时间段内，所对应的船舶:</h3> -->
                 <ul class="search-result-list">
                     <li class="open-shipdialog" v-for="item in timelist" :key="item.id" @click="ship_detail(item)">
-                        {{item}}
+                        <img  src="../../assets/images/icon.png">  {{item}}
                     </li>
                 </ul>
             </el-dialog>
@@ -147,7 +150,7 @@
                 <h3>当前所选的目标区域，返回:</h3>
                 <ul class="search-result-list">
                     <li class="open-shipdialog" v-for="item in arealist" :key="item.id" @click="ship_detail(item)">
-                        {{item}}
+                        <img  src="../../assets/images/icon.png">{{item}}
                     </li>
                 </ul>
             </el-dialog>
@@ -844,8 +847,12 @@
                         }).then(res => {
                             // console.log("目标区域筛选", res)
                             // console.log('区域data',this.objectArea)
-                            this.dialogVisible5 = true
-                            this.arealist = res.result
+                            // if(res.result.length==0){
+                            //     this.$message('当前区域内，暂无查到所对应的船舶' + '!');
+                            // }else {
+                                this.dialogVisible5 = true
+                                this.arealist = res.result
+                            // }
                         })
                     // }
 
@@ -858,17 +865,13 @@
                         endTime: this.endTime
                     }
                 }).then(res => {
-                    console.log("目标时间筛选", res)
-                   
-                    // if (res.error==0) {
-                      
+                    // console.log("目标时间筛选", res)
                         if(res.result.length==0){
                             this.$message('当前时间段内，暂无查到所对应的船舶' + '!');
                         }else{
                             this.timelist = res.result
                             this.dialogVisible4 = true
                         }
-                    // } 
                     // else if(res.result===[]){
                     //     this.$message('当前时间段内，暂无查到所对应的船舶' + '!');
                     // }
@@ -1095,7 +1098,9 @@
         border-bottom: 1px dashed #ccc;
         padding: 5px 8px;
     }
-
+    .open-shipdialog  img{
+        margin-right: 10px;
+    }
     .signChild {
         /deep/ .el-input__inner {
             border: 2px solid #316ca4;
@@ -1254,7 +1259,7 @@
 
         cursor: pointer;
         float: right;
-        font-size: 18px;
+        font-size: 14px;
     }
 
     .groupViewMain {
@@ -1579,4 +1584,26 @@
         // overflow: scroll; 
         height: 100%;
     }
+
+    @media only screen and  (max-width: 1366px) {
+        /deep/ .el-dialog .signdialog {
+            margin-top: 21vh;
+            width: 30%;
+        }
+        .signChild{
+            display: flex;
+            justify-content: space-between;
+        } 
+        /deep/.signdialog .el-select > .el-input {
+             width: 253px;
+        }
+
+        .signChild span{
+            font-size: 4px;
+            padding-left: 4px;
+            line-height: 20px;
+            height: 40px;
+            width: 58px;
+        }
+}
 </style>

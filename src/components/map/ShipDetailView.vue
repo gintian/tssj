@@ -8,13 +8,13 @@
             </div>
         </div>
         <div style="overflow: scroll;padding: 5px;max-height: 400px;">
-            <div v-if="Object.keys(shipTabObj).length<2" style="height: 150px;display: grid;place-items: center">暂无
+            <div v-if="Object.keys(shipTabObj).length<2" style="height: 150px;display: grid;place-items: center">暂无数据
             </div>
             <div v-else>
                 <div v-if="shipTabObj.archivesShip">
-                    <p >基本信息</p>
+                    <p>基本信息</p>
                     <ul style=" list-style-type:none;overflow: hidden">
-                        <li v-for="i in ship"  :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesShip[i.prop.charAt(0).toLowerCase()
+                        <li v-for="i in ship" :key="i.id"><span>{{i.name}}</span>:{{shipTabObj.archivesShip[i.prop.charAt(0).toLowerCase()
                             + i.prop.slice(1)]}}
                         </li>
                     </ul>
@@ -134,225 +134,229 @@
     </div>
 </template>
 <script>
-  export default {
-    props: {
-      shipTabObj: {
-        type: Object,
-        // default: {}
-        default:()=>{}
-      }
-    },
-    data(){
-      return{
-        shipTabObj:{}
-      }
-    },
-    mounted() {
-      console.log('shipTabObj',this.shipTabObj)
-    },
-    watch: {
-      shipTabObj: function(val) {
-
-        console.log('数据变化shipTabObj',val)
-        if(val.archivesShip){
-          // val.archivesShip.Last_Upd_Dt=new Date(val.archivesShip.Last_Upd_Dt).toISOString().split('T')[0] + ' ' +  new Date(val.archivesShip.Last_Upd_Dt).toTimeString().split(' ')[0];
-          // val.archivesShip.Last_Upd_Dt_long=new Date(parseFloat(val.archivesShip.Last_Upd_Dt_long+'000')).toISOString().split('T')[0] + ' ' +  new Date(parseFloat(val.archivesShip.Last_Upd_Dt_long+'000')).toTimeString().split(' ')[0];
-          for(let i of this.ship){
-            let archivesShip=val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)]
-            // console.log(this.base[i.prop],val.ship[this.base[i.prop]])
-            // this.formShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)]='  —'
-            if(archivesShip===undefined||archivesShip===''||archivesShip==='null'){
-              // console.log(archivesShip,this.base[i.prop],val.ship[this.base[i.prop]])
-              val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)]=val.ship[this.base[i.prop]]
-
-              if(this.base[i.prop]==='null'){
-                // console.log('base1',val.ship[this.base[i.prop]])
-                val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)]=' —'
-              }
-              // console.log(val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)])
+    export default {
+        props: {
+            shipTabObj: {
+                type: Object,
+                // default: {}
+                default: () => {
+                }
             }
-
-          }
-        }
-        // console.log(val.archivesShip)
-        if(val.archivesCommunicationList){
-          for(let i of val.archivesCommunicationList){
-            i.Last_Upd_Dt=new Date(val.archivesShip.Last_Upd_Dt).toISOString().split('T')[0] + ' ' +  new Date(val.archivesShip.Last_Upd_Dt).toTimeString().split(' ')[0];
-          }
-        }
-      }
-    },
-    updated() {
-      // console.log('shipTabObj', this.shipTabObj, Object.keys(this.shipTabObj).length)
-    },
-    data() {
-      return {
-        base:{
-          'IMO':'null',
-          'SHIPTYPE_KEY':'shiptype',
-          'NAME':'name',
-          'TRIMNAME':'null',
-          'LOCALNAME':'null',
-          'EXNAME':'null',
-          'PORTID':'null',
-          'MMSI':'mmsi',
-          'CALLSIGN':'null',
-          'ICECLASS':'null',
-          'COUNTRY_CODE':'null',
-          'BUILT':'null',
-          'DATASOURCE':'status',
-          'REMARK':'null',
-          'SPEED':'speed',
-          'Last_Upd_Dt':'null',
-          'ClassKey':'null',
-          'Last_Upd_Dt_long':'null',
         },
-        ship: [
-          { id: 1, name: 'IMO', prop: 'IMO' },
-          { id: 2, name: '船舶类型', prop: 'SHIPTYPE_KEY' },
-          { id: 4, name: '船舶名称', prop: 'NAME' },
-          { id: 5, name: '简称', prop: 'TRIMNAME' },
-          { id: 6, name: '当地语言', prop: 'LOCALNAME' },
-          { id: 7, name: '船前的名', prop: 'EXNAME' },
-          { id: 8, name: '注册港口', prop: 'PORTID' },
-          { id: 9, name: 'MMSI', prop: 'MMSI' },
-          { id: 10, name: '船舶呼号', prop: 'CALLSIGN' },
-          { id: 11, name: '冰级', prop: 'ICECLASS' },
-          { id: 12, name: '船旗', prop: 'COUNTRY_CODE' },
-          { id: 13, name: '建造完工', prop: 'BUILT' },
-          { id: 14, name: '数据来源', prop: 'DATASOURCE' },
-          { id: 15, name: '备注', prop: 'REMARK' },
-          { id: 16, name: '设计航速', prop: 'SPEED' },
-          { id: 17, name: '更新日期', prop: 'Last_Upd_Dt' },
-          { id: 18, name: '所属船级社', prop: 'ClassKey' },
-          { id: 19, name: '更新时间', prop: 'Last_Upd_Dt_long' }
-        ],
-        communication: [
-          { id: 1, name: '终端类型', prop: 'TERMINAL_TYPE' },
-          { id: 2, name: '船舶类型', prop: 'SHIPTYPE_KEY' },
-          { id: 3, name: '号码', prop: 'TERMINAL_NO' },
-          { id: 4, name: '卫星系统类型', prop: 'SYSTEM_TYPE' },
-          { id: 5, name: '卫星使用类型', prop: 'USE_TYPE_CD' },
-          { id: 6, name: '备注', prop: 'DESC' },
-          { id: 7, name: '来源', prop: 'SUPPLIER' },
-          { id: 8, name: '更新时间', prop: 'Last_Upd_Dt' }
+        data() {
+            return {
+                shipTabObj: {}
+            }
+        },
+        mounted() {
+            console.log('shipTabObj', this.shipTabObj)
+        },
+        watch: {
+            shipTabObj: function (val) {
 
-        ],
-        consumption: [
-          { id: 1, name: '空载IFO耗油量', prop: 'IFOBALLAST' },
-          { id: 2, name: '满载IFO耗油量', prop: 'IFOLOADED' },
-          { id: 3, name: '港口IFO耗油量', prop: 'IFOPORT' },
-          { id: 4, name: '航行MDO耗油量', prop: 'MDOSTEAM' },
-          { id: 5, name: '港口MDO耗油量', prop: 'MDOPORT' },
-          { id: 6, name: 'FWCapacity', prop: 'FWCAPACITY' },
-          { id: 7, name: 'DOCapacity', prop: 'DOCAPACITY' },
-          { id: 8, name: 'FOCapacity', prop: 'FOCAPACITY' },
-          { id: 9, name: 'WBCapacity', prop: 'WBCAPACITY' },
-          { id: 10, name: 'AUX', prop: 'AUX' }
-        ],
-        crew: [
-          { id: 1, name: '最少船员数', prop: 'MIMCREW' },
-          { id: 2, name: '舱内乘客数', prop: 'PSGBERTHED' },
-          { id: 3, name: '甲板乘客数', prop: 'PSGDECK' },
-          { id: 4, name: '总乘客数', prop: 'PSGTOTAL' }
-        ],
-        dimension: [
-          { id: 1, name: '船体总长', prop: 'LOA' },
-          { id: 2, name: '船舶型长', prop: 'LBP' },
-          { id: 3, name: '最大宽度', prop: 'MAXBEAM' },
-          { id: 4, name: '船舶型宽', prop: 'BEAMMOULDED' },
-          { id: 5, name: '高度', prop: 'HEIGHT' },
-          { id: 6, name: '深度(型深)', prop: 'DEPTH' },
-          { id: 7, name: '吃水', prop: 'DRAFT' },
-          { id: 8, name: 'Freeborad', prop: 'FREEBORAD' },
-          { id: 9, name: '备注', prop: 'REMARK' }
-        ],
-        dry: [
-          { id: 1, name: '捆包货物容量', prop: 'BALE' },
-          { id: 2, name: '谷物容量', prop: 'GRAIN' },
-          { id: 3, name: '集装箱容量', prop: 'TEU' },
-          { id: 4, name: '仓内轻便梯', prop: 'RAMPSINTERNAL' },
-          { id: 5, name: '货仓数量情况', prop: 'HOLDS' },
-          { id: 6, name: 'DryDes', prop: 'DRYDES' },
-          { id: 7, name: '最大舱盖尺寸', prop: 'HATCHESSIZEMAX' },
-          { id: 8, name: '舱盖情况', prop: 'HATCHES' },
-          { id: 9, name: '冷藏箱TEU', prop: 'REEFER_TEU' },
-          { id: 10, name: '冷藏箱CAPACITY', prop: 'REEFER_CAPACITY' }
-        ],
-        engine: [
-          { id: 1, name: '序号', prop: 'SEQNO' },
-          { id: 2, name: '制造商名称', prop: 'BUILDER' },
-          { id: 3, name: '缸数', prop: 'CYLINDER' },
-          { id: 4, name: '主机型号', prop: 'MODEL' },
-          { id: 5, name: '引擎数量', prop: 'NUMBER' },
-          { id: 6, name: '转速', prop: 'RPM' },
-          { id: 7, name: '冲程', prop: 'STROKE' },
-          { id: 8, name: '缸径', prop: 'BORE' },
-          { id: 9, name: '引擎功率千瓦', prop: 'POWERKW' },
-          { id: 10, name: '引擎功率马力', prop: 'POWERHP' }
+                console.log('数据变化shipTabObj', val)
+                if (val.archivesShip) {
+                    // val.archivesShip.Last_Upd_Dt=new Date(val.archivesShip.Last_Upd_Dt).toISOString().split('T')[0] + ' ' +  new Date(val.archivesShip.Last_Upd_Dt).toTimeString().split(' ')[0];
+                    // val.archivesShip.Last_Upd_Dt_long=new Date(parseFloat(val.archivesShip.Last_Upd_Dt_long+'000')).toISOString().split('T')[0] + ' ' +  new Date(parseFloat(val.archivesShip.Last_Upd_Dt_long+'000')).toTimeString().split(' ')[0];
+                    for (let i of this.ship) {
+                        let archivesShip = val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)]
+                        // console.log(this.base[i.prop],val.ship[this.base[i.prop]])
+                        // this.formShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)]='  —'
+                        // if (archivesShip === undefined || archivesShip === '' || archivesShip === 'null') {
+                        //     // console.log(archivesShip,this.base[i.prop],val.ship[this.base[i.prop]])
+                        //     val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)] = val.ship[this.base[i.prop]]
+                        //
+                        //     if (this.base[i.prop] === 'null') {
+                        //         // console.log('base1',val.ship[this.base[i.prop]])
+                        //         val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)] = ' —'
+                        //     }
+                        //     // console.log(val.archivesShip[i.prop.charAt(0).toLowerCase() + i.prop.slice(1)])
+                        // }
 
-        ],
-        hull: [
-          { id: 1, name: 'HullNo', prop: 'HULLNO' },
-          { id: 2, name: '材料', prop: 'MATERAL' },
-          { id: 3, name: '材料类型', prop: 'MATERIALTYPE' },
-          { id: 4, name: '材料描述', prop: 'MATERIALDES' },
-          { id: 5, name: 'BulkHeads', prop: 'BULKHEADS' },
-          { id: 6, name: 'HullDes', prop: 'HULLDES' },
-          { id: 7, name: '球形艏', prop: 'BULBOWSBOW' },
-          { id: 8, name: '系住拉力', prop: 'BOLLARDPULL' },
-          { id: 9, name: '甲板数量', prop: 'DECKS' },
-          { id: 10, name: '双层船底', prop: 'DBLBOTTOM' },
-          { id: 11, name: '双层甲板', prop: 'DBLDECK' },
-          { id: 12, name: '双层船舷', prop: 'DBLSIDESKINS' },
-          { id: 13, name: '双层船壳', prop: 'DBLHULL' },
-          { id: 14, name: '冰体加强', prop: 'ICESTRENGTHENED' },
-          { id: 15, name: '重货加强', prop: 'HEAVYCARGOSTRENGTHENED' }
+                    }
+                }
+                // console.log(val.archivesShip)
+                if (val.archivesCommunicationList) {
+                    for (let i of val.archivesCommunicationList) {
+                        i.lAST_UPD_DT = new Date(val.archivesShip.lAST_UPD_DT).toISOString().split('T')[0] + ' ' + new Date(val.archivesShip.lAST_UPD_DT).toTimeString().split(' ')[0];
+                    }
+                }
+            }
+        },
+        updated() {
+            // console.log('shipTabObj', this.shipTabObj, Object.keys(this.shipTabObj).length)
+        },
+        data() {
+            return {
+                base: {
+                    'IMO': 'null',
+                    'SHIPTYPE_KEY': 'shiptype',
+                    'NAME': 'name',
+                    'TRIMNAME': 'null',
+                    'LOCALNAME': 'null',
+                    'EXNAME': 'null',
+                    'PORTID': 'null',
+                    'MMSI': 'mmsi',
+                    'CALLSIGN': 'null',
+                    'ICECLASS': 'null',
+                    'COUNTRY_CODE': 'null',
+                    'BUILT': 'null',
+                    'DATASOURCE': 'status',
+                    'REMARK': 'null',
+                    'SPEED': 'speed',
+                    'lAST_UPD_DT': 'null',
+                    'ClassKey': 'null',
+                    'lAST_UPD_DT_LONG': 'null',
+                },
+                ship: [
+                    {id: 1, name: 'IMO', prop: 'IMO'},
+                    {id: 2, name: '船舶类型', prop: 'SHIPTYPE_KEY'},
+                    {id: 3, name: '船舶ID', prop: 'sHIPID'},
+                    {id: 4, name: '船舶名称', prop: 'NAME'},
+                    {id: 5, name: '简称', prop: 'TRIMNAME'},
+                    {id: 6, name: '当地语言', prop: 'LOCALNAME'},
+                    {id: 7, name: '船前的名', prop: 'EXNAME'},
+                    {id: 8, name: '注册港口', prop: 'PORTID'},
+                    {id: 9, name: 'MMSI', prop: 'MMSI'},
+                    {id: 10, name: '船舶呼号', prop: 'CALLSIGN'},
+                    {id: 11, name: '冰级', prop: 'ICECLASS'},
+                    {id: 12, name: '船旗', prop: 'COUNTRY_CODE'},
+                    {id: 13, name: '建造完工', prop: 'BUILT'},
+                    {id: 14, name: '数据来源', prop: 'DATASOURCE'},
+                    {id: 15, name: '备注', prop: 'REMARK'},
+                    {id: 16, name: '设计航速', prop: 'SPEED'},
+                    {id: 17, name: '更新日期', prop: 'lAST_UPD_DT'},
+                    {id: 18, name: '所属船级社', prop: 'ClassKey'},
+                    {id: 19, name: '航点时间', prop: 'lAST_UPD_DT_LONG'},
+                    {id: 20, name: '状态', prop: 'sTATUS'}
+                ],
+                communication: [
+                    {id: 1, name: '终端类型', prop: 'TERMINAL_TYPE'},
+                    {id: 2, name: '船舶类型', prop: 'SHIPTYPE_KEY'},
+                    {id: 3, name: '号码', prop: 'TERMINAL_NO'},
+                    {id: 4, name: '卫星系统类型', prop: 'SYSTEM_TYPE'},
+                    {id: 5, name: '卫星使用类型', prop: 'USE_TYPE_CD'},
+                    {id: 6, name: '备注', prop: 'DESC'},
+                    {id: 7, name: '来源', prop: 'SUPPLIER'},
+                    {id: 8, name: '更新时间', prop: 'Last_Upd_Dt'}
 
-        ],
-        lift: [
-          { id: 1, name: '序号', prop: 'SEQ' },
-          { id: 2, name: '材料', prop: 'LIFTTYPE' },
-          { id: 3, name: '材料类型', prop: 'NAME' },
-          { id: 4, name: '材料描述', prop: 'BUILDER' },
-          { id: 5, name: 'BulkHeads', prop: 'NUMBER' },
-          { id: 6, name: 'HullDes', prop: 'CAPACITY' },
-          { id: 7, name: '球形艏', prop: 'REMARK' }
+                ],
+                consumption: [
+                    {id: 1, name: '空载IFO耗油量', prop: 'IFOBALLAST'},
+                    {id: 2, name: '满载IFO耗油量', prop: 'IFOLOADED'},
+                    {id: 3, name: '港口IFO耗油量', prop: 'IFOPORT'},
+                    {id: 4, name: '航行MDO耗油量', prop: 'MDOSTEAM'},
+                    {id: 5, name: '港口MDO耗油量', prop: 'MDOPORT'},
+                    {id: 6, name: 'FWCapacity', prop: 'FWCAPACITY'},
+                    {id: 7, name: 'DOCapacity', prop: 'DOCAPACITY'},
+                    {id: 8, name: 'FOCapacity', prop: 'FOCAPACITY'},
+                    {id: 9, name: 'WBCapacity', prop: 'WBCAPACITY'},
+                    {id: 10, name: 'AUX', prop: 'AUX'}
+                ],
+                crew: [
+                    {id: 1, name: '最少船员数', prop: 'MIMCREW'},
+                    {id: 2, name: '舱内乘客数', prop: 'PSGBERTHED'},
+                    {id: 3, name: '甲板乘客数', prop: 'PSGDECK'},
+                    {id: 4, name: '总乘客数', prop: 'PSGTOTAL'}
+                ],
+                dimension: [
+                    {id: 1, name: '船体总长', prop: 'LOA'},
+                    {id: 2, name: '船舶型长', prop: 'LBP'},
+                    {id: 3, name: '最大宽度', prop: 'mAXBEAM'},
+                    {id: 4, name: '船舶型宽', prop: 'BEAMMOULDED'},
+                    {id: 5, name: '高度', prop: 'hEIGHT'},
+                    {id: 6, name: '深度(型深)', prop: 'dEPTH'},
+                    {id: 7, name: '吃水', prop: 'dRAFT'},
+                    {id: 8, name: 'Freeborad', prop: 'fREEBORAD'},
+                    {id: 9, name: '备注', prop: 'rEMARK'},
+                    {id: 10, name: '船舶ID', prop: 'sHIPID'},
+                ],
+                dry: [
+                    {id: 1, name: '捆包货物容量', prop: 'BALE'},
+                    {id: 2, name: '谷物容量', prop: 'GRAIN'},
+                    {id: 3, name: '集装箱容量', prop: 'TEU'},
+                    {id: 4, name: '仓内轻便梯', prop: 'RAMPSINTERNAL'},
+                    {id: 5, name: '货仓数量情况', prop: 'HOLDS'},
+                    {id: 6, name: 'DryDes', prop: 'DRYDES'},
+                    {id: 7, name: '最大舱盖尺寸', prop: 'HATCHESSIZEMAX'},
+                    {id: 8, name: '舱盖情况', prop: 'HATCHES'},
+                    {id: 9, name: '冷藏箱TEU', prop: 'REEFER_TEU'},
+                    {id: 10, name: '冷藏箱CAPACITY', prop: 'REEFER_CAPACITY'}
+                ],
+                engine: [
+                    {id: 1, name: '序号', prop: 'SEQNO'},
+                    {id: 2, name: '制造商名称', prop: 'BUILDER'},
+                    {id: 3, name: '缸数', prop: 'CYLINDER'},
+                    {id: 4, name: '主机型号', prop: 'MODEL'},
+                    {id: 5, name: '引擎数量', prop: 'NUMBER'},
+                    {id: 6, name: '转速', prop: 'RPM'},
+                    {id: 7, name: '冲程', prop: 'STROKE'},
+                    {id: 8, name: '缸径', prop: 'BORE'},
+                    {id: 9, name: '引擎功率千瓦', prop: 'POWERKW'},
+                    {id: 10, name: '引擎功率马力', prop: 'POWERHP'}
 
-        ],
-        liquid: [
-          { id: 1, name: '液体容量', prop: 'LIQUID' },
-          { id: 2, name: '制惰性气体发生系统造商名称', prop: 'IGS' },
-          { id: 3, name: '原油洗仓系统', prop: 'COW' },
-          { id: 4, name: '泵数量排量说明', prop: 'PUMP' },
-          { id: 5, name: '泵总排量', prop: 'PUMPCAPACITY' },
-          { id: 6, name: 'LiquidDes', prop: 'LIQUIDDES' },
-          { id: 7, name: '液仓情况', prop: 'TANKS' }
+                ],
+                hull: [
+                    {id: 1, name: 'HullNo', prop: 'HULLNO'},
+                    {id: 2, name: '材料', prop: 'MATERAL'},
+                    {id: 3, name: '材料类型', prop: 'MATERIALTYPE'},
+                    {id: 4, name: '材料描述', prop: 'MATERIALDES'},
+                    {id: 5, name: 'BulkHeads', prop: 'BULKHEADS'},
+                    {id: 6, name: 'HullDes', prop: 'HULLDES'},
+                    {id: 7, name: '球形艏', prop: 'BULBOWSBOW'},
+                    {id: 8, name: '系住拉力', prop: 'BOLLARDPULL'},
+                    {id: 9, name: '甲板数量', prop: 'DECKS'},
+                    {id: 10, name: '双层船底', prop: 'DBLBOTTOM'},
+                    {id: 11, name: '双层甲板', prop: 'DBLDECK'},
+                    {id: 12, name: '双层船舷', prop: 'DBLSIDESKINS'},
+                    {id: 13, name: '双层船壳', prop: 'DBLHULL'},
+                    {id: 14, name: '冰体加强', prop: 'ICESTRENGTHENED'},
+                    {id: 15, name: '重货加强', prop: 'HEAVYCARGOSTRENGTHENED'}
 
-        ],
-        machinery: [
-          { id: 1, name: '锅炉', prop: 'BOILER' },
-          { id: 2, name: '发电机', prop: 'GENERATOR' },
-          { id: 3, name: '电台', prop: 'RADIO' },
-          { id: 4, name: '导航', prop: 'NAVI' },
-          { id: 5, name: '救援', prop: 'RESCUE' },
-          { id: 6, name: '系泊', prop: 'MOORING' },
-          { id: 7, name: '螺旋桨', prop: 'PROPELLER' },
-          { id: 8, name: '制冷', prop: 'REFRIGERATING' },
-          { id: 9, name: 'Other', prop: 'OTHER' }
-        ],
-        //urltypeArr
-        dialogVisible: false,
-        description: '',
-        formShip:{},
-      }
-    },
-    methods: {
-      remove() {
-        this.$emit('remove')
-      }
+                ],
+                lift: [
+                    {id: 1, name: '序号', prop: 'SEQ'},
+                    {id: 2, name: '材料', prop: 'LIFTTYPE'},
+                    {id: 3, name: '材料类型', prop: 'NAME'},
+                    {id: 4, name: '材料描述', prop: 'BUILDER'},
+                    {id: 5, name: 'BulkHeads', prop: 'NUMBER'},
+                    {id: 6, name: 'HullDes', prop: 'CAPACITY'},
+                    {id: 7, name: '球形艏', prop: 'REMARK'}
+
+                ],
+                liquid: [
+                    {id: 1, name: '液体容量', prop: 'LIQUID'},
+                    {id: 2, name: '制惰性气体发生系统造商名称', prop: 'IGS'},
+                    {id: 3, name: '原油洗仓系统', prop: 'COW'},
+                    {id: 4, name: '泵数量排量说明', prop: 'PUMP'},
+                    {id: 5, name: '泵总排量', prop: 'PUMPCAPACITY'},
+                    {id: 6, name: 'LiquidDes', prop: 'LIQUIDDES'},
+                    {id: 7, name: '液仓情况', prop: 'TANKS'}
+
+                ],
+                machinery: [
+                    {id: 1, name: '锅炉', prop: 'BOILER'},
+                    {id: 2, name: '发电机', prop: 'GENERATOR'},
+                    {id: 3, name: '电台', prop: 'RADIO'},
+                    {id: 4, name: '导航', prop: 'NAVI'},
+                    {id: 5, name: '救援', prop: 'RESCUE'},
+                    {id: 6, name: '系泊', prop: 'MOORING'},
+                    {id: 7, name: '螺旋桨', prop: 'PROPELLER'},
+                    {id: 8, name: '制冷', prop: 'REFRIGERATING'},
+                    {id: 9, name: 'Other', prop: 'OTHER'}
+                ],
+                //urltypeArr
+                dialogVisible: false,
+                description: '',
+                formShip: {},
+            }
+        },
+        methods: {
+            remove() {
+                this.$emit('remove')
+            }
+        }
     }
-  }
 </script>
 <style scoped lang="less">
     .main {
@@ -368,9 +372,9 @@
 
     p {
         margin: 0;
-        padding:10px;
-        background:#E3EFFB;
-        font-weight:900;
+        padding: 10px;
+        background: #E3EFFB;
+        font-weight: 900;
     }
 
     ul {
@@ -382,9 +386,10 @@
         padding: 0 0 0 5%;
     }
 
-    li{
+    li {
         text-align: left;
     }
+
     li span {
         /*text-align: left;*/
     }
@@ -393,14 +398,17 @@
         /*float: left;*/
         margin-left: 15%;
     }
-    /deep/.cell{
+
+    /deep/ .cell {
         // color: white;
         color: black;
     }
-    .el-table, .el-table__expanded-cell{
-        background: none!important;
+
+    .el-table, .el-table__expanded-cell {
+        background: none !important;
     }
-    .el-table--border, .el-table--group{
+
+    .el-table--border, .el-table--group {
         border: none;
     }
 </style>
