@@ -5,18 +5,18 @@
         <h3>业务异常（共{{total}}条）</h3>
         <div class="select_query"> 
             <el-form  style="display:grid;grid-template-columns: 1fr 1fr;"  :inline="true">
-                <el-form-item label="开始时间："  style="display:flex;margin:0;" label-width="100px" size="medium" v-model="listQuery.time" >
+                <el-form-item label="开始时间："  style="display:flex;margin:0;" label-width="100px" size="medium" v-model="listQuery.beginTime" >
                     <el-date-picker
-                            v-model="filters.column.create_start_date"
+                            v-model="listQuery.beginTime"
                             type="date"
                             :picker-options="pickerBeginDateBefore"
                             format="yyyy-MM-dd"
                             placeholder="">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="结束时间：" style="display:flex;margin:0;"  label-width="100px" size="medium"  v-model="listQuery.time">
+                <el-form-item label="结束时间：" style="display:flex;margin:0;"  label-width="100px" size="medium"  v-model="listQuery.endTime">
                     <el-date-picker
-                            v-model="filters.column.create_end_date"
+                            v-model="listQuery.endTime"
                             type="date"
                             format="yyyy-MM-dd"
                             :picker-options="pickerBeginDateAfter"
@@ -46,6 +46,7 @@
     <el-table-column  prop="username"  label="用户名"  align="center"></el-table-column> 
     <el-table-column  prop="email"  label="邮箱" align="center">  </el-table-column> 
      <el-table-column prop="realname" label="角色" align="center"> </el-table-column> 
+     <el-table-column prop="content" label="操作内容" align="center"> </el-table-column> 
     <el-table-column  prop="level" label="操作类型" align="center">
       <template slot-scope="scope">
             <span v-if="scope.row.level == 0">登录</span>
@@ -88,6 +89,7 @@ export default {
         name:'' , //查询输入条件
         beginTime:'' , //开始时间
         endTime:'',//结束时间
+        content:"",
         level:'' //操作类型，默认显示全部(-1)
       },
        filters: {
@@ -145,7 +147,8 @@ export default {
           +this.listQuery.name+'&&level='
           +this.listQuery.level+'&&beginTime='
           +this.listQuery.beginTime+'&&endTime='
-          +this.listQuery.endTime
+          +this.listQuery.endTime+'&&content='
+           +this.listQuery.content
         ).then(req => {
           console.log("系统操作日志数据",req)
           this.list = req.page.list
@@ -154,6 +157,11 @@ export default {
         })
     },
     query(){ //查询
+
+    //  console.log(new Date(this.listQuery.beginTime).toLocaleDateString().replace(/\//g,'-'),'beginTime')
+     this.listQuery.beginTime=new Date(this.listQuery.beginTime).toLocaleDateString().replace(/\//g,'-')
+     this.listQuery.endTime=new Date(this.listQuery.endTime).toLocaleDateString().replace(/\//g,'-')
+
       this.getList();
       },
     //当前条数变化

@@ -737,7 +737,7 @@
             this.loadDefaultMarker()
             this.loadLeftDrawer()
             this.ShipStatistical()
-
+             console.log( "markerLayersGroup",this.markerLayersGroup)
             setTimeout(() => {
                 this.websocketsend(JSON.stringify({
                     action: 'criminal',

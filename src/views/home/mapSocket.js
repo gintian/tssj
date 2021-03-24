@@ -2,7 +2,7 @@ import { wgs84ToBD } from '../../utils/coordinateConvert'
 export default {
   initWebSocket() { //初始化weosocket 218.205.125.100:8091   http://192.168.1.36:8093/
     const wsuri = 'ws://192.168.1.36:8093/websocket'
-    // const wsuri = 'ws://192.168.1.75:8093/websocket'
+    // const wsuri = 'ws://127.0.0.1:8093/websocket'
     // const wsuri2 = 'ws://192.168.1.36:8093/zc_data/websocket'
     this.websock = new WebSocket(wsuri)
     // this.websock2 = new WebSocket(wsuri2)
@@ -42,24 +42,32 @@ export default {
         for(let i in redata.data.list){
           this.$notify({
             title: '异常船只',
+            dangerouslyUseHTMLString: true,
             // duration: 60000,
             // offset: 200,
             type: 'warning',
             position: 'bottom-left',
-            message:
-                h('div', { class: 'message' }, [
-                          h('div', {class: 'btnList'} ,redata.data.list[i].message, [
-                            h('span',
-                                {
-                                  class: 'later',
-                                  on:{
-                                    // click:  this.ship_detail(),
-                                      click: this.ship_detail(redata.data.list[i].mmsi)
-                                    }
-                                },
-                            ),
-                          ])
-                        ]),
+            message:[redata.data.list[i].message,redata.data.list[i].mmsi],
+            onClick: () => {
+              this.ship_detail(redata.data.list[i].mmsi)
+            },
+            onClose: () => {
+              console.log(`Notify已关闭，说明异常或已查看`)
+            }
+            // message:
+            //     h('div', { class: 'message' }, [
+            //               h('div', {class: 'btnList'} ,redata.data.list[i].message, [
+            //                 h('span',
+            //                     {
+            //                       class: 'later',
+            //                       on:{
+            //                         // click:  this.ship_detail(),
+            //                           // click: ()=>{this.ship_detail(redata.data.list[i].mmsi)}
+            //                         }
+            //                     },
+            //                 ),
+            //               ])
+            //             ]),
             // message: [redata.data.list[i].message, redata.data.list[i].mmsi],
         }); 
         }
@@ -67,14 +75,14 @@ export default {
           
     } else if (redata.action === 'allRadar') {
       this.socketRadarData = redata.data.radarlist
-      // console.log("redata.data",  redata.data)   
+      // console.log("redatadata",  this.socketRadarData )   
          // console.log('socketRadarData',val)
          this.radarLayer.clearLayers()
          let mz=this.map.getZoom()
         //  console.log('当前的地图缩放级别是：',mz)
          function marker(e) {
           //  console.log('e',e)
-           let size=105*Math.pow(2,10-mz)
+           let size=105*Math.pow(2,9-mz)
            let bd09Arr = wgs84ToBD(e.lon, e.lat)
            let marker = L.marker([bd09Arr[1], bd09Arr[0]], {
              icon: L.divIcon({
@@ -97,9 +105,17 @@ export default {
            marker.signal = '雷达'
            return marker
          }
-         if ( this.stationCheck.radar) {
+        //  if ( this.stationCheck.radar) {
+          // console.log('clickedMarker',this.clickedMarker)
+          
+          // if ( this.clickedMarker.name=='雷达'&&this.clickedMarker.is==true) {  
+            if ( this.clickedMarker.name=='雷达'&& this.clickedMarker.is==false) {           
+            this.radarLayer.clearLayers()
           //  console.log('stationCheck',this.stationCheck.radar)
-           for (let i of   this.socketRadarData) {
+
+          
+      } else{
+          for (let i of   this.socketRadarData) {
             //  console.log('socketRadarData',i)
              // console.log(this.stationLayers)
              if (i.status==false) {
@@ -107,10 +123,8 @@ export default {
                  marker(i).addTo(this.radarLayer);
                }
              }
-           }
-         } else {
-           this.radarLayer.clearLayers()
-         }     
+           } 
+      } 
     }
 
   },

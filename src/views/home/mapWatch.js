@@ -14,9 +14,7 @@ let ShipDataImgMap = {
     } else if(shipType=='水下作业'){
       return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
     } 
-    // else if(shipType=='水下作业'){
-    //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
-    // } else if(shipType=='潜水作业'){
+    //  else if(shipType=='潜水作业'){
     //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
     // } else if(shipType=='补给船'){
     //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
@@ -37,7 +35,9 @@ let ShipDataImgMap = {
   3:(shipType)=>{
     return { imgName:'aim01.png',sizeWidth:26, sizeHeight:26 }  //雷达目标
   },
- 
+  4:(shipType)=>{
+    return { imgName:'aim03.png',sizeWidth:26, sizeHeight:26 }  //异常目标
+  },
 }
 // let flyDataImg=function(speed) {
 
@@ -61,15 +61,43 @@ export default {
     this.ciLayer.clearLayers()
     this.leftDrawerShipTypeLayer.clearLayers()
     for (let i of val) {
+      var  normal=i.normal
+      // console.log('normal',normal)
+      
       // let sim=ShipDataImgMap[i.targettype](i.abnormal, i.time)
       let sim=ShipDataImgMap[i.targettype](i.shipType)
       // console.log('sim',sim)
       let bd09Arr = wgs84ToBD(parseFloat(i.lon), parseFloat(i.lat))
-      let icon = L.icon({
-        iconUrl: require('../../assets/mapSigns/' + sim.imgName),
-        iconSize: [sim.sizeWidth*0.8,sim.sizeHeight*0.8],
-        iconAnchor: [sim.sizeWidth*0.55, sim.sizeWidth*0.55]
-      })
+
+      // let icon = L.icon({
+      //   iconUrl: require('../../assets/mapSigns/' + sim.imgName),
+      //   iconSize: [sim.sizeWidth*0.8,sim.sizeHeight*0.8],
+      //   iconAnchor: [sim.sizeWidth*0.55, sim.sizeWidth*0.55]
+      // })
+
+      // if(normal==1){
+      //   let icon =  L.icon({
+      //     iconUrl: require('../../assets/mapSigns/aim03.png'),
+      //     iconSize: [32,32],
+      //     iconAnchor: [16,16]
+      //   })
+      // }
+
+      let icon;
+      if(normal==1){
+        icon =  L.icon({
+          iconUrl: require('../../assets/mapSigns/aim03.png'),
+          iconSize: [16,22],
+          iconAnchor: [16,16]
+        })
+      }else{
+           icon = L.icon({
+            iconUrl: require('../../assets/mapSigns/' + sim.imgName),
+            iconSize: [sim.sizeWidth*0.8,sim.sizeHeight*0.8],
+            iconAnchor: [sim.sizeWidth*0.55, sim.sizeWidth*0.55]
+          })
+      }
+
       let rotationAngle=parseFloat(i.course)
       // console.log(rotationAngle)
       // rotationAngle: parseFloat(i.course)
@@ -97,6 +125,7 @@ export default {
 
 
     this.ciLayer.addOnClickListener((e,data)=>{
+      
       this.animateLayer.clearLayers()
       let info=data[0].data.signal
       let bd09Arr = wgs84ToBD(parseFloat(info.lon), parseFloat(info.lat))
@@ -107,6 +136,7 @@ export default {
           iconAnchor: [16,16]
         })
       }).addTo(this.animateLayer);
+
       console.log(data[0].data.signal);
       // 1是Ais目标2是融合目标3是雷达目标
       if(info.targettype === 3){

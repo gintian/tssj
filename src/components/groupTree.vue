@@ -502,7 +502,7 @@
           form.append('file', fileObj);
            this.$axios({
             method: 'post',
-            url: 'http://192.168.1.36:8093/'+this.uploadUrl,
+            url: 'http://127.0.0.1:8093/'+this.uploadUrl,
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -588,7 +588,7 @@
           const index = children.findIndex(d => d.id === data.id)
           children.splice(index, 1)
           console.log(data)
-          if (data.name) {
+          if (data.id) {
             console.log('删除区域')
             this.$emit('removeArea', { id: data.id})
           }

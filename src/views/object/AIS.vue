@@ -73,7 +73,7 @@
      <el-dialog title="添加AIS" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
       <el-form ref="updateForm"  :model="addsForm" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
-          <el-form-item label="名称" prop="name" v-show="false">
+          <el-form-item label="名称" prop="name" >
               <el-input v-model="addsForm.name" />
             </el-form-item>
             <el-form-item label="编号" prop="station">
@@ -107,7 +107,7 @@
      <el-dialog title="编辑AIS" :visible.sync="dialogFormVisible"     width="600px">
       <el-form ref="updateForm"  :model="temp" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
-          <el-form-item label="名称" prop="name" >
+            <el-form-item label="名称" prop="name" >
               <el-input v-model="temp.name" />
             </el-form-item>
             <el-form-item label="编号" prop="station">

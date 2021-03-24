@@ -302,6 +302,8 @@ const map={
   map: null,
   ciLayer: null,//船舶覆盖物图层
   focusShipLayer: null,//关注船舶图层
+
+  // maxMapZoom:11,
   maxMapZoom:9,
   mapZoom:10,//当前地图等级
 

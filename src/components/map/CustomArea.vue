@@ -84,14 +84,24 @@
         tabObj(val){
         // this.tabObj=val
         // this.tabObj.showed=false
-        console.log('自定义区域TabObj',val)
+        // console.log('自定义区域TabObj',val)
+        if(val.type==0){
+          // return "圆形海域"
+          val.type='圆形海域'
+        }else if(val.type==1){
+          // return  "矩形海域"
+          val.type='矩形海域'
+        }else  if(val.type==2){
+          // return  "多边形海域"
+          val.type='多边形海域'
+        }
       },
         points(val){
-            console.log('points',val)
+            // console.log('points',val)
         }
     },
     mounted() {
-      console.log('自定义区域TabObj',this.tabObj)
+      // console.log('自定义区域TabObj',this.tabObj)
     },
     updated() {
       // console.log('shipTabObj',this.tabObj)

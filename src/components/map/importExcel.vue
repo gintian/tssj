@@ -87,9 +87,9 @@
           const form = new FormData();
           // 文件对象
           form.append('file', fileObj);  
-      this.$axios({
+         this.$axios({
             method: 'post',
-            url: 'http://192.168.1.36:8093/'+this.uploadUrl,
+            url: 'http://127.0.0.1:8093/'+this.uploadUrl,
             headers: {
               'Content-Type': 'multipart/form-data',
             },

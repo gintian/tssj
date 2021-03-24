@@ -12,7 +12,7 @@
             <div class="event_nav_msg">
                   <h4 >开始时间：</h4>
                         <el-date-picker
-                          v-model="value1"
+                          v-model="listQuery.time"
                           type="datetime"
                           placeholder="">
                         </el-date-picker>
@@ -20,10 +20,15 @@
             <div  class="event_nav_msg">
                   <h4 >结束时间：</h4>
                         <el-date-picker
-                          v-model="value2"
+                          v-model="listQuery.endTime"
                           type="datetime"
                           placeholder="">
                         </el-date-picker>
+            </div>
+            <div class="query-input">
+                <el-button class="filter-item" type="primary" icon="el-icon-search" @click="query()" >
+                  搜索
+                </el-button>
             </div>
         </div>
     </div>
@@ -75,7 +80,9 @@ export default {
       listQuery:{
         pageNo:1, //当前页面
         pageSize:10, //条数
-        level:''  //查询条件
+        level:'' , //查询条件
+        time:'',
+        endTime:''
       },
       value1: '',
       value2: '',
@@ -96,7 +103,9 @@ export default {
        this.service.get( '/alarmlog/page?pageNumber='
        +this.listQuery.pageNo+'&&pageSize='
        +this.listQuery.pageSize+'&&level='
-       +this.listQuery.level
+       +this.listQuery.level+'&&time='
+       +this.listQuery.time+'&&endTime='
+       +this.listQuery.endTime
        ).then(req => {
           console.log("业务告警日志数据",req)
           this.list = req.page.list
@@ -105,6 +114,10 @@ export default {
         })
     },
     query(){ //按名称查询
+      console.log(new Date(this.listQuery.time).toLocaleDateString().replace(/\//g,'-'),'beginTime')
+      console.log(new Date(this.listQuery.endTime).toLocaleDateString().replace(/\//g,'-'),'endTime')
+      this.listQuery.time=new Date(this.listQuery.time).toLocaleDateString().replace(/\//g,'-')
+      this.listQuery.endTime=new Date(this.listQuery.endTime).toLocaleDateString().replace(/\//g,'-')
       this.getList();
     //   console.log("查到的数据",this.getList())
     },
@@ -132,20 +145,22 @@ export default {
 }
 .filter-container{
       display: grid;
-    grid-template-columns: 60% 40%;
+    grid-template-columns: 40% 60%;
     align-items: center;
     margin: 16px;
 }
 
 .filter-container .select_query{
-      display: grid;
-    grid-template-columns: 50%  50%;
-    align-items: center;
+    //   display: grid;
+    // grid-template-columns: 50%  50%;
+    // align-items: center;
+    display: flex;
+    justify-content: space-between;
 }
 .event_nav_msg{
     // display: flex;
     display: grid;
-    grid-template-columns: 23% 44%;
+   grid-template-columns: 33% 69%;
     align-items: center;
 }
 .filter-item{

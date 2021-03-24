@@ -43,7 +43,7 @@
       return{
         mapSigns: [ 
               { img: require('../../assets/mapicon/radar.png'), is:true,name: '雷达' },    
-              { img: require('../../assets/mapSigns/ais.png'), is:true,name: 'AIS' },
+              { img: require('../../assets/mapSigns/ais.png'), is:true,name: 'ais' },
               { img: require('../../assets/mapSigns/02.png'), is:true,name: '码头' },
               { img: require('../../assets/mapSigns/03.png'), is:true,name: '锚地' },   
           ],

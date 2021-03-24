@@ -61,7 +61,7 @@ const map = {
     ]
     //离线海图+天地卫星图+天地地图
     this.baseLayer = L.tileLayer('http://218.205.125.142:8001/{z}/{x}/{y}.png').addTo(this.map)//服务器上的离线海图
-    // this.baseLayer = L.tileLayer('http://192.168.1.75:8001/{z}/{x}/{y}.png').addTo(this.map)//服务器上的离线海图
+    // this.baseLayer = L.tileLayer('http://127.0.0.1:9001/{z}/{x}/{y}.png').addTo(this.map)//服务器上的离线海图
 
     this.sateLayer =L.tileLayer.chinaProvider(
       'TianDiTu.Satellite.Map',
@@ -1013,6 +1013,7 @@ const marker = {
             })
             marker.isFocus = false
             marker.addTo(this.markerLayersGroup)
+            // console.log( "marker",this.markerLayersGroup)
             if (e.isFocus) {
               marker.isFocus = true
             }
@@ -1666,7 +1667,16 @@ const ship={
        var  latitude=res.ais.lat
        var  longitude=res.ais.lon
        if (res.error === 0) {
-  
+
+        let bd09Arr = wgs84ToBD(parseFloat(longitude), parseFloat(latitude))
+        L.marker([bd09Arr[1],bd09Arr[0]], {
+          icon:L.icon({
+            iconUrl: require('../../assets/mapicon/aim.png'),
+            iconSize: [32,32],
+            iconAnchor: [16,16]
+          })
+        }).addTo(this.animateLayer);
+
          this.map.setView([latitude,longitude], 12 , { 
              pan: { animate: true , duration: 0.5 }, 
              zoom: { animate: true }, 
@@ -2368,7 +2378,7 @@ const area={
         this.areaLayer.clearLayers()
         // this.drawLayer.clearLayers()
        this.loadGroupData()
-        // console.log('删除区域返回',res)
+        console.log('删除区域返回',res)
       })
   },
 }
