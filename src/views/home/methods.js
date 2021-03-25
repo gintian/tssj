@@ -139,9 +139,11 @@ const map = {
       if (this.map.getZoom() < this.maxMapZoom) {
         this.addShipPointCollection(this.map.getSize())
         this.loadAreaShip(0)
+        this.ShipStatistical(0)
       } else {
         console.log(this.shipselect)
         this.loadAreaShip(1,[],this.shipselect,[])
+        this.ShipStatistical(1,[],this.shipselect,[])
       }
       let swne = this.getMapBounds()
       let d = {

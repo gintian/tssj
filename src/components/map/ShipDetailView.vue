@@ -215,7 +215,7 @@
                     {id: 4, name: '船舶名称', prop: 'NAME'},
                     {id: 5, name: '简称', prop: 'TRIMNAME'},
                     {id: 6, name: '当地语言', prop: 'LOCALNAME'},
-                    {id: 7, name: '船前的名', prop: 'EXNAME'},
+                    {id: 7, name: '船前的名', prop: 'eXNAME'},
                     {id: 8, name: '注册港口', prop: 'PORTID'},
                     {id: 9, name: 'MMSI', prop: 'MMSI'},
                     {id: 10, name: '船舶呼号', prop: 'CALLSIGN'},

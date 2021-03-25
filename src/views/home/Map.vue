@@ -3,8 +3,7 @@
         <div id="map" ref="map">
 
         </div>
-
-        <!-- <button @click="pushMessage" style="position: absolute;top: 0%;z-index: 400;right: 8px;width:23px;height:25px;">123</button> -->
+         <el-button @click="loadVideo" type="warning" style="position: absolute;top: 8%;z-index: 400;right: 9%;">视频</el-button>
         <!-- 统计图标 -->
         <button class="signTitle" style="position: absolute;top: 59%;z-index: 400;right: 8px;width:23px;height:25px;"
                 @click="showShipStatistics=!showShipStatistics">
@@ -439,14 +438,11 @@
         <!--摄像头视频-->
         <div id='CameraVideoView' :style="{width: videoWidth}"
              style="height: auto;width: auto;position: absolute;right: 2%; top:10%;z-index: 500" v-drag
-             v-show="showInfo.camera">
-            <VideoView
+           >
+            <VideoPlayer
                     v-for="(itme,index) in dialogInfo.camera" :key="index"
-                    :videoName="itme.name"
-                    :background="'#2770D4'"
-                    :isBird="{is:false}"
-                    :videoID='itme.id' :videoSrc='itme.videoUrl'
-                    @enlarge='enlargeVideo'
+                    serverIp="218.205.125.185"
+                    rtsp='rtsp://218.205.125.185/vc85Yl2c'
             />
             <el-button type="text" @click="showInfo.camera=false"
                        style="position: absolute;top: 1px;right: 10px;color: #eee;">X
@@ -642,6 +638,8 @@
     import CountrySigns from '../../components/CountrySigns .vue'
     import {wgs84ToBD} from '../../utils/coordinateConvert'
     import {formRules} from '../../utils/formRules'
+
+    import VideoPlayer from '../../components/VideoPlayer';
     //   import {
     //     addMyMarker,
     //     addPolygon, customMarker, addStationDom,
@@ -650,6 +648,7 @@
     export default {
         name: 'Map',
         components: {
+            VideoPlayer,
             Dropdown,
             ButtonGroup,
             MapControl,
@@ -872,13 +871,6 @@
                             this.timelist = res.result
                             this.dialogVisible4 = true
                         }
-                    // else if(res.result===[]){
-                    //     this.$message('当前时间段内，暂无查到所对应的船舶' + '!');
-                    // }
-                    //  else {
-                    //     this.$message('当前时间段内，暂无查到所对应的船舶' + '!');
-                    // }
-
                 })
             },
 
@@ -897,7 +889,7 @@
                 this.service.post('/ship/statistical', {
                     ...d
                 }).then(res => {
-                    // console.log("船舶统计",res)
+                    console.log("船舶统计",res)
                     this.shipStatistics = res.list
                 })
             },
@@ -949,12 +941,39 @@
                     'swLon': swne['swLon'],
                     'neLon': swne['neLon']
                 }).then(res => {
-                    // console.log(res,'addShipPointCollection')
+                    console.log(res,'初始化海量点')
                     this.pointCollectionImg = res.data
                     this.showPointCollectionImg = true
                     this.map.dragging.enable();
                     // this.map.scrollWheelZoom.enable();
                 })
+            },
+            loadVideo(){
+                this.dialogInfo.camera = [{name:'1231',id:'1'}]
+                // const loadInfo = e => {
+                //     this.service.post('http://218.205.125.100:8093/camera/view', {
+                //         id: e.id
+                //     })
+                //         .then(res => {
+                //             // console.log(res)
+                //             this.dialogInfo.camera = [res.data]
+                //             this.showInfo.camera = true
+                //         })
+                // }
+                // this.$axios.post('http://218.205.125.100:8093/camera/findAll', {
+                //     stationId: 4
+                // }).then(res => {
+                //     console.log(res.data)
+                //     this.dialogInfo.camera = res.data
+                //     this.showInfo.camera = true
+                //     res.data.forEach(e => {
+                //
+                //         let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
+                //         let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 10, require('../../assets/mapSigns/system4.png'), e.pAngle)('视频监控站')
+                //         ((ev) => {loadInfo(e)})
+                //         marker.addTo(this.stationLayerGroup)
+                //     })
+                // })
             },
         },
         directives: {

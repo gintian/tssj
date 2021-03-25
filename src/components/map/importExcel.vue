@@ -43,7 +43,7 @@
         toastShow: false,
 				toastText: '',
          action:'aaa',
-        uploadUrl:'/ship/pushExcel',
+        uploadUrl:'ship/pushExcel',
         fileList: [],
         
       }
@@ -89,7 +89,8 @@
           form.append('file', fileObj);  
          this.$axios({
             method: 'post',
-            url: 'http://127.0.0.1:8093/'+this.uploadUrl,
+            url: 'http://192.168.1.36:8093/'+this.uploadUrl,
+            // url: 'http://127.0.0.1:8093/'+this.uploadUrl,
             headers: {
               'Content-Type': 'multipart/form-data',
             },

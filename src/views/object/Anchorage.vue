@@ -75,36 +75,134 @@
 </el-dialog>
  <!-- 新增弹层功能 -->
      <el-dialog title="添加锚地" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
-      <el-form ref="updateForm"  :model="addsForm" label-position="left" label-width="100px"
+      <el-form  :model="formLabelAlign" label-position="left" label-width="100px"  ref="ruleForm" :rules="formRules"
        style="width: 400px; margin-left:50px;">
-          <!-- <el-form-item label="名称" prop="name" >
-              <el-input v-model="addsForm.name" />
-            </el-form-item> -->
-            <el-form-item label="类型" prop="type">
-              <el-input v-model="addsForm.type" />
-            </el-form-item>
-          <el-form-item label="经度" prop="lon">
-              <el-input v-model="addsForm.lon" />
-            </el-form-item>
-            <el-form-item label="纬度" prop="lat">
-            <el-input v-model="addsForm.lat" />
-          </el-form-item>
-          <el-form-item label="区域点集合（矩形/多边形时）" prop="points">
-              <el-input v-model="addsForm.points" />
-          </el-form-item>
-            <el-form-item label="区域（为圆形时）" prop="radius">
-            <el-input v-model="addsForm.radius" />
-          </el-form-item>
-
-            <el-form-item label="描述" prop="describe">
-            <el-input v-model="addsForm.describe" />
-          </el-form-item>
+        <el-form-item v-for="item in addData" :key="item.id" :label="item.name" :prop="item.prop" >
+          <el-input v-model="formLabelAlign[item.prop]" v-if="item.id<4" :disabled="dialog.disabled"></el-input>
+          
+            <el-select v-model="formLabelAlign.type" placeholder="请选择" v-if="item.id==6"
+                                       prop="type"  :disabled="dialog.disabled">
+                                <el-option
+                                        v-for="i in typeList"
+                                        :key="i.value"
+                                        :label="i.label"
+                                        :value="i.value">
+                                </el-option>
+            </el-select>
+        </el-form-item>
+                      <div class="circle" v-show="formLabelAlign.type==0">
+                            <el-form-item>
+                                <el-row>
+                                    <el-col :span="11">
+                                        <el-form-item label="经度" label-position=‘left’ prop="lon">
+                                            <el-input v-model="formLabelAlign.lon" :disabled="dialog.disabled"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="11">
+                                        <el-form-item label="纬度 " prop="lat">
+                                            <el-input v-model="formLabelAlign.lat" :disabled="dialog.disabled"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-row>
+                                    <el-col :span="11">
+                                        <el-form-item label="半径" label-position=‘left’ prop="radius">
+                                            <el-input v-model="formLabelAlign.radius" :disabled="dialog.disabled"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-form-item>
+                        </div>
+                        <div class="rectangle" v-show="formLabelAlign.type==2">
+                           <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="80px"
+                                     class="demo-dynamic">
+                                <el-form-item
+                                        v-for="(domain, index) in dynamicValidateForm.domains" :key="index">
+                                    <el-row>
+                                        <el-col :span="11">
+                                            <el-form-item label="经度"
+                                                          :rules="[{required: true, message: '请输入经度', trigger: 'blur'}]"
+                                                          :prop="'domains.' + index + '.lon'">
+                                                <el-input v-model="domain.lon" :disabled="dialog.disabled"></el-input >
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="11">
+                                            <el-form-item label="纬度"
+                                                          :rules="[{required: true, message: '请输入纬度', trigger: 'blur'}]"
+                                                          :prop="'domains.' + index + '.lat'">
+                                                <el-input v-model="domain.lat" :disabled="dialog.disabled"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="1"><i class="el-icon-circle-plus-outline" @click="addDomain"
+                                                             style="cursor: pointer;font-size:20px;color: #409eff;margin-left: ;" v-show="interfaceType==='add'"> </i>
+                                        </el-col>
+                                    </el-row>
+                                </el-form-item>
+                            </el-form>
+                            <!-- <el-form-item>
+                                <el-row>
+                                    <el-col :span="11">
+                                        <el-form-item label="经度" label-position=‘left’ prop="lon">
+                                            <el-input v-model="formLabelAlign.lon" :disabled="dialog.disabled"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="11">
+                                        <el-form-item label="纬度" label-position=‘left’ prop="lat">
+                                            <el-input v-model="formLabelAlign.lat" :disabled="dialog.disabled"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-form-item> -->
+                            <!-- <el-form-item>
+                                <el-row>
+                                    <el-col :span="11">
+                                        <el-form-item label="经度" label-position=‘left’ prop="lon">
+                                            <el-input v-model="formLabelAlign.lon" :disabled="dialog.disabled"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="11">
+                                        <el-form-item label="纬度" label-position=‘left’ prop="lat">
+                                            <el-input v-model="formLabelAlign.lat" :disabled="dialog.disabled"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-form-item> -->
+                        </div>
+                        <div class="polygon" v-show="formLabelAlign.type==1">
+                            <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="80px"
+                                     class="demo-dynamic">
+                                <el-form-item
+                                        v-for="(domain, index) in dynamicValidateForm.domains" :key="index">
+                                    <el-row>
+                                        <el-col :span="11">
+                                            <el-form-item label="经度"
+                                                          :rules="[{required: true, message: '请输入经度', trigger: 'blur'}]"
+                                                          :prop="'domains.' + index + '.lon'">
+                                                <el-input v-model="domain.lon" :disabled="dialog.disabled"></el-input >
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="11">
+                                            <el-form-item label="纬度"
+                                                          :rules="[{required: true, message: '请输入纬度', trigger: 'blur'}]"
+                                                          :prop="'domains.' + index + '.lat'">
+                                                <el-input v-model="domain.lat" :disabled="dialog.disabled"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="1"><i class="el-icon-circle-plus-outline" @click="addDomain"
+                                                             style="cursor: pointer;font-size:20px;color: #409eff;margin-left: ;" v-show="interfaceType==='add'"> </i>
+                                        </el-col>
+                                    </el-row>
+                                </el-form-item>
+                            </el-form>
+                        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible1 = false">
           取消
         </el-button>
-        <el-button type="primary" @click="AddData()">
+        <el-button type="primary" @click="AddData('dynamicValidateForm')">
           确定
         </el-button>
       </div>
@@ -170,13 +268,141 @@
 </template>
 
 <script>
-
+  import {formRules} from '../../utils/formRules';
 // import TableMap from '../../../src/components/TableMap'
 export default {
   name: 'ComplexTable',
   // components:{'table-map':TableMap},
   data() {
+       const validateRules = {
+        'lon1': (rule, value, callback) => {
+          if (this.formLabelAlign.type == 2) {
+
+            let reg = /^\d+$|^\d+\.\d+$/g;
+            if (!value) {
+              callback(new Error('请输入经度'));
+            } else if (!reg.test(value)) {
+              callback(new Error('请输入数字'));
+            } else {
+              callback();
+            }
+          }
+          callback();
+        },
+        'lon2': (rule, value, callback) => {
+          if (this.formLabelAlign.type == 2) {
+            let reg = /^\d+$|^\d+\.\d+$/g;
+            if (!value) {
+              callback(new Error('请输入经度'));
+            } else if (!reg.test(value)) {
+              callback(new Error('请输入数字'));
+            } else {
+              callback();
+            }
+          }
+          callback();
+        },
+        'lat1': (rule, value, callback) => {
+          if (this.formLabelAlign.type == 2) {
+            let reg = /^\d+$|^\d+\.\d+$/g;
+            if (!value) {
+              callback(new Error('请输入纬度'));
+            } else if (!reg.test(value)) {
+              callback(new Error('请输入数字'));
+            } else {
+              callback();
+            }
+          }
+          callback();
+        },
+        'lat2': (rule, value, callback) => {
+          if (this.formLabelAlign.type == 2) {
+            let reg = /^\d+$|^\d+\.\d+$/g;
+            if (!value) {
+              callback(new Error('请输入纬度'));
+            } else if (!reg.test(value)) {
+              callback(new Error('请输入数字'));
+            } else {
+              callback();
+            }
+          }
+          callback();
+        },
+        'centerx': (rule, value, callback) => {
+          if (this.formLabelAlign.type == 0) {
+            let reg = /^\d+$|^\d+\.\d+$/g;
+            if (!value) {
+              callback(new Error('请输入经度'));
+            } else if (!reg.test(value)) {
+              callback(new Error('请输入数字'));
+            } else {
+              callback();
+            }
+          }
+          callback();
+        },
+        'centery': (rule, value, callback) => {
+          if (this.formLabelAlign.type == 0) {
+            let reg = /^\d+$|^\d+\.\d+$/g;
+            if (!value) {
+              callback(new Error('请输入纬度'));
+            } else if (!reg.test(value)) {
+              callback(new Error('请输入数字'));
+            } else {
+              callback();
+            }
+          }
+          callback();
+        },
+        'radius': (rule, value, callback) => {
+          if (this.formLabelAlign.type == 0) {
+            let reg = /^\d+$|^\d+\.\d+$/g;
+            if (!value) {
+              callback(new Error('请输入半径'));
+            } else if (!reg.test(value)) {
+              callback(new Error('请输入数字'));
+            } else {
+              callback();
+            }
+          }
+          callback();
+        },
+
+
+      }
     return {
+      interfaceType:'',
+      dynamicValidateForm: {//多边形经纬度
+          domains: [{lon: '', lat: ''}, {lon: '', lat: ''}],
+        },
+      rules: {
+          lon1: [{validator: validateRules.lon1, trigger: 'blur'}],
+          lat1: [{validator: validateRules.lat1, trigger: 'blur'}],
+          lon2: [{validator: validateRules.lon2, trigger: 'blur'}],
+          lat2: [{validator: validateRules.lat2, trigger: 'blur'}],
+          centerx: [{validator: validateRules.centerx, trigger: 'blur'}],
+          centery: [{validator: validateRules.centery, trigger: 'blur'}],
+          radius: [{validator: validateRules.radius, trigger: 'blur'}],
+          type: [
+            {required: true, message: '请选择区域类型', trigger: 'change'}
+          ],
+        },
+    formRules:formRules,
+        formLabelAlign: {
+          name: '',
+          lon: '',
+          lat: '',
+          attributionId: '',
+          type: '',
+          points: [{lon: '', lat: ''}],
+          // centerx: '',
+          // centery: '',
+          radius: '',
+          // lat1: '',
+          // lat2: '',
+          // lon1: '',
+          // lon2: '',
+        },
      dialog: {
           visible: false,
           title: '',
@@ -193,6 +419,23 @@ export default {
         pageSize:10, //条数
         name:''  //查询条件
       },
+        addData: [
+          {id: 0, prop: 'name', name: '名称'},
+          {id: 1, prop: 'lon', name: '经度'},
+          {id: 2, prop: 'lat', name: '纬度'},
+          {id: 3, prop: 'describe', name: '描述'},
+          {id: 6, prop: 'type', name: '区域类型'},
+        ],
+        typeList: [{
+          value: 0,
+          label: '圆形'
+        }, {
+          value: 2,
+          label: '矩形'
+        }, {
+          value: 1,
+          label: '多边形'
+        }],
       dialogDelVisible:false, //删除弹层显示与隐藏
       dialogFormVisible:false, //编辑弹层显示与隐藏
       dialogFormVisible1:false, //新增弹层显示与隐藏
@@ -216,12 +459,11 @@ export default {
          describe:""
       },
       Business_exception:null,
-      //  visible: false,
     }
   },
-  filters:{},
-  created() {
-    this.getList();
+  mounted() {
+    this.getList()
+     Object.assign(this.formRules,this.rules)
   },
   methods: {
      // 修改table header的背景色
@@ -230,7 +472,9 @@ export default {
             return 'background-color: #DEE8FE;color: #000;font-weight: 500;'
           }
         }, 
-
+   addDomain() {
+        this.dynamicValidateForm.domains.push({lng: '', lat: ''});
+      },
     getList(){  //获取数据
          this.service.get( '/anchorage/page',{
               params:{
@@ -308,19 +552,52 @@ export default {
      this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
       this.dialogFormVisible = true; //弹层显示
     },
-    // 添加雷达
+    // 添加锚地
      handleAdd(){
       this.dialogFormVisible1 = true; //弹层显示
+        this.interfaceType = 'add'
+        this.formLabelAlign = {}
+        this.dynamicValidateForm.domains=[{lon: '', lat: ''}, {lon: '', lat: ''}];
+        // this.dialog.visible = true
+        // this.dialog.title = '锚地添加'
+        // this.dialog.disabled=false
+        // this.dialog.showBtn = true;
+        // this.resetForm('ruleForm')//重置
     },
-     AddData(){
-        let userList=this.addsForm;  
-        let {lat,lon,type,points,radius,describe} = userList;
-          this.service.post('/anchorage/save',this.addsForm).then(res => {
-            console.log("新增的锚地数据",res)
-             this.getList(); 
-          this.dialogFormVisible1 = false;}
-          ); 
-    },
+      AddData()/* 提交表单 */ {
+
+            // alert('submit!'); /basicData/personnel/add
+            console.log(this.formLabelAlign)
+        this.formLabelAlign.points=this.dynamicValidateForm.domains,
+            this.service.post('/anchorage/save', {
+              ...this.formLabelAlign
+            }).then(res => {
+              // console.log(res,'表单提交')
+
+              this.getList(); 
+          this.dialogFormVisible1 = false;
+              if(res.code===0){
+                this.dialog.visible = false
+              }
+              // this.formLabelAlign={}
+            }).catch(err => {
+              this.$message({ message: err.msg, type: 'error' })
+              console.log(err)
+              this.queryData()
+
+              //  return false;
+            })
+      },
+
+    //  AddData(formName, formName2)  /* 提交表单 */{
+    //     let userList=this.addsForm;  
+    //     let {lat,lon,type,points,radius,describe} = userList;
+    //       this.service.post('/anchorage/save',this.addsForm).then(res => {
+    //         console.log("新增的锚地数据",res)
+    //          this.getList(); 
+    //       this.dialogFormVisible1 = false;}
+    //       ); 
+    // },
     //编辑提交
     updateData(){
        this.service.post('/anchorage/update',{
@@ -333,6 +610,12 @@ export default {
           console.log("编辑锚地信息",req)
           this.getList();
            this.dialogFormVisible = false;
+          //  if(req.data.waters.type===1){//多边形
+          //   this.dynamicValidateForm.domains=[...req.data.waters.points]
+          // }
+          // console.log(this.dynamicValidateForm.domains)
+          // req.data.type = req.data.waters.type;
+          // this.formLabelAlign = {...req.data}
       })
     }
   }

@@ -28,12 +28,12 @@
     },
     watch:{
       shipList(val){
-        // console.log('val',val)
+        console.log('监听到的统计数据',val)
         this.shipList=val
       }
     },
     mounted(){
-      //  console.log('mounted shipList=====' + this.shipList)
+       console.log('mounted shipList=====' + this.shipList)
     },
     methods: {}
   }

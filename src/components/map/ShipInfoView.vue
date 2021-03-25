@@ -110,7 +110,7 @@ export default {
         }
     },
     mounted(){
-      console.log('shipTabObj',this.shipTabObj)
+      // console.log('shipTabObj',this.shipTabObj)
     },
   updated() {
     // console.log('shipTabObj',this.shipTabObj)
@@ -182,7 +182,7 @@ export default {
       return fmt
     },
     subFocus() {
-      console.log(this.shipTabObj)
+      // console.log(this.shipTabObj)
       this.dialogVisible = false
       this.$set(this.shipTabObj, 'isFocus', true)
       this.$emit('isFocus', {
@@ -197,7 +197,7 @@ export default {
     focus() {
       this.dialogVisible = true
       if(this.shipTabObj.focus===true){
-        console.log("this.shipTabObj.focus",this.shipTabObj.focus)
+        // console.log("this.shipTabObj.focus",this.shipTabObj.focus)
       // }else{
         // this.$emit('isFocus',{description:this.description,focus:this.shipTabObj.isFocus,targetType:9,mmsi:this.shipTabObj.mmsi})
         this.$emit('isFocus',{mmsi:this.shipTabObj.mmsi,focus:this.shipTabObj.focus})

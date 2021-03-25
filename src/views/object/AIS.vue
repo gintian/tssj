@@ -264,7 +264,7 @@ export default {
         const tHeader = ['序号', '名称','编号','经度','纬度','运行状态']; // 表头
         const filterVal = ['id', 'name','id','lat','lon','status']; // 值
         const list = this.tableData;
-        console.log('后端返回的数据', list);
+        // console.log('后端返回的数据', list);
         const data = this.formatJson(filterVal, list);
         export_json_to_excel(tHeader, data, 'ais数据表');
       });
@@ -292,7 +292,7 @@ export default {
     handleDel(row){
       console.log(row)
        this.delid=row.id
-       console.log("这行数据的id",this.delid)
+      //  console.log("这行数据的id",this.delid)
       this.temp = {...row};
       this.dialogDelVisible = true; //弹层显示
     },
@@ -300,7 +300,7 @@ export default {
     delData(){
          this.service.get( '/ais/delete?id='+this.delid,{     
          }).then(req => {
-          console.log("删除AIS数据",req)
+          // console.log("删除AIS数据",req)
           this.getList();
           this.dialogDelVisible = false;
         }) 
@@ -308,7 +308,7 @@ export default {
      //编辑弹层
     handleUpdate(index,row){
      this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
-     console.log('获取到的',this.temp)
+    //  console.log('获取到的',this.temp)
       if(this.temp.status==true){
         this.update = "异常"
       }else if(this.temp.status==false){
@@ -330,7 +330,7 @@ export default {
         let userList=this.addsForm;  
         let {station,name,lat,lon,status} = userList;
           this.service.post('/ais/save',this.addsForm).then(res => {
-            console.log("新增的AIS数据",res)
+            // console.log("新增的AIS数据",res)
           this.getList(); 
           this.dialogFormVisible1 = false;}
           );
@@ -345,7 +345,7 @@ export default {
          lon:this.temp.lon,
         status:this.temp.status,
        }).then(req => {
-          console.log("编辑AIS信息",req)
+          // console.log("编辑AIS信息",req)
           this.getList();
           this.dialogFormVisible = false;
       })

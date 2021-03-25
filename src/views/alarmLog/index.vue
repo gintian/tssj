@@ -4,11 +4,7 @@
     <div class="filter-container">
         <h3>业务异常（共{{total}}条）</h3>
         <div class="select_query">
-            <!-- <el-input v-model="listQuery.name" placeholder="请输入级别" style="width: 200px;" class="filter-item" 
-            @input="query()"/>
-            <el-button class="filter-item" type="primary" icon="el-icon-search" @click="query()" >
-              搜索
-            </el-button> -->
+        
             <div class="event_nav_msg">
                   <h4 >开始时间：</h4>
                         <el-date-picker
@@ -107,7 +103,7 @@ export default {
        +this.listQuery.time+'&&endTime='
        +this.listQuery.endTime
        ).then(req => {
-          console.log("业务告警日志数据",req)
+          // console.log("业务告警日志数据",req)
           this.list = req.page.list
           this.total = req.page.totalRow //总条数
           this.pages = req.page.totalPage;  //总页数
@@ -130,7 +126,7 @@ export default {
     handleCurrentChange(val=this.listQuery.pageNo){
       this.listQuery.pageNo = val;
       this.getList();
-    console.log(`当前页: ${val}`);
+    // console.log(`当前页: ${val}`);
     },
   }
 }

@@ -14,7 +14,6 @@
                 map: null,
               travelData:[],
               markData:{}
-
             }
         },
         mounted() {

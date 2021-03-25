@@ -136,7 +136,8 @@ export default {
   props: {
     videoSrc: {
       type: String,
-      required: true
+      required: true,
+        default:'rtsp://218.205.125.185/vc85Yl2c'
     },
     videoID: {
       type: Number ,
@@ -208,7 +209,7 @@ export default {
        // this.cleanBuff = setInterval(this.jumpToEndBuffer, 3 * 10 * 1000)
   },
   mounted () {
-    //console.log('aaaaasasdasd')
+    console.log('aaaaasasdasd',this.videoSrc)
     let hash = this.randomString(8);
     this.cleanBuff = setInterval(()=>this.jumpToEndBuffer(), 3 * 10 * 1000);
     this.self_destruction_time = setInterval(()=>this.flvReload(), 10 * 6 * 10 * 1000);
@@ -288,7 +289,7 @@ export default {
               this.player = flvjs.createPlayer({
                   type: "flv",
                   isLive: true,
-                  url: `ws://218.205.125.185:8888/rtsp/${this.videoID}/?url=${rtsp}`,
+                  url: `ws://218.205.125.185:8888/rtsp/1/?url=rtsp://218.205.125.185/vc85Yl2c`,
               },
               {
                  isLive: true,

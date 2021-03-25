@@ -392,7 +392,7 @@
         this.areaLayer=val
       },
       tableData(val){
-        console.log(tableData111111,"val")
+        console.log(tableData,"val")
         for(let i in val){
               val[i].id=i
               val[i].show=true
@@ -420,10 +420,11 @@
             // this.msg=this.target.value;
         },
     handleUpdate(row,index){
+
       console.log('handleUpdate',row,index)
       // console.log('this.tableData[row.id]',this.tableData[row.id])
       if(row){
-        let [level,type,points,radius,lat,lon]=[row.level,row.type,row.points,row.radius,row.lat,row.lon]
+        let [level,type,name,points,radius,lat,lon]=[row.level,row.type,row.name,row.points,row.radius,row.lat,row.lon]
         console.log('level,type',level,type)
          this.service.post( '/water/save',{
               level: level,
@@ -431,9 +432,11 @@
               lat:lat,
               lon:lon,
               radius:radius,
-              points:points
+              points:points,
+              name:name
          }).then(req => {
           console.log("导入的数据",req)
+         
           // console.log("导入数据的状态",req.error)
           if(req.error==0){
             row.show=false
@@ -443,7 +446,10 @@
                   _index=i
               }
             }
-             this.$set(this.tableData,_index,{...row})
+            this.$set(this.tableData,_index,{...row})
+
+            //  this.drawLayer.clearLayers()
+            // this.$emit('loadGroupData')
           }
         })
       }
@@ -455,22 +461,25 @@
           // console.log("i",i)
           if(this.tableData[i].show){
               console.log("tableData",this.tableData[i])
-            let [level,type,points,radius,lat,lon]=[this.tableData[i].level,this.tableData[i].type,this.tableData[i].points,this.tableData[i].radius,this.tableData[i].lat,this.tableData[i].lon]
+            let [level,type,name,points,radius,lat,lon]=[this.tableData[i].level,this.tableData[i].type,this.tableData[i].name,this.tableData[i].points,this.tableData[i].radius,this.tableData[i].lat,this.tableData[i].lon]
               this.service.post( '/water/save',{
                     level: level,
                     type: type,
                     lat:lat,
                     lon:lon,
                     radius:radius,
-                    points:points
+                    points:points,
+                     name:name
               }).then(req => {
                 console.log("一键导入的数据",req)
+                 
                 // console.log("导入的数据",req.error)
                   if(req.error==0){
                       this.tableData[i].show=false;
                         this.$set(this.tableData,i,this.tableData[i])
                       console.log("表格数据更新后",this.tableData);
                   }
+                // this.$emit('loadGroupData')
               })
           }
         }
@@ -502,7 +511,8 @@
           form.append('file', fileObj);
            this.$axios({
             method: 'post',
-            url: 'http://127.0.0.1:8093/'+this.uploadUrl,
+            // url: 'http://127.0.0.1:8093/'+this.uploadUrl,
+            url: 'http://192.168.1.36:8093/'+this.uploadUrl,
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -514,8 +524,6 @@
             // console.log("返回数据：",res.data);
             this.importdialog=true
             this.tableData = res.data.list
-            // let t=[JSON.Parse(res.data)]
-            // var  tt=this.tableData.split('/',2)
 
             for(let i in this.tableData){
               this.tableData[i].id=i
@@ -629,7 +637,7 @@
       },
       showOrdHide(data)/* 绘制/隐藏区域   icon 样式*/ {
 
-        console.log(data,'showOrdHide')
+        // console.log(data,'showOrdHide')
         if (data.name) {
           if (data.show===false) {
             // return 'show-icon-view el-icon-view'
