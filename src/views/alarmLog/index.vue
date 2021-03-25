@@ -111,7 +111,9 @@ export default {
     },
     query(){ //按名称查询
       console.log(new Date(this.listQuery.time).toLocaleDateString().replace(/\//g,'-'),'beginTime')
+      //  console.log(new Date(this.listQuery.time).toTimeString().split(' '),'beginTime')
       console.log(new Date(this.listQuery.endTime).toLocaleDateString().replace(/\//g,'-'),'endTime')
+      // this.listQuery.time=new Date(this.listQuery.time).toLocaleDateString().replace(/\//g,'-') +new Date(this.listQuery.time).toTimeString().split(' ')
       this.listQuery.time=new Date(this.listQuery.time).toLocaleDateString().replace(/\//g,'-')
       this.listQuery.endTime=new Date(this.listQuery.endTime).toLocaleDateString().replace(/\//g,'-')
       this.getList();

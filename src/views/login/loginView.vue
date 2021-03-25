@@ -98,12 +98,13 @@
 @media  screen and (min-width: 750px) and (max-width: 1920px){
   
   .login-mian {
-      background: url("../../assets/login.jpg")  81% -31% ;
+      // background: url("../../assets/login.jpg")  81% -31% ;
+      background: url("../../assets/login.jpg") ;
       // height:97.3%;
       height:100%;
       .footer-msg{
               position: absolute;
-              bottom: 0;
+              bottom: 28px;
               left: 40%;
               color: #B0B0B0;
               font-size: 18px;
@@ -117,7 +118,8 @@
           border: 1px solid #eaeaea;
           box-shadow: 0 0 25px #cac6c6;
           position: absolute;
-          left: 65%;
+          // left: 65%;
+           left: 65.2%;
           top: 10%;
           height:82.3%;
           h3{

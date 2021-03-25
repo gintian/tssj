@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <div style="display: grid;grid-template-columns: 88% 12%;background:#2770D4;color: #eee;    padding: 3px;">
+        <div style="display: grid;grid-template-columns: 88% 12%;background:#2770D4;color: #eee;align-items: center;padding: 3px;">
             <div style="padding-left: 10px;">{{titleName}}自定义区域</div>
             <div style="padding:0 4px;text-align: right;">
                 <el-button type="text" @click="remove" style="padding: 0;color: #eee;">X
@@ -30,7 +30,7 @@
                         <!--<td class="value">{{item.lat}}</td>-->
                     <!--</tr>-->
                 <!--</table>-->
-                <h4 style="margin: 5px 12px;color: red;" v-if="tabObj.type!=0">区域坐标点集合如下：</h4>
+                <h4 style="margin: 5px 12px;color: red;" v-if="tabObj.type!='圆形海域'">区域坐标点集合如下：</h4>
                 <table style="width: 100%;" v-if="tabObj.type!=0">
                     <tr v-for="(item,index) in points" :key="index">
                         <td class="title">经度：</td>

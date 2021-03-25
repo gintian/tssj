@@ -105,12 +105,12 @@
 
 <!-- 查看地图弹窗 -->
 <el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
-      <table-map :mapData="mapData"  markerType="point" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></table-map>
+      <leaflet-tablemap :mapData="mapData"  markerType="suspicious" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
 </el-dialog>
   
-<!-- 查看地图弹窗 -->
-<!-- <el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
-      <table-map :mapData1="mapData1"  markerType="point" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></table-map>
+<!-- 查看轨迹弹窗 -->
+<!-- <el-dialog :visible.sync="dialog.trail" width="520px" :show-close='false' custom-class="mapDialog">
+      <leaflet-tablemap :mapData="mapData"  markerType="suspiciousTrail" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
 </el-dialog> -->
   
  <!-- 新增弹层功能 -->
@@ -168,10 +168,11 @@
 </template>
 
 <script>
-import TableMap from '../../../src/components/TableMap'
+// import TableMap from '../../../src/components/TableMap'
+import LeafletTableMap from '../../../src/components/LeafletTableMap'
 export default {
   name: 'ComplexTable',
-  components:{'table-map':TableMap},
+    components:{'leaflet-tablemap':LeafletTableMap},
   data() {
     return { 
        options: [{
@@ -186,9 +187,11 @@ export default {
           title: '',
           showBtn:true,
           showMap:false,
+          trail:false, //轨迹
           disabled:false
         }, 
-        mapData:[],
+        mapData:{},
+        // trailData:{},
       visible:false,
       tableData: [], //表格展示的数据
       pages:1, //总页数
@@ -227,22 +230,22 @@ export default {
     this.statistical();
     },
   methods: {
-    // Track(row) {
-    //     console.log('查看轨迹')
-    //     this.dialog.showMap = true
-    //     if (row.waters) {
-    //       row = { ...row, ...row.waters }
-    //     }
-    //     this.mapData1 = [row]
-    //   },
+    Track(row) {
+        console.log('查看轨迹')
+        this.dialog.trail = true
+        // if (row.waters) {
+        //   row = { ...row, ...row.waters }
+        // }
+        this.mapData = row;
+      },
 
      handleClickView(row) {
         console.log('查看地图')
         this.dialog.showMap = true
-        if (row.waters) {
-          row = { ...row, ...row.waters }
-        }
-        this.mapData = [row]
+        // if (row.waters) {
+        //   row = { ...row, ...row.waters }
+        // }
+        this.mapData = row;
       },
   
      // 修改table header的背景色

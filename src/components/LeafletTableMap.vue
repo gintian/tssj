@@ -1,189 +1,222 @@
 <template>
-    <div>
-        <div id="allmap" ref="allmap"></div>
-        <p style="display: none">{{mapData}}</p>
-    </div>
+  <div>
+    <div id="allmap1" ref="allmap1"></div>
+    <p style="display: none">{{mapData}}</p>
+  </div>
 </template>
 
 <script>
-   import { wgs84ToBD } from '../utils/coordinateConvert'
-    export default {
-        name: "TableMap",
-        props: {mapData: Array, markerType: String, option: {type: Object,default:{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}}},
-        data() {
-            return {
-            map: null,
-              travelData:[],
-              markData:{}
-            }
+import { wgs84ToBD } from "../utils/coordinateConvert";
+export default {
+  name: "TableMap",
+  props: {
+    mapData: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
+    // trailData: {
+    //   type: Object,
+    //   default: () => {
+    //     return {};
+    //   }
+    // },
+    markerType:  {
+        type: String,
+        default: ''
+      },
+    option: {
+      type: Object,
+      default: { strokeColor: "blue ", strokeWeight: 2, strokeOpacity: 0.5 }
+    }
+  },
+  data() {
+    return {
+      map: null,
+      travelData: [],
+      markData: {},
+      dialogInfo:{
+            anchorage:{},
         },
-        mounted() {
-            this.mapInit();
-          // console.log(this.mapData)
-          if(this.mapData.length===1) {//如果传进来长度是1 直接data变成对象
-            // console.log('567678678')
-            this.markData=this.mapData[0]
-            this.map.centerAndZoom(new BMap.Point(this.markData.longitude, this.markData.latitude), 13);  // 初始化地图,设置中心点坐标和地图级别
-          } else{
-            this.travelData=this.mapData
-            this.map.centerAndZoom(new BMap.Point(this.travelData[0].lon, this.travelData[0].lat), 13);  // 初始化地图,设置中心点坐标和地图级别
-          }
-            this.addMarker(this.markerType)
-        },
-        updated() {
-            this.mapInit();
-            this.map.clearOverlays();
-            console.log(this.markerType)
+    };
+  },
+  watch: {
+    
+    mapData(val){
+        if (this.markerType === "Anchorage") {
+        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/03.png"))(1)(() => {}).addTo(this.map);
+        this.map.setView([val.lat, val.lon], 13);
+        // const m = {
+        //         '0': 'circle',
+        //         '1': 'rectangle',
+        //         '2': 'polygon',
+        //     }
 
-            this.map.addEventListener("click", (e) => {
-                console.log(e.point)
-            })
+        // this.createPolygon(m[this.dialogInfo.anchorage.type],this.dialogInfo.anchorage,'1' + this.dialogInfo.anchorage.id,
+        //     {  //颜色
+        //     color: 'rgba(222,29,55,0.84)',
+        //     //填充色
+        //     fillColor: 'rgba(249,247,244,0.44)',
+        //     //填充色透明度
+        //     fillOpacity: 0.8
+        //     }
+        // )(wgs84ToBD).addTo(this.map);
 
-          // this.markData=this.mapData
-        //   if(this.mapData.length===1) {//如果传进来长度是1 直接data变成对象
-        //     // console.log('567678678')
-        //     this.markData=this.mapData[0]
-        //     this.map.centerAndZoom(new BMap.Point(this.markData.longitude, this.markData.latitude), 13);  // 初始化地图,设置中心点坐标和地图级别
-        //     // return false
-        //   } else{
-        //     this.travelData=this.mapData
-        //     this.map.centerAndZoom(new BMap.Point(this.travelData[0].lon, this.travelData[0].lat), 13);  // 初始化地图,设置中心点坐标和地图级别
-        //   }
+        }else if(this.markerType === "ais"){
+        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/ais.png"))(2)(() => {}).addTo(this.map);
+        this.map.setView([val.lat, val.lon], 13);
+        }else if(this.markerType === "wharf"){
+        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/02.png"))(3)(() => {}).addTo(this.map);
+        this.map.setView([val.lat, val.lon], 13);
+        }else if(this.markerType === "radar"){
+        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/01.png"))(4)(() => {}).addTo(this.map);
+        this.map.setView([val.lat, val.lon], 13);
+        }else if(this.markerType === "suspicious"){
+        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/aim03.png"))(5)(() => {}).addTo(this.map);
+        this.map.setView([val.lat, val.lon], 13);
+        }else if(this.markerType === "suspiciousTrail"){
+        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/aim03.png"))(6)(() => {}).addTo(this.map);
+        this.map.setView([val.lat, val.lon], 13);
 
-            // if(this.marker==0){
-            //     console.log('遮盖物')
-          // console.log(this.travelData)
-            this.addMarker(this.markerType)
-            // }
-            // this.map.panTo(new BMap.Point(this.mapData.longitude,this.mapData.latitude))
-        },
-        methods: {
-            mapInit() {
-                // 百度地图API功能
-                // this.map = new window.BMap.Map(this.$refs.allmap,{enableMapClick:false}) // 创建Map实例
-                this.map = L.map('allmap', {
-                        crs: L.CRS.EPSG3857,           
-                        attributionControl: false,   //不添加属性说明控件                  
-                        center: [30.969907662611103, 122.50475884137897],  //显示中心                      
-                        minZoom: 4,   //最小显示等级                  
-                        maxZoom: 16,  //最大显示等级                   
-                        zoom: 11,   //当前显示等级
-                        zoomControl: false,
-                        doubleClickZoom: false,
-                        })
-                this.baseLayer = L.tileLayer('http://218.205.125.142:8001/{z}/{x}/{y}.png').addTo(this.map)//服务器上的离线海图
-            //     this.map.centerAndZoom(new window.BMap.Point(122.02092469279008, 30.231412233427587), 13);  // 初始化地图,设置中心点坐标和地图级别
-            //    this.map.setMapStyleV2({
-            //     styleId: '20cc61302c9ac0b284d3076e6647033a'
-            //   });
-                // //添加地图类型控件
-                // this.map.addControl(new window.BMap.MapTypeControl({
-                //     mapTypes: [
-                //         BMAP_NORMAL_MAP,
-                //         BMAP_HYBRID_MAP
-                //     ]
-                // }));
-                 //初始时加载矢量图层组
-                this.map.addLayer(this.baseLayer)
-                // this.map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
-                this.map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
-
-            },
-            addMarker(tp) {
-              // console.log(this.markData)
-                console.log(tp)
-                let bd09Arr = wgs84ToBD(parseFloat(longitude), parseFloat(latitude))
-                    L.marker([bd09Arr[1],bd09Arr[0]], {
-                    icon:L.icon({
-                        iconUrl: require('../../assets/mapicon/ship2.png'),
-                        iconSize: [13,32],
-                        iconAnchor: [16,16]
-                    })
-                    }).addTo(this.map);
-                const mp = {
-                    
-                    'ship':()=>{
-                        var pt = new BMap.Point(this.markData.longitude, this.markData.latitude);
-                        var myIcon = new BMap.Icon(require("../assets/mapicon/ship2.png"), new BMap.Size(13,22));
-                        var marker = new BMap.Marker(pt,{icon:myIcon});
-                        marker.setRotation(this.markData.course)
-                        return marker
-                    },
-                    'point': () => {
-                        let marker = new BMap.Marker(new BMap.Point(this.markData.longitude, this.markData.latitude), {
-                            anchor: new BMap.Size(10, 30)
-                        });
-                        return marker
-                    },
-                    'polyline': () => {
-                        var sy = new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
-                            scale: 0.6,//图标缩放大小
-                            strokeColor:'#fff',//设置矢量图标的线填充颜色
-                            strokeWeight: '2',//设置线宽
-                        });
-                        var icons = new BMap.IconSequence(sy, '10', '30');// 创建polyline对象
-                      let pois = []
-                      for(let i of this.mapData){
-                        // console.log(i.lon,i.lat)
-                        pois.push(new BMap.Point(parseFloat(i.lon),parseFloat(i.lat)))
-                      }
-                        var polyline =new BMap.Polyline(pois, {
-                            enableEditing: false,//是否启用线编辑，默认为false
-                            enableClicking: true,//是否响应点击事件，默认为true
-                            icons:[icons],
-                            strokeWeight:'8',//折线的宽度，以像素为单位
-                            strokeOpacity: 0.8,//折线的透明度，取值范围0 - 1
-                            strokeColor:"#18a45b" //折线颜色
-                        });
-                        return polyline
-                    },
-                    'circle': () => {
-                        var circle = new BMap.Circle(new BMap.Point(this.markData.centerx, this.markData.centery), this.markData.radius, {
-                            strokeColor: this.option.strokeColor,
-                            strokeWeight: this.option.strokeWeight,
-                            strokeOpacity: this.option.strokeOpacity
-                        });
-                        return circle
-                    },
-                    'polygon': () => {
-                        let points = [];
-                        for (let i of this.markData.points) {
-                            points.push(new BMap.Point(i.lon, i.lat),)
-                        }
-                        var polygon = new BMap.Polygon(points, {
-                            strokeColor: this.option.strokeColor,
-                            strokeWeight: this.option.strokeWeight,
-                            strokeOpacity: this.option.strokeOpacity
-                        });
-                        return polygon
-                    },
-                    'rectangle': () => {
-                        var rectangle = new BMap.Polygon([
-                            new BMap.Point(this.markData.lon1, this.markData.lat1),
-                            new BMap.Point(this.markData.lon2, this.markData.lat1),
-                            new BMap.Point(this.markData.lon2, this.markData.lat2),
-                            new BMap.Point(this.markData.lon1, this.markData.lat2)
-                        ], {
-                            strokeColor: this.option.strokeColor,
-                            strokeWeight: this.option.strokeWeight,
-                            strokeOpacity: this.option.strokeOpacity});
-                        return rectangle
-                    },
-
-                }
-              // console.log(this.markData)
-                // this.map.addOverlay(mp[tp]());
-
-            },
+        // let points = [],duration=[]
+        // // res.data.forEach(val => {
+        //   let bd09Arr = wgs84ToBD(parseFloat(val.lon), parseFloat(val.lat))
+        //   points.push([bd09Arr[1], bd09Arr[0]])
+        //   duration.push(800*i)
+        // // })
+        // // console.log("duration",duration)
+        // L.marker(points[0], {
+        //   icon:L.icon({
+        //     iconUrl: require('../assets/history/start.png'),
+        //     iconSize: [30,44],
+        //     iconAnchor: [15,22]
+        //   })
+        // }).addTo(this.animateLayer);
+        // L.marker(points[points.length-1], {
+        //   icon:L.icon({
+        //     iconUrl: require('../assets/history/end.png'),
+        //     iconSize: [30,44],
+        //     iconAnchor: [15,22]
+        //   })
+        // }).addTo(this.animateLayer);
+        // var polyline = L.polyline(points, { color: 'red' }).addTo(this.animateLayer);
+        // var myMovingMarker = L.Marker.movingMarker(points,
+        //   duration,{
+        //     icon:L.icon({
+        //       iconUrl: require('../assets/history/ship.png'),
+        //       iconSize: [40,44],
+        //       iconAnchor: [20,22]
+        //     })
+        //   }).addTo(this.animateLayer);
+        // myMovingMarker.start();
 
         }
     }
+
+  },
+  mounted() {
+    this.mapInit();
+    // console.log(this.mapData)
+    //   this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/03.png"))(1)(() => {}).addTo(this.map);
+    //   this.map.setView([this.mapData.lat,this.mapData.lon], 13);
+    //   this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/ais.png"))(2)(() => {}).addTo(this.map);
+    //   this.map.setView([this.mapData.lat,this.mapData.lon], 13);
+    //   this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/02.png"))(3)(() => {}).addTo(this.map);
+    //   this.map.setView([this.mapData.lat,this.mapData.lon], 13);
+    //   this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/01.png"))(4)(() => {}).addTo(this.map);
+    //     this.map.setView([this.mapData.lat,this.mapData.lon], 13);
+  },
+
+  methods: {
+     // 创建多边形区域
+  createPolygon(type,waters,signal,style){
+    let map = {
+      'circle': (wgs84ToBD) => {
+        let bd09Arr = wgs84ToBD(waters.centerx, waters.centery)
+        let circle = L.circle([bd09Arr[1], bd09Arr[0]], {
+          //圆半径
+          radius: waters.radius,
+         ...style
+        })
+        circle.signal = signal
+        return circle
+      },
+      'polygon': (wgs84ToBD) => {
+        let points = []
+        waters.points.forEach(e => {
+          let bd09Arr = wgs84ToBD(e.lon, e.lat)
+          points.push([bd09Arr[1], bd09Arr[0]])
+        })
+        let polygon = L.polygon(points, {
+          ...style
+        })
+        polygon.signal = signal
+        return polygon
+      },
+      'rectangle': (wgs84ToBD) => {
+        let points = []
+        let p1 = wgs84ToBD(waters.lon1, waters.lat1)
+        let p2 = wgs84ToBD(waters.lon2, waters.lat2)
+        var polygon = L.polygon([[p1[1], p1[0]], [p2[1], p1[0]], [p2[1], p2[0]], [p1[1], p2[0]]], {
+          ...style
+        })
+        polygon.signal = signal
+        return polygon
+      }
+    }
+     return (wgs84ToBD)=>{ return map[type](wgs84ToBD)}
+  },
+    createMarker(lat, lng, width, height, img, Angle = 0) {
+      //标记样式
+      var icon = L.icon({
+        //图标地址
+        iconUrl: img,
+        //图标大小
+        iconSize: [width, height]
+      });
+      //标记
+      var Marker = L.marker([lat, lng], {
+        //添加图标
+        icon: icon,
+        rotationAngle: Angle
+      });
+      return signal => {
+        Marker.signal = signal;
+        return fun => {
+          Marker.on("click", fun);
+          return Marker;
+        };
+      };
+    },
+    mapInit() {
+      this.map = L.map("allmap1", {
+        crs: L.CRS.EPSG3857,
+        attributionControl: false, //不添加属性说明控件
+        center: [30.969907662611103, 122.50475884137897], //显示中心
+        minZoom: 4, //最小显示等级
+        maxZoom: 16, //最大显示等级
+        zoom: 11, //当前显示等级
+        zoomControl: false,
+        doubleClickZoom: false
+      });
+      this.baseLayer = L.tileLayer(
+        "http://218.205.125.142:8001/{z}/{x}/{y}.png"
+      ).addTo(this.map); //服务器上的离线海图
+
+      //初始时加载矢量图层组
+      this.map.addLayer(this.baseLayer);
+    },
+    addMarker(tp) {
+      console.log(tp);
+    }
+  }
+};
 </script>
 
 <style scoped>
-    #allmap {
-        /* width: 500px; */
-        height: 400px;
-
-    }
+#allmap1 {
+  /* width: 500px; */
+  height: 400px;
+}
 </style>

@@ -67,7 +67,7 @@
   </el-table>
 <!-- 查看地图弹窗 -->
 <el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
-      <table-map :mapData="mapData"  markerType="point" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></table-map>
+       <leaflet-tablemap :mapData="mapData"  markerType="ais" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
 </el-dialog>
  <!-- 新增弹层功能 -->
      <el-dialog title="添加AIS" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
@@ -162,11 +162,13 @@
 <script>
 
 import TableMap from '../../../src/components/TableMap'
+import LeafletTableMap from '../../../src/components/LeafletTableMap'
 export default {
   name: 'ComplexTable',
-  components:{'table-map':TableMap},
+  components:{'leaflet-tablemap':LeafletTableMap},
   data() {
     return {
+      ais:null,
      dialog: {
           visible: false,
           title: '',
@@ -174,7 +176,7 @@ export default {
           showMap:false,
           disabled:false
         }, 
-      mapData:[],
+      mapData: {},
       tableData: [], //表格展示的数据
       pages:1, //总页数
       rows:1, //总条数
@@ -250,10 +252,10 @@ export default {
      handleClickView(row) {
         console.log('查看地图')
         this.dialog.showMap = true
-        if (row.waters) {
-          row = { ...row, ...row.waters }
-        }
-        this.mapData = [row]
+        // if (row.waters) {
+        //   row = { ...row, ...row.waters }
+        // }
+          this.mapData = row;
       },
     // 数据写入excel
     download() {
