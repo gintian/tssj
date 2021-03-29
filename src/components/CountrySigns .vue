@@ -68,8 +68,7 @@
           })     
       },
        showChild(item) {
-         this.dialogVisible=true
-       
+         this.dialogVisible=true     
       },
       handleCheckChange(data, checked, indeterminate) {
         console.log(data, checked, indeterminate);

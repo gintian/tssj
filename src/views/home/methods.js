@@ -117,9 +117,30 @@ const map = {
     // })
     this.ciLayer = L.canvasIconLayer({}).addTo(this.map)
     this.mapEvent()
+    // console.log('this.map', this.map)
+    // this.map.mousemove(
+    //   (e) => {
+    //       console.log('监听mousemove',e)
+    //     let latlng = e.latlng;
+    //     console.log('监听mousemove经纬度',latlng );// {lat: 30.59, lng: 114.32}
+    //   })
+    //  // 监听 mousemove 事件
+    //  this.map.on('mousemove', (e) => {
+    //   console.log('监听mousemove',e)
+    // let latlng = e.latlng;
+    // console.log('监听mousemove经纬度',latlng );// {lat: 30.59, lng: 114.32}
+    // });
+    // // 取消 mousemove 事件
+    // this.map.off('mousemove')
+
+
   },
+
+
+
   //地图事件
   mapEvent() {
+
     function debounce(fn, wait) {
       var timeout = null
       return function() {
@@ -173,6 +194,15 @@ const map = {
       console.log('地图级数改变结束！')
       this.mapZoom = this.map.getZoom()
     })
+
+     // 监听 mousemove 事件
+      this.map.on('mousemove', (e) => {
+        console.log('监听mousemove',e)
+      let latlng = e.latlng;
+      console.log('监听mousemove经纬度',latlng );// {lat: 30.59, lng: 114.32}
+      });
+      // 取消 mousemove 事件
+      this.map.off('mousemove')
   },
   //切换地图类型组件
   buttonGroupClickItem({ type }) {

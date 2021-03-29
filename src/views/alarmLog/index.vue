@@ -8,9 +8,9 @@
             <div class="event_nav_msg">
                   <h4 >开始时间：</h4>
                         <el-date-picker
-                          v-model="listQuery.time"
+                          v-model="listQuery.beginTime"
                           type="datetime"
-                          placeholder="">
+                          placeholder="请选择要查询的开始时间">
                         </el-date-picker>
             </div>
             <div  class="event_nav_msg">
@@ -18,7 +18,7 @@
                         <el-date-picker
                           v-model="listQuery.endTime"
                           type="datetime"
-                          placeholder="">
+                          placeholder="请选择要查询的结束时间">
                         </el-date-picker>
             </div>
             <div class="query-input">
@@ -55,7 +55,7 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.pageNo"
+      :current-page="listQuery.pageNumber"
       :page-sizes="[10, 20, 30, 40]"
       :page-size="listQuery.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
@@ -74,11 +74,12 @@ export default {
       pages:1, //总页数
       total:1, //总条数
       listQuery:{
-        pageNo:1, //当前页面
+        pageNumber:1, //当前页面
         pageSize:10, //条数
         level:'' , //查询条件
-        time:'',
-        endTime:''
+        beginTime:'',
+        endTime:'',
+        content:"",
       },
       value1: '',
       value2: '',
@@ -97,27 +98,29 @@ export default {
         },
     getList(){  //获取数据
        this.service.get( '/alarmlog/page?pageNumber='
-       +this.listQuery.pageNo+'&&pageSize='
+       +this.listQuery.pageNumber+'&&pageSize='
        +this.listQuery.pageSize+'&&level='
-       +this.listQuery.level+'&&time='
-       +this.listQuery.time+'&&endTime='
-       +this.listQuery.endTime
+       +this.listQuery.level
+       +'&&beginTime='
+       +this.listQuery.beginTime+'&&endTime='
+       +this.listQuery.endTime+'&&content='
+        +this.listQuery.content
        ).then(req => {
-          // console.log("业务告警日志数据",req)
+          console.log("业务告警日志数据",req)
           this.list = req.page.list
           this.total = req.page.totalRow //总条数
           this.pages = req.page.totalPage;  //总页数
         })
     },
-    query(){ //按名称查询
-      console.log(new Date(this.listQuery.time).toLocaleDateString().replace(/\//g,'-'),'beginTime')
+    query(){ 
+      console.log(new Date(this.listQuery.beginTime).toLocaleDateString().replace(/\//g,'-'),'beginTime')
       //  console.log(new Date(this.listQuery.time).toTimeString().split(' '),'beginTime')
       console.log(new Date(this.listQuery.endTime).toLocaleDateString().replace(/\//g,'-'),'endTime')
       // this.listQuery.time=new Date(this.listQuery.time).toLocaleDateString().replace(/\//g,'-') +new Date(this.listQuery.time).toTimeString().split(' ')
-      this.listQuery.time=new Date(this.listQuery.time).toLocaleDateString().replace(/\//g,'-')
+      this.listQuery.beginTime=new Date(this.listQuery.beginTime).toLocaleDateString().replace(/\//g,'-')
       this.listQuery.endTime=new Date(this.listQuery.endTime).toLocaleDateString().replace(/\//g,'-')
       this.getList();
-    //   console.log("查到的数据",this.getList())
+      // console.log("查到的数据",this.getList())
     },
     //当前条数变化
      handleSizeChange(val=this.listQuery.pageSize ){
@@ -125,8 +128,8 @@ export default {
       this.getList();
     },
     //当前页变化
-    handleCurrentChange(val=this.listQuery.pageNo){
-      this.listQuery.pageNo = val;
+    handleCurrentChange(val=this.listQuery.pageNumber){
+      this.listQuery.pageNumber = val;
       this.getList();
     // console.log(`当前页: ${val}`);
     },

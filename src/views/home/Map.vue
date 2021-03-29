@@ -566,7 +566,7 @@
     <div
       id="CameraVideoView"
       :style="{width: videoWidth}"
-      style="height: auto;width: auto;position: absolute;right: 2%; top:10%;z-index: 500"
+      style="height: auto;width: auto;position: absolute;right: 3%; top:35%;z-index: 500"
       v-drag
     >
       <VideoPlayer
@@ -575,11 +575,11 @@
         serverIp="218.205.125.185"
         rtsp="rtsp://218.205.125.185/vc85Yl2c"
       />
-      <el-button
+      <!-- <el-button
         type="text"
         @click="showInfo.camera=false"
         style="position: absolute;top: 1px;right: 10px;color: #eee;"
-      >X</el-button>
+      >X</el-button> -->
     </div>
     <!-- 左侧抽屉 -->
     <!-- <div  id="leftDrawerView"  style="width: 440px;height: calc(100% - 121px);position: absolute;left:82px; top:95px;z-index: 400" :style="{width:showLeft?'440px':'20px'}" >
@@ -924,7 +924,7 @@ export default {
     this.loadDefaultMarker();
     this.loadLeftDrawer();
     this.ShipStatistical();
-    console.log("markerLayersGroup", this.markerLayersGroup);
+    // console.log("markerLayersGroup", this.markerLayersGroup);
     setTimeout(() => {
       this.websocketsend(
         JSON.stringify({

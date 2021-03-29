@@ -109,22 +109,23 @@ export default {
       // console.log('clickedMarker',this.clickedMarker)
 
       // if ( this.clickedMarker.name=='雷达'&&this.clickedMarker.is==true) {  
-      if (this.clickedMarker.name == '雷达' && this.clickedMarker.is == false) {
+      if (this.clickedMarker.name == '雷达' && this.clickedMarker.is == false )  {
         this.radarLayer.clearLayers()
         //  console.log('stationCheck',this.stationCheck.radar)
-
-
-      } else {
-        for (let i of this.socketRadarData) {
-          //  console.log('socketRadarData',i)
-          // console.log(this.stationLayers)
-          if (i.status == false) {
-            if (i.id) {
-              marker(i).addTo(this.radarLayer);
+      } 
+      // else (this.clickedMarker.name == '雷达' && this.clickedMarker.is == true) 
+      else
+        {
+          for (let i of this.socketRadarData) {
+            //  console.log('socketRadarData',i)
+            // console.log(this.stationLayers)
+            if (i.status == false) {
+              if (i.id) {
+                marker(i).addTo(this.radarLayer);
+              }
             }
           }
         }
-      }
     }
 
   },

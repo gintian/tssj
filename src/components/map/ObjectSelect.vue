@@ -6,8 +6,8 @@
         </div>
         <div class="content" style="overflow: auto;height: calc(100% - 40px)">
            
-                    <div class="signChildContent" v-for="(child,index) in  mapSigns" :key="index" @click="selectAll(child)">
-                        <input  type="checkbox" checked>
+                    <div class="signChildContent" v-for="(child,index) in  mapSigns" :key="index" >
+                        <input  type="checkbox" checked  @click="selectAll(child)">
                          <img :src='child.img' alt="">
                          <p >{{child.name}}</p>
                     </div>
