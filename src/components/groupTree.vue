@@ -924,6 +924,27 @@ export default {
       console.log('showArea',data)
       data.show = true;
       console.log("树形数据", data);
+
+       let market = {}
+        const m = {
+          '0': 'circle',
+          '1': 'polygon',
+          '2': 'rectangle'
+        }
+        for (let mark of this.areaData) {
+          if (mark.id == data.id) {
+            market = mark
+            market.tp = m[mark.type]
+          }
+        }
+      //   if (data.show) {
+      //     console.log('hide')
+      //     var allOverlay = this.map.getOverlays()
+      //     this.removeMarker(data.id)
+      //   } else {
+      //     console.log('show')
+      //     this.addMarker(market,data)
+      //   }
       if (data.show) {
         console.log("hide");
         console.log(data);
@@ -933,9 +954,10 @@ export default {
             this.areaLayer.removeLayer(item);
           }
         });
+      
       } else {
         console.log("show");
-        console.log(market, data);
+        console.log("market",market, data);
         const m = {
           "0": "circle",
           "1": "polygon",
@@ -1124,20 +1146,7 @@ export default {
         !$input ? "" : $input.focus(); //获取焦点
       });
     },
-    editStyle(data) /*未分组隐藏修改按钮*/ {
-      if (!data.canUpdate) {
-        return "";
-      } else {
-        return "el-icon-edit-outline";
-      }
-    },
-    deleteStyle(data) /*未分组隐藏删除按钮*/ {
-      if (!data.canUpdate) {
-        return "";
-      } else {
-        return "el-icon-delete";
-      }
-    }
+    
   }
 };
 </script>

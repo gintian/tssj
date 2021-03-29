@@ -4,19 +4,20 @@
     <div class="filter-container">
         <h3>业务异常（共{{total}}条）</h3>
         <div class="select_query">
-        
+         <!-- v-model="listQuery.beginTime" -->
             <div class="event_nav_msg">
                   <h4 >开始时间：</h4>
                         <el-date-picker
-                          v-model="listQuery.beginTime"
+                          :beginTime="list.time" 
                           type="datetime"
                           placeholder="请选择要查询的开始时间">
                         </el-date-picker>
             </div>
+             <!-- v-model="listQuery.endTime" -->
             <div  class="event_nav_msg">
                   <h4 >结束时间：</h4>
                         <el-date-picker
-                          v-model="listQuery.endTime"
+                          :endTime="list.time" 
                           type="datetime"
                           placeholder="请选择要查询的结束时间">
                         </el-date-picker>
@@ -99,17 +100,19 @@ export default {
     getList(){  //获取数据
        this.service.get( '/alarmlog/page?pageNumber='
        +this.listQuery.pageNumber+'&&pageSize='
-       +this.listQuery.pageSize+'&&level='
-       +this.listQuery.level
-       +'&&beginTime='
-       +this.listQuery.beginTime+'&&endTime='
-       +this.listQuery.endTime+'&&content='
-        +this.listQuery.content
+       +this.listQuery.pageSize
+      //  +'&&level='
+      //  +this.listQuery.level
+      //  +'&&beginTime='
+      //  +this.listQuery.beginTime+'&&endTime='
+      //  +this.listQuery.endTime+'&&content='
+      //   +this.listQuery.content
        ).then(req => {
           console.log("业务告警日志数据",req)
           this.list = req.page.list
           this.total = req.page.totalRow //总条数
-          this.pages = req.page.totalPage;  //总页数
+          this.pages = req.page.totalPage  //总页数
+           this.time = req.page.list.time
         })
     },
     query(){ 

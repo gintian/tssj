@@ -195,11 +195,11 @@ const map = {
       this.mapZoom = this.map.getZoom()
     })
 
-     // 监听 mousemove 事件
+    //  监听 mousemove 事件
       this.map.on('mousemove', (e) => {
         console.log('监听mousemove',e)
       let latlng = e.latlng;
-      console.log('监听mousemove经纬度',latlng );// {lat: 30.59, lng: 114.32}
+      console.log('监听mousemove经纬度',latlng );  
       });
       // 取消 mousemove 事件
       this.map.off('mousemove')

@@ -76,7 +76,7 @@ export default {
     } else if (redata.action === 'allRadar') {
       this.socketRadarData = redata.data.radarlist
       // console.log("redatadata",  this.socketRadarData )   
-      // console.log('socketRadarData',val)
+  
       this.radarLayer.clearLayers()
       let mz = this.map.getZoom()
       //  console.log('当前的地图缩放级别是：',mz)
@@ -108,14 +108,18 @@ export default {
       //  if ( this.stationCheck.radar) {
       // console.log('clickedMarker',this.clickedMarker)
 
-      // if ( this.clickedMarker.name=='雷达'&&this.clickedMarker.is==true) {  
-      if (this.clickedMarker.name == '雷达' && this.clickedMarker.is == false )  {
+      // if ( this.clickedMarker.name=='雷达'&&this.clickedMarker.is==false) {  
+      if (this.clickedMarker.name == '雷达' && this.clickedMarker.is==false||
+      this.clickedMarker.name == 'ais'&& this.clickedMarker.is==false
+       ||this.clickedMarker.name == '码头'&& this.clickedMarker.is==false
+       ||this.clickedMarker.name == '锚地' && this.clickedMarker.is==false)  {
         this.radarLayer.clearLayers()
         //  console.log('stationCheck',this.stationCheck.radar)
       } 
-      // else (this.clickedMarker.name == '雷达' && this.clickedMarker.is == true) 
-      else
-        {
+      else if (this.clickedMarker.name == '雷达' && this.clickedMarker.is == true ||
+      this.clickedMarker.name == 'ais'&& this.clickedMarker.is == true ||
+      this.clickedMarker.name == '码头'&& this.clickedMarker.is == true||
+      this.clickedMarker.name == '锚地'&& this.clickedMarker.is == true ){
           for (let i of this.socketRadarData) {
             //  console.log('socketRadarData',i)
             // console.log(this.stationLayers)
@@ -125,7 +129,24 @@ export default {
               }
             }
           }
-        }
+      }
+      // // else if (this.clickedMarker.name != '雷达'){
+      //   this.radarLayer.clearLayers()
+      // }
+      else {
+          for (let i of this.socketRadarData) {
+            //  console.log('socketRadarData',i)
+            // console.log(this.stationLayers)
+            if (i.status == false) {
+              if (i.id) {
+                marker(i).addTo(this.radarLayer);
+              }
+            }
+          }
+      }
+      // else{
+      //   this.radarLayer.clearLayers()
+      // }
     }
 
   },

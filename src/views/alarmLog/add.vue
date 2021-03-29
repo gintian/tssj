@@ -147,7 +147,7 @@ export default {
           +this.listQuery.name+'&&level='
           +this.listQuery.level+'&&beginTime='
           +this.listQuery.beginTime+'&&endTime='
-          +this.listQuery.endTime+'&&content='
+          +this.listQuery.endTime +'&&content='
            +this.listQuery.content
         ).then(req => {
           console.log("系统操作日志数据",req)
