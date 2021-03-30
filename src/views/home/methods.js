@@ -195,15 +195,19 @@ const map = {
       this.mapZoom = this.map.getZoom()
     })
 
-    //  监听 mousemove 事件
+      //  监听 mousemove 事件
       this.map.on('mousemove', (e) => {
-        console.log('监听mousemove',e)
-      let latlng = e.latlng;
-      console.log('监听mousemove经纬度',latlng );  
+        // console.log('监听mousemove',e)
+        L.popup().setLatLng(e.latlng)
+        .setContent('经纬度'+e.latlng.toString())
+        .openOn(this.map)
+      // let latlng = e.latlng;
+      // console.log('监听mousemove经纬度',latlng );  
       });
       // 取消 mousemove 事件
-      this.map.off('mousemove')
+      // this.map.off('mousemove')
   },
+
   //切换地图类型组件
   buttonGroupClickItem({ type }) {
     if (type === 1) {
@@ -1177,6 +1181,149 @@ const marker = {
         marker.addTo(this.markerLayersGroup)
       }
     })
+     // 摄像头
+     this.service.get('/camera/allList').then(res => {
+      // console.log("区域内摄像头信息",res)
+      for (let e of res.list) {
+        let bd09Arr = wgs84ToBD(e.lon, e.lat)
+        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/camera.png'))('摄像头')
+        ((event) => {
+          //摄像头信息框
+          // console.log("摄像头信息",e)
+          this.service.get('/camera/view', {
+            params:{
+              id:e.id
+            }
+          }).then(res => {
+            // console.log("摄像头详细信息",res)
+            let a = Object.entries(this.showInfo)
+            // console.log('摄像头的',a)
+            a.forEach(e => {
+              this.showInfo[e[0]] = false
+            })
+            this.showInfo.camera = true
+            if (this.hasLayer(this.map, 'camera' + e.id).length > 0) {
+              res.camera.showed = true
+            } else {
+              res.camera.showed = false
+            }
+            this.dialogInfo.camera = res.camera
+          })
+            
+        })
+        marker.addTo(this.markerLayersGroup)
+      }
+    })
+    // 铁塔
+    this.service.get('/tower/allList').then(res => {
+      console.log("区域内铁塔信息",res)
+      for (let e of res.list) {
+        let bd09Arr = wgs84ToBD(e.lon, e.lat)
+        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/tower.png'))('铁塔')
+        ((event) => {
+          //摄像头信息框
+          // console.log("铁塔信息",e)
+          this.service.get('/tower/view', {
+            params:{
+              station_id:e.station_id
+            }
+          }).then(res => {
+            // console.log("铁塔详细信息",res)
+            let a = Object.entries(this.showInfo)
+            // console.log('铁塔的',a)
+            a.forEach(e => {
+              this.showInfo[e[0]] = false
+            })
+            this.showInfo.tower = true
+            if (this.hasLayer(this.map, 'tower' + e.id).length > 0) {
+              res.tower.showed = true
+            } else {
+              res.tower.showed = false
+            }
+            this.dialogInfo.tower = res.tower
+            // console.log('this.dialogInfo.tower',this.dialogInfo.tower)
+          })
+            
+        })
+        marker.addTo(this.markerLayersGroup)
+      }
+    })
+    // 海底光缆
+    this.service.get('/seaLine/allList',{
+      params:{
+        name:1
+      }
+    }).then(res => {
+      console.log("区域内海底光缆信息",res)
+      for (let e of res.list) {
+        let bd09Arr = wgs84ToBD(e.lon, e.lat)
+        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/Submarine.png'))('海底光缆')
+        ((event) => {
+          //摄像头信息框
+          console.log("海底光缆信息",e)
+          this.service.get('/seaLine/view', {
+            params:{
+              station_id:e.station_id
+            }
+          }).then(res => {
+            console.log("海底光缆详细信息",res)
+            let a = Object.entries(this.showInfo)
+            console.log('海底光缆的',a)
+            a.forEach(e => {
+              this.showInfo[e[0]] = false
+            })
+            this.showInfo.sealine = true
+            if (this.hasLayer(this.map, 'sealine' + e.id).length > 0) {
+              res.sealine.showed = true
+            } else {
+              res.sealine.showed = false
+            }
+            this.dialogInfo.sealine = res.sealine
+            // console.log('this.dialogInfo.tower',this.dialogInfo.tower)
+          })
+            
+        })
+        marker.addTo(this.markerLayersGroup)
+      }
+    })
+     // 泊位
+    //  this.service.get('/berth/allList',{
+    //   params:{
+    //     name:1
+    //   }
+    // }).then(res => {
+    //   console.log("区域内泊位信息",res)
+    //   for (let e of res.list) {
+    //     let bd09Arr = wgs84ToBD(e.lon, e.lat)
+    //     let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/port.png'))('泊位')
+    //     ((event) => {
+    //       //摄像头信息框
+    //       console.log("泊位信息",e)
+    //       this.service.get('/berth/view', {
+    //         params:{
+    //           id:e.Id
+    //         }
+    //       }).then(res => {
+    //         console.log("泊位详细信息",res)
+    //         let a = Object.entries(this.showInfo)
+    //         console.log('泊位的',a)
+    //         a.forEach(e => {
+    //           this.showInfo[e[0]] = false
+    //         })
+    //         this.showInfo.berthage = true
+    //         if (this.hasLayer(this.map, 'berth' + e.id).length > 0) {
+    //           res.berth.showed = true
+    //         } else {
+    //           res.berth.showed = false
+    //         }
+    //         this.dialogInfo.berthage = res.berth
+    //         // console.log('this.dialogInfo.tower',this.dialogInfo.tower)
+    //       })
+            
+    //     })
+    //     marker.addTo(this.markerLayersGroup)
+    //   }
+    // })
     // 组织机构
     // this.service.get('/org/allList').then(res => {
     //   console.log("组织机构",res)
@@ -1216,7 +1363,7 @@ const marker = {
   },
   //leaflet 折线 没有设置透明度属性 只能删除重新绘制
   // loadSeaLineLayer(){
-  //   this.service.post('/seaLine/findAll', {
+  //   this.service.post('/seaLine/allList', {
   //     'isfocus':this.focusButton
   //   }).then(res => {
   //     for (let i of res.data) {

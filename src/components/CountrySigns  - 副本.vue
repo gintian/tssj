@@ -11,42 +11,16 @@
                         top="11vh"
                         custom-class="countrydialog"
                         :append-to-body="true">
-                        <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
-                              <el-radio-button :label="false">船舶</el-radio-button>
-                              <el-radio-button :label="true">基础设施</el-radio-button>
-                        </el-radio-group>
-                        <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-                            <el-submenu index="1">
-                              <template slot="title">
-                                <i class="el-icon-location"></i>
-                                <span slot="title">导航一</span>
-                              </template>
-                              <el-menu-item-group>
-                                <span slot="title">分组一</span>
-                                <el-menu-item index="1-1">选项1</el-menu-item>
-                                <el-menu-item index="1-2">选项2</el-menu-item>
-                              </el-menu-item-group>
-                              <el-menu-item-group title="分组2">
-                                <el-menu-item index="1-3">选项3</el-menu-item>
-                              </el-menu-item-group>
-                              <el-submenu index="1-4">
-                                <span slot="title">选项4</span>
-                                <el-menu-item index="1-4-1">选项1</el-menu-item>
-                              </el-submenu>
-                            </el-submenu>
-                            <el-menu-item index="2">
-                              <i class="el-icon-menu"></i>
-                              <span slot="title">导航二</span>
-                            </el-menu-item>
-                            <el-menu-item index="3" disabled>
-                              <i class="el-icon-document"></i>
-                              <span slot="title">导航三</span>
-                            </el-menu-item>
-                            <el-menu-item index="4">
-                              <i class="el-icon-setting"></i>
-                              <span slot="title">导航四</span>
-                            </el-menu-item>
-                      </el-menu>
+                        <el-tree
+                          :props="props"
+                          :load="loadNode"
+                          highlight-current
+                          lazy
+                          show-checkbox
+                          @check-change="handleCheckChange"
+                           @node-click="handleTreeNodeClick"
+                          >
+                        </el-tree>
                 </el-dialog>
             </div>
         </div>
@@ -69,19 +43,12 @@
         flag:'未知' , //国家名称
         shipType:'其他',  //船舶类型
         firstMenu:[],
-        isCollapse: true
       };
     },
     mounted(){
       this.loadData()
     },
     methods: {
-       handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      },
        // 点击树节点事件处理
       handleTreeNodeClick(data, node, elem){
                 // data.id即为科室id，根据这个科室id触发医生表格数据的查询...

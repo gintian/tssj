@@ -10,6 +10,11 @@ import Radar from '@/views/object/radar'  //目标管理
 import AIS from '@/views/object/AIS'
 import Anchorage from '@/views/object/Anchorage'
 import Wharf from '@/views/object/wharf'
+import camera from '@/views/object/camera'
+import Tower from '@/views/object/tower'
+import Submarine from '@/views/object/Submarine' 
+// import Berthage from '@/views/object/Berthage'
+import port from '@/views/object/port'
 
 import EnterpriseList from '@/views/alarmLog/index.vue'  //告警日志
 import EnterpriseAdd from '@/views/alarmLog/add.vue'
@@ -187,7 +192,60 @@ let router = new VueRouter({
                         {path: '/object/wharf', component: Wharf, name: '码头', menuShow: true},
                     ]
                 },
+                {
+                    path: '/camera',
+                    component: LeftNav,
+                    // name: 'AIS',
+                    leaf: true, // 只有一个节点
+                    iconCls: 'iconfont icon-shexiangtou', // 图标样式class
+                    menuShow: true,
+                    children: [
+                        {path: '/object/camera', component: camera, name: '摄像头', menuShow: true},
+                    ]
+                },
 
+                {
+                    path: '/Tower',
+                    component: LeftNav,
+                    leaf: true, // 只有一个节点
+                    iconCls: 'iconfont icon-tieta-copy',
+                    menuShow: true,
+                    children: [
+                        {path: '/object/Tower', component: Tower, name: '铁塔', menuShow: true}
+                    ]
+                },
+
+                {
+                    path: '/Submarine',
+                    component: LeftNav,
+                    leaf: true, // 只有一个节点
+                    iconCls: 'iconfont icon-cidai',
+                    menuShow: true,
+                    children: [
+                        {path: '/object/Submarine', component: Submarine, name: '海底光缆', menuShow: true},
+                    ]
+                },
+                
+                // {
+                //     path: '/Berthage',
+                //     component: LeftNav,
+                //     leaf: true, // 只有一个节点
+                //     iconCls: 'iconfont icon-cidai',
+                //     menuShow: true,
+                //     children: [
+                //         {path: '/object/Berthage', component: Berthage, name: '泊位', menuShow: true},
+                //     ]
+                // },
+                {
+                    path: '/port',
+                    component: LeftNav,
+                    leaf: true, // 只有一个节点
+                    iconCls: 'iconfont icon-cidai',
+                    menuShow: true,
+                    children: [
+                        {path: '/object/port', component: port, name: '泊位', menuShow: true},
+                    ]
+                },
             ]
         },
 

@@ -83,7 +83,7 @@ const button={
 
     navy:{},//海军
 
-    berth:{},
+    berth:{},  //码头
     seaLine:{},
     towerInfo:{},
     anchorage:{},
@@ -106,7 +106,7 @@ const button={
     berth:false, //码头泊位开关
     port:false, //港区开关
     customArea:false, //自定义区域开关
-   
+    berthage:false,// 泊位开关
 
     navy:false, //海军开关
     mary:false,//海警军开关
@@ -123,8 +123,9 @@ const button={
     radarShip:false, //雷达船舶列表开关
     ais:false, //ais开关
     aisShip:false, //ais船舶列表开关
-    camera:false, //摄像头开关
+    camera:false, //摄像头视频开关
     focus:false,//关注列表开关
+    tower:false,  //铁塔开关
   },
   showGroupView:false,
 }

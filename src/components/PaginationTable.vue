@@ -8,6 +8,7 @@
         border
          height="710px"
         style="width: 100%;height: 84%;"
+         :header-cell-style="tableHeaderColor"
         >
         <el-table-column
           type="index"
@@ -95,8 +96,6 @@
                 v-if="isDeal"
         >
           <template slot-scope="scope">
-
-<!--            <el-button  @click="handleClickDeal(scope.row)" type="text" size="small" class="btn-upt">查看</el-button>-->
             <div @click="handleClickDeal(scope.row)" style="cursor: pointer">
               <font-awesome-icon  :icon="icons[scope.row.status][0]" style=" font-size: 16px;" :class="icons[scope.row.status][0]" />
               <p style="display: inline-block;width: 50%">{{icons[scope.row.status][1]}}</p>
@@ -105,9 +104,6 @@
 
         </el-table-column>
       </el-table>
-<!--      <div class="test test-1">-->
-<!--        <div class="scrollbar"></div>-->
-<!--      </div>-->
     </div>
       <!-- 分页 -->
     <div style="text-align: center;padding-bottom: 1em;margin-top: 1%;">
@@ -121,17 +117,11 @@
         :total="total">
       </el-pagination>
     </div>
-
-<!--    <el-dialog :visible.sync="mapDialog" width="520px" :show-close='false' custom-class="mapDialog">-->
-<!--      <table-map :mapData="rowData" v-show="isMap" :markerType="markerType" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></table-map>-->
-<!--    </el-dialog>-->
-
-
   </div>
 </template>
 
 <script>
-  import TableMap from '../components/TableMap';
+  import LeafletTableMap from '../components/LeafletTableMap'
   import { MessageBox } from 'element-ui';
 export default {
   name: 'BasalData',
@@ -148,10 +138,6 @@ export default {
       type:Boolean,
       default:true
     },
-    // dataFormRow:{//判断地图数据是否来自本行 还是父组件的传值
-    //   type:Boolean,
-    //   default:true
-    // },
     isTravel:{
       type:Boolean,
       default:false
@@ -186,7 +172,8 @@ export default {
     }
   },
   components: {
-    'table-map':TableMap
+    // 'table-map':TableMap
+    'leaflet-tablemap':LeafletTableMap
   },
   data() {
     return {
@@ -205,6 +192,12 @@ export default {
 
   },
   methods: {
+    // 修改table header的背景色
+        tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
+          if (rowIndex === 0) {
+            return 'background-color: #DEE8FE;color: #000;font-weight: 500;'
+          }
+        }, 
     handleSizeChange(val) {
      // console.log(`每页 ${val} 条`);
       this.$emit('handleSizeChange',val)
@@ -278,9 +271,6 @@ export default {
         // this.$emit('handleClickDeal',row)
       }
 
-
-
-
     },
     handleClickPass(row){
       // console.log(row)
@@ -292,18 +282,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style >
-
-/*.el-table >>> .el-table__body {
-  width: 100%!important;
-}
-.el-table >>> .el-table__header{
-  width: 100%!important;
-}*/
 .check-circle{
   color: #2ac06d;
 }
 .spinner{
-  color: rgb(255, 255, 255);
+  /* color: rgb(255, 255, 255); */
+  color: black;
 }
 .exclamation-circle{
   color: #bd3538;
@@ -343,21 +327,14 @@ export default {
   }
 
   .table-wrapper{
-    height: 100%;
-    display: grid;
-    grid-template-rows: 90% 10%;
+    // height: 100%;
+    // display: grid;
+    // grid-template-rows: 90% 10%;
   }
-/*  .table-wrapper /deep/ .el-table{*/
-/*    height: 84%!important;*/
-/*    min-height: 450px;*/
-/*    max-height: 680px;*/
-/*    overflow: auto;*/
-/*  }*/
-/*  .table-wrapper /deep/ .el-table__body-wrapper{*/
-/*  height: auto!important;*/
-/*}*/
+
   .table-wrapper .cell{
-    color: white;
+    // color: white;
+    color: black;
   }
   .table-wrapper .el-table--border{
     border: none!important;
@@ -367,7 +344,7 @@ export default {
   }
   .table-wrapper .el-table td, .el-table th{
     text-align: center!important;
-    color: #c8c8c8;
+    // color: #c8c8c8;
   }
   .el-table th, .el-table tr{
     background: none!important;
@@ -378,19 +355,7 @@ export default {
   .el-table td, .el-table th{
     border: none!important;
   }
-  /*.table-wrapper /deep/  .el-table, .el-table__expanded-cell {*/
-  /*  background-color: transparent;*/
-  /*}*/
-
-  /*.table-wrapper /deep/ .el-table tr {*/
-  /*  background-color: transparent!important;*/
-  /*}*/
-  /*.table-wrapper /deep/ .el-table tr:nth-child(2n) {*/
-  /*  background: rgba(0, 0, 0, 0.24) !important;*/
-  /*}*/
-  /*.table-wrapper /deep/  .el-table--enable-row-transition .el-table__body td, .el-table .cell{*/
-  /*  background-color: transparent;*/
-  /*}*/
+  
   .el-table{
     background: transparent!important;
   }

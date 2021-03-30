@@ -72,7 +72,20 @@ export default {
         }else if(this.markerType === "radar"){
         this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/01.png"))(4)(() => {}).addTo(this.map);
         this.map.setView([val.lat, val.lon], 13);
-        }else if(this.markerType === "suspicious"){
+        }else if(this.markerType === "Submarine"){
+        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/Submarine.png"))(4)(() => {}).addTo(this.map);
+        this.map.setView([val.lat, val.lon], 13);
+        }else if(this.markerType === "tower"){
+        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/tower.png"))(4)(() => {}).addTo(this.map);
+        this.map.setView([val.lat, val.lon], 13);
+        }else if(this.markerType === "camera"){
+        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/camera.png"))(4)(() => {}).addTo(this.map);
+        this.map.setView([val.lat, val.lon], 13);
+        }else if(this.markerType === "port"){
+        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/camera.png"))(4)(() => {}).addTo(this.map);
+        this.map.setView([val.lat, val.lon], 13);
+        }
+        else if(this.markerType === "suspicious"){
         this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/aim03.png"))(5)(() => {}).addTo(this.map);
         this.map.setView([val.lat, val.lon], 13);
         }else if(this.markerType === "suspiciousTrail"){

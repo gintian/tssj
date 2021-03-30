@@ -77,26 +77,10 @@
       },
     },
     watch:{
-      /*shipTabObj :function(val) {
-          if(val.urltype === 2){
-              console.log(val)
-              this.ordArr = [
-                  { id:1, name:'MMSI' ,prop:'mmsi' },
-                  { id:2, name:'名称' ,prop:'name' },
-                  { id:3, name:'方位' ,prop:'azimuth' },
-                  { id:4, name:'距离' ,prop:'distance' },
-                  { id:5, name:'航向' ,prop:'course' },
-                  { id:6, name:'航速' ,prop:'speed' },
-                  { id:8, name:'经度' ,prop:'lon' },
-                  { id:9, name:'纬度' ,prop:'lat'},
-              ]
-          }
-      }*/
+    
     },
     mounted(){
       // console.log('shipTabObj',this.tabObj)
-
-
     },
     updated() {
       // console.log('shipTabObj',this.tabObj)
@@ -106,19 +90,19 @@
         ordArr:[
           { id:0, name:'名称' ,prop:'name'},
           { id:1, name:'总长(海里)' ,prop:'totalLength'},
-          // { id:2, name:'经度' ,prop:'longitude'},
-          // { id:3, name:'纬度' ,prop:'latitude'},
-          // // { id:4, name:'是否展示' ,prop:'showedString'},
-          // { id:5, name:'覆盖距离' ,prop:'coverage'},
-          // { id:6, name:'发射功率' ,prop:'launchPower'},
-          // { id:7, name:'等级' ,prop:'level'},
-          // { id:8, name:'天线方位角' ,prop:'skyLineAzimuth'},
-          // { id:9, name:'天线范围' ,prop:'skyLineCoverage'},
-          // { id:10, name:'天线高度' ,prop:'skyLineHeight'},
-          // { id:11, name:'天线倾角' ,prop:'skylinePitch'},
-          // { id:12, name:'铁塔高度' ,prop:'towerHeight'},
-          // { id:13, name:'传输方式' ,prop:'transType'},
-          // { id:14, name:'类型' ,prop:'type'},
+          { id:2, name:'经度' ,prop:'longitude'},
+          { id:3, name:'纬度' ,prop:'latitude'},
+          // { id:4, name:'是否展示' ,prop:'showedString'},
+          { id:5, name:'覆盖距离' ,prop:'coverage'},
+          { id:6, name:'发射功率' ,prop:'launchPower'},
+          { id:7, name:'等级' ,prop:'level'},
+          { id:8, name:'天线方位角' ,prop:'skyLineAzimuth'},
+          { id:9, name:'天线范围' ,prop:'skyLineCoverage'},
+          { id:10, name:'天线高度' ,prop:'skyLineHeight'},
+          { id:11, name:'天线倾角' ,prop:'skylinePitch'},
+          { id:12, name:'铁塔高度' ,prop:'towerHeight'},
+          { id:13, name:'传输方式' ,prop:'transType'},
+          { id:14, name:'类型' ,prop:'type'},
         ],
         //urltypeArr
         dialogVisible:false,

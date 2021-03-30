@@ -9,19 +9,19 @@
                         title="图例"
                         :visible.sync="dialogVisible"
                         width="23%"
-                        top="0vh"
+                        top="-8vh"
                         :append-to-body="true">
                           <h4>基础设施</h4>
                          <div class="signChild" >
                               <div class="signChildContent" v-for="(child,index) in item.children1" :key="index+'1'">
-                                  <img :src='child.img' alt="">
+                                  <img :src='child.img' alt=""  style="width: 15px; height: 20px;">
                                   <p >{{child.label}}</p>
                               </div>
                            </div>
                               <h4>船舶目标</h4>
                                <div class="signChild" >
                                   <div class="signChildContent" v-for="(child,index) in item.children2" :key="index+'2'">
-                                      <img :src='child.img' alt="">
+                                      <img :src='child.img' alt=""  style="width: 15px; height: 15px;">
                                       <p >{{child.label}}</p>
                                   </div>
                               </div>
@@ -54,6 +54,10 @@
               { img: require('../assets/mapSigns/03.png'), label: '锚地' },
               { img: require('../assets/mapSigns/ais.png'), label: 'AIS' },
               { img: require('../assets/mapSigns/01.png'), label: '雷达' }, 
+               { img: require('../assets/mapSigns/Submarine.png'), label: '海底光缆' },
+              { img: require('../assets/mapSigns/tower.png'), label: '铁塔' },
+              { img: require('../assets/mapSigns/camera.png'), label: '摄像头' ,width:'100'}
+              // { img: require('../assets/mapSigns/port.png'), label: '泊位'}
             ],
              children2: [
               { img: require('../assets/mapSigns/aim01.png'), label: '雷达目标' },
@@ -68,8 +72,8 @@
               { img: require('../assets/mapSigns/dangerbuk.png'), label: '水下作业' },
 
               { img: require('../assets/mapSigns/another.png'), label: '其他' },  
-              { img: require('../assets/mapSigns/aim03.png'), label: '异常目标' }
-              // { img: require('../assets/mapSigns/zf.png'), label: '执法船' }  
+              { img: require('../assets/mapSigns/aim03.png'), label: '异常目标' },
+              { img: require('../assets/mapSigns/zf.png'), label: '执法船' }  
             ],
             children3: [
               { img: require('../assets/mapSigns/11.png'), label: '陆军海防部队' },

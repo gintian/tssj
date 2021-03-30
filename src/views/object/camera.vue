@@ -1,8 +1,8 @@
 <template>
  <div class="app-container" >
     <div class="container-title" >
-        <h3>雷达</h3>
-         <div  style="display: flex;justify-content: space-between;">
+        <h3>摄像头</h3>
+        <div  style="display: flex;justify-content: space-between;">
                 <el-upload
                       class="upload-demo"
                        ref="upload"
@@ -42,33 +42,22 @@
       prop="name"
       label="名称">
     </el-table-column>
-    <el-table-column
-      prop="id"
-      label="编号"
-      align="center">
-    </el-table-column>
-    <el-table-column
-      prop="band"
-      label="波段"
-      align="center">
-    </el-table-column>
+  
+    
     <el-table-column prop="lat,lon" label="位置" align="center"  min-width="90%">
        <template slot-scope="scope">   
             <span> 经度：{{scope.row.lon}}</span><br>
             <span> 纬度：{{scope.row.lat}}</span>
        </template>
     </el-table-column>
-    <el-table-column
-      prop="range"
-      label="探距（海里）"
-      align="center">
-    </el-table-column>
-    <el-table-column prop="status" label="运行状态" align="center">
-      <template slot-scope="scope">
+
+     <el-table-column  align="center" prop="status"  label="状态">
+        <template slot-scope="scope">
             <span v-if="scope.row.status == true">异常</span>
             <span v-if="scope.row.status == false">正常</span>
       </template>
     </el-table-column>
+
     <el-table-column
       label="查看地图" 
       align="center">
@@ -76,7 +65,13 @@
           <el-button  @click="handleClickView(scope.row)" type="text" size="small" class="btn-upt">查看</el-button>
         </template>
     </el-table-column>
-    
+
+      <el-table-column
+      align="center"
+      prop="videoUrl"
+      label="视频流地址">
+    </el-table-column>
+
     <el-table-column label="操作" align="center">
       <template slot-scope="scope">
         <el-button
@@ -88,29 +83,23 @@
   </el-table>
 <!-- 查看地图弹窗 -->
 <el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
-      <leaflet-tablemap :mapData="mapData"  markerType="radar" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
+      <leaflet-tablemap :mapData="mapData"  markerType="camera" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
 </el-dialog>
  <!-- 新增弹层功能 -->
-     <el-dialog title="添加雷达" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
+     <el-dialog title="添加摄像头" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
       <el-form ref="updateForm"  :model="addsForm" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
           <el-form-item label="名称" prop="name" >
               <el-input v-model="addsForm.name" />
-            </el-form-item>
-            <el-form-item label="编号" prop="station">
-              <el-input v-model="addsForm.station" />
-            </el-form-item>
-             <el-form-item label="波段" prop="band">
-              <el-input v-model="addsForm.band" />
-            </el-form-item>
+            </el-form-item>     
           <el-form-item label="经度" prop="lon">
               <el-input v-model="addsForm.lon" />
             </el-form-item>
-            <el-form-item label="纬度" prop="lat">
+          <el-form-item label="纬度" prop="lat">
             <el-input v-model="addsForm.lat" />
           </el-form-item>
-           <el-form-item label="探距（海里）" prop="range" lable-width="40px">
-            <el-input v-model="addsForm.range" />
+          <el-form-item label="视频流地址" prop="videoUrl">
+            <el-input v-model="addsForm.videoUrl" />
           </el-form-item>
           <el-form-item label="运行状态" prop="status">
               <!-- <el-input v-model="addsForm.status" /> -->
@@ -118,7 +107,7 @@
                   <el-option   v-for="item in options"  :value="item.value"   :label="item.label" :key="item.value">        
                   </el-option>
               </el-select>
-            </el-form-item>
+          </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible1 = false">
@@ -131,26 +120,20 @@
     </el-dialog> 
 
   <!-- 编辑弹层功能 -->
-     <el-dialog title="编辑雷达" :visible.sync="dialogFormVisible"     width="600px">
+     <el-dialog title="编辑码头" :visible.sync="dialogFormVisible"     width="600px">
       <el-form ref="updateForm"  :model="temp" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
           <el-form-item label="名称" prop="name" >
               <el-input v-model="temp.name" />
             </el-form-item>
-            <el-form-item label="编号" prop="station">
-              <el-input v-model="temp.station" />
-            </el-form-item>
-             <el-form-item label="波段" prop="band">
-              <el-input v-model="temp.band" />
-            </el-form-item>
           <el-form-item label="经度" prop="lon">
               <el-input v-model="temp.lon" />
             </el-form-item>
-            <el-form-item label="纬度" prop="lat">
+          <el-form-item label="纬度" prop="lat">
             <el-input v-model="temp.lat" />
           </el-form-item>
-           <el-form-item label="探距（海里）" prop="range">
-            <el-input v-model="temp.range" />
+          <el-form-item label="视频流地址" prop="videoUrl">
+            <el-input v-model="temp.videoUrl" />
           </el-form-item>
           <el-form-item label="运行状态" prop="status">
               <el-input v-model="update" @change="changeu" />
@@ -201,6 +184,7 @@ export default {
   components:{'leaflet-tablemap':LeafletTableMap},
   data() {
     return {
+      wharf:null,
      dialog: {
           visible: false,
           title: '',
@@ -208,6 +192,7 @@ export default {
           showMap:false,
           disabled:false
         },
+        delid:'',
       mapData:{},
       tableData: [], //表格展示的数据
       pages:1, //总页数
@@ -224,24 +209,18 @@ export default {
         name:'',
         lat:'',
         lon:'',
-        range:'',
-        status:'',
-        band:'',
-        station:''
+        videoUrl:'',
+        status:''
       },
-       delid:'',
       temp:{  //编辑的表单字段
         id:'',
-        station:'',
         name:'',
         lat:'',
         lon:'',
-        range:'',
-        status:'',
-        band:''
+        videoUrl:'',
+        status:''
       },
-      Business_exception:null,
-      update:'',
+       update:'',
        options:[{
         value:'正常',
         lable:'正常'
@@ -249,7 +228,7 @@ export default {
         value:'异常',
         lable:'异常'
       }],
-       uploadUrl:'radar/pushExcel',
+        uploadUrl:'camera/pushExcel',
        fileList: [],
     }
   },
@@ -296,7 +275,7 @@ export default {
               // });
             }
           });
-      } ,
+      } ,  
      // 修改table header的背景色
         tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
           if (rowIndex === 0) {
@@ -309,16 +288,17 @@ export default {
         this.temp.status=true
       }else if(val=='正常'){
         this.temp.status=false
+        // console.log("this.temp.status",this.temp.status)
       }
     },
     getList(){  //获取数据
-         this.service.get( '/radar/page',{
+         this.service.get( '/camera/page',{
               params:{
            pageNumber: this.listQuery.pageNo,
           pageSize: this.listQuery.pageSize,
           name: this.listQuery.name}
          }).then(req => {
-          console.log("雷达数据",req)
+          console.log("摄像头数据",req)
           this.tableData = req.page.list
           this.rows=req.page.totalRow
         }) 
@@ -337,12 +317,12 @@ export default {
       require.ensure([], () => {
         // eslint-disable-next-line camelcase,global-require
         const { export_json_to_excel } = require('@/vandor/export2Excel.js');
-        const tHeader = ['序号', '名称','编号','波段','经度','纬度','探距(海里)','运行状态']; // 表头
-        const filterVal = ['id', 'name','id','band','lat','lon','range','status']; // 值
+        const tHeader = ['序号', '名称','纬度','经度','视频流地址','状态']; // 表头
+        const filterVal = ['id', 'name','lat','lon','videoUrl','status']; // 值
         const list = this.tableData;
         console.log('后端返回的数据', list);
         const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, '雷达数据excel');
+        export_json_to_excel(tHeader, data, '摄像头数据excel');
       });
     },
     // 格式转换
@@ -353,7 +333,9 @@ export default {
     query(){ //按名称查询
       this.getList();
     },
-   
+    handleSubmit(row){
+      
+    },
     //当前条数变化
     handleSizeChange(val=this.listQuery.pageSize ){
       this.listQuery.pageSize = val;
@@ -366,17 +348,16 @@ export default {
     },
     //删除弹层
     handleDel(row){
-      console.log(row)
        this.delid=row.id
-       console.log("这行数据的id",this.delid)
+      //  console.log("这行数据的id",this.delid) 
       this.temp = {...row};
       this.dialogDelVisible = true; //弹层显示
     },
     //删除提交
     delData(){
-       this.service.get( '/radar/delete?id='+this.delid,{     
+      this.service.get( '/camera/delete?id='+this.delid,{     
          }).then(req => {
-          console.log("删除radar数据",req)
+          console.log("删除摄像头数据",req)
           this.getList();
           this.dialogDelVisible = false;
         }) 
@@ -384,11 +365,6 @@ export default {
      //编辑弹层
     handleUpdate(index,row){
      this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
-       if(this.temp.status==true){
-        this.update = "异常"
-      }else if(this.temp.status==false){
-       this.update = "正常"
-      }
       this.dialogFormVisible = true; //弹层显示
     },
     // 添加雷达
@@ -396,34 +372,25 @@ export default {
       this.dialogFormVisible1 = true; //弹层显示
     },
      AddData(){
-         console.log("this.addsForm",this.addsForm)
-        if(this.addsForm.status=='正常'){
-          this.addsForm.status='false'
-        }else if(this.addsForm.status=='异常'){
-          this.addsForm.status='true'
-        }
         let userList=this.addsForm;  
-        let {station,name,lat,lon,range,band,status} = userList;
-      
-          this.service.post('/radar/save',this.addsForm).then(res => {
-          console.log("新增的雷达数据",res)
-          this.getList(); 
+        let {name,lat,lon,videoUrl,status} = userList;
+          this.service.post('/camera/save',this.addsForm).then(res => {
+            console.log("新增的摄像头数据",res)
+            this.getList(); 
           this.dialogFormVisible1 = false;}
           );
     },
     //编辑提交
     updateData(){
-       this.service.post('/radar/update',{
-           id:this.temp.id,
-          station:this.temp.station,
+       this.service.post('/camera/update',{
+          id:this.temp.id,
           name:this.temp.name,
           lat:this.temp.lat,
           lon:this.temp.lon,
-          range:this.temp.range,
-          status:this.temp.status,
-          band:this.temp.band
+          videoUrl:this.temp.videoUrl,
+          status:this.temp.status
        }).then(req => {
-          console.log("编辑雷达信息",req)
+          console.log("编辑摄像头信息",req)
           this.getList();
           this.dialogFormVisible = false;
       })

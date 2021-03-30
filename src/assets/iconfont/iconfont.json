@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1250489",
+      "name": "磁带",
+      "font_class": "cidai",
+      "unicode": "e76d",
+      "unicode_decimal": 59245
+    },
+    {
+      "icon_id": "20669294",
+      "name": "铁塔",
+      "font_class": "tieta-copy",
+      "unicode": "e9f5",
+      "unicode_decimal": 59893
+    },
+    {
+      "icon_id": "7116486",
+      "name": "摄像头",
+      "font_class": "shexiangtou",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "16429215",
+      "name": "铁塔",
+      "font_class": "tieta",
+      "unicode": "e6d7",
+      "unicode_decimal": 59095
+    },
+    {
       "icon_id": "799386",
       "name": "告警",
       "font_class": "gaojing",

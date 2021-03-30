@@ -226,7 +226,7 @@ export default {
             this.myVideoWidth = this.$refs.player.offsetWidth;
             this.myVideoHeight = this.$refs.player.offsetHeight;
             this.$refs.player.addEventListener("playing", e => {
-              console.log("开始播放");
+              // console.log("开始播放");
               this.isLoadIn = false; //视频加载状态改变
               this.myVideoWidth = this.$refs.player.offsetWidth;
               this.myVideoHeight = this.$refs.player.offsetHeight;

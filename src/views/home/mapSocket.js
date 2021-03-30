@@ -130,9 +130,7 @@ export default {
             }
           }
       }
-      // // else if (this.clickedMarker.name != '雷达'){
-      //   this.radarLayer.clearLayers()
-      // }
+    
       else {
           for (let i of this.socketRadarData) {
             //  console.log('socketRadarData',i)
@@ -144,9 +142,7 @@ export default {
             }
           }
       }
-      // else{
-      //   this.radarLayer.clearLayers()
-      // }
+      
     }
 
   },

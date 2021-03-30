@@ -519,7 +519,33 @@
         @isFocus="infoViewFocus"
       />
     </div>
-
+      <!-- 摄像头信息框 -->
+    <div
+      id="camera"
+      style="height: auto;width: 400px;position: absolute;left: 23%; top:10%;z-index: 500"
+      v-drag
+      v-show="showInfo.camera"
+    >
+      <Camera :tabObj="dialogInfo.camera" titleName @remove="showInfo.camera=false" />
+    </div>
+      <!-- 铁塔信息框 -->
+    <div
+      id="Tower"
+      style="height: auto;width: 480px;position: absolute;left: 23%; top:10%;z-index: 500"
+      v-drag
+      v-show="showInfo.tower"
+    >
+      <Tower :tabObj="dialogInfo.tower" titleName @remove="showInfo.tower=false" />
+    </div>
+      <!-- 泊位信息框 -->
+    <div
+      id="Berthage"
+      style="height: auto;width: 600px;position: absolute;left: 23%; top:10%;z-index: 500"
+      v-drag
+      v-show="showInfo.berthage"
+    >
+      <Berth :tabObj="dialogInfo.berthage" titleName @remove="showInfo.berthage=false" />
+    </div>
     <!-- 资源站 信息框 -->
     <div
       id="stationInfoView"
@@ -807,6 +833,9 @@ import FI from "../../components/map/FI"; //边检
 import Customs from "../../components/map/Customs"; //海关
 
 import CustomArea from "../../components/map/CustomArea"; //自定义区域
+import Camera from "../../components/map/Camera"; 
+import Tower from "../../components/map/Tower";  
+import Berth from "../../components/map/Berth";  
 
 import SeaLineInfoView from "../../components/map/SeaLineInfoView";
 import StationInfoView from "../../components/map/StationInfoView";
@@ -868,9 +897,9 @@ export default {
     NavyInfoView,
     MarpoInfoView,
     MilidivisInfoView,
-    MSA,
-    PSB,
-    CMIO,
+    MSA,Camera,
+    PSB,Tower,
+    CMIO,Berth,
     OFA,
     FI,
     Customs,

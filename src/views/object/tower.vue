@@ -1,8 +1,8 @@
 <template>
  <div class="app-container" >
     <div class="container-title" >
-        <h3>雷达</h3>
-         <div  style="display: flex;justify-content: space-between;">
+        <h3>铁塔</h3>
+        <div  style="display: flex;justify-content: space-between;">
                 <el-upload
                       class="upload-demo"
                        ref="upload"
@@ -39,36 +39,34 @@
     </el-table-column>
     <el-table-column
       align="center"
-      prop="name"
+      prop="station_name"
       label="名称">
     </el-table-column>
     <el-table-column
-      prop="id"
-      label="编号"
-      align="center">
+      align="center"
+      prop="station_id"
+      label="编号">
     </el-table-column>
-    <el-table-column
-      prop="band"
-      label="波段"
-      align="center">
-    </el-table-column>
+    
     <el-table-column prop="lat,lon" label="位置" align="center"  min-width="90%">
        <template slot-scope="scope">   
             <span> 经度：{{scope.row.lon}}</span><br>
             <span> 纬度：{{scope.row.lat}}</span>
        </template>
+     <!-- align:	对齐方式,	值有left/center/right	默认left -->
     </el-table-column>
-    <el-table-column
-      prop="range"
-      label="探距（海里）"
-      align="center">
+     <el-table-column
+      align="center"
+      prop="tower_height"
+      label="铁塔高度">
     </el-table-column>
-    <el-table-column prop="status" label="运行状态" align="center">
-      <template slot-scope="scope">
-            <span v-if="scope.row.status == true">异常</span>
-            <span v-if="scope.row.status == false">正常</span>
-      </template>
+
+      <el-table-column
+      align="center"
+      prop="launch_power"
+      label="发射功率">
     </el-table-column>
+
     <el-table-column
       label="查看地图" 
       align="center">
@@ -79,6 +77,8 @@
     
     <el-table-column label="操作" align="center">
       <template slot-scope="scope">
+           <el-button
+          type="text" size="small" class="btn-upt" @click="handle(scope.$index, scope.row)"  >详情</el-button>
         <el-button
           type="text" size="small" class="btn-upt" @click="handleUpdate(scope.$index, scope.row)"  >编辑</el-button>
         <el-button
@@ -88,37 +88,60 @@
   </el-table>
 <!-- 查看地图弹窗 -->
 <el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
-      <leaflet-tablemap :mapData="mapData"  markerType="radar" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
+      <leaflet-tablemap :mapData="mapData"  markerType="tower" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
 </el-dialog>
  <!-- 新增弹层功能 -->
-     <el-dialog title="添加雷达" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
+     <el-dialog title="添加铁塔" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
       <el-form ref="updateForm"  :model="addsForm" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
-          <el-form-item label="名称" prop="name" >
-              <el-input v-model="addsForm.name" />
+          <el-form-item label="所属区域" prop="area" >
+              <el-input v-model="addsForm.area" />
+            </el-form-item>     
+          <el-form-item label="创建时间" prop="bulid_date">
+              <el-input v-model="addsForm.bulid_date" />
             </el-form-item>
-            <el-form-item label="编号" prop="station">
-              <el-input v-model="addsForm.station" />
-            </el-form-item>
-             <el-form-item label="波段" prop="band">
-              <el-input v-model="addsForm.band" />
-            </el-form-item>
+          <el-form-item label="覆盖距离" prop="coverage">
+            <el-input v-model="addsForm.coverage" />
+          </el-form-item>
+          <el-form-item label="发射功率" prop="launch_power ">
+            <el-input v-model="addsForm.launch_power " />
+          </el-form-item>
+           <el-form-item label="等级" prop="level " >
+              <el-input v-model="addsForm.level " />
+            </el-form-item>     
           <el-form-item label="经度" prop="lon">
               <el-input v-model="addsForm.lon" />
             </el-form-item>
-            <el-form-item label="纬度" prop="lat">
+          <el-form-item label="纬度" prop="lat">
             <el-input v-model="addsForm.lat" />
           </el-form-item>
-           <el-form-item label="探距（海里）" prop="range" lable-width="40px">
-            <el-input v-model="addsForm.range" />
+          <el-form-item label="天线方位角" prop="sky_line_azimuth">
+            <el-input v-model="addsForm.sky_line_azimuth" />
           </el-form-item>
-          <el-form-item label="运行状态" prop="status">
-              <!-- <el-input v-model="addsForm.status" /> -->
-              <el-select  v-model="addsForm.status"  class="selectInput"  :popper-append-to-body="false"  style="width: 301px;">
-                  <el-option   v-for="item in options"  :value="item.value"   :label="item.label" :key="item.value">        
-                  </el-option>
-              </el-select>
-            </el-form-item>
+          <el-form-item label="天线方位" prop="sky_line_coverage">
+            <el-input v-model="addsForm.sky_line_coverage" />
+          </el-form-item>
+          <el-form-item label="天线挂高" prop="sky_line_height">
+            <el-input v-model="addsForm.sky_line_height" />
+          </el-form-item>
+          <el-form-item label="天线倾角" prop="skyline_pitch">
+            <el-input v-model="addsForm.skyline_pitch" />
+          </el-form-item>
+           <el-form-item label="站点编号" prop="station_id">
+            <el-input v-model="addsForm.station_id" />
+          </el-form-item>
+          <el-form-item label="站点名称" prop="station_name">
+            <el-input v-model="addsForm.station_name" />
+          </el-form-item>
+          <el-form-item label="塔高" prop="tower_height">
+            <el-input v-model="addsForm.tower_height" />
+          </el-form-item>
+          <el-form-item label="传输方式" prop="trans_type">
+            <el-input v-model="addsForm.trans_type" />
+          </el-form-item>
+          <el-form-item label="类型" prop="type">
+            <el-input v-model="addsForm.type" />
+          </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible1 = false">
@@ -131,30 +154,57 @@
     </el-dialog> 
 
   <!-- 编辑弹层功能 -->
-     <el-dialog title="编辑雷达" :visible.sync="dialogFormVisible"     width="600px">
+     <el-dialog title="编辑码头" :visible.sync="dialogFormVisible"     width="600px">
       <el-form ref="updateForm"  :model="temp" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
-          <el-form-item label="名称" prop="name" >
-              <el-input v-model="temp.name" />
+           <el-form-item label="所属区域" prop="area" >
+              <el-input v-model="temp.area" />
+            </el-form-item>     
+          <el-form-item label="创建时间" prop="bulid_date">
+              <el-input v-model="temp.bulid_date" />
             </el-form-item>
-            <el-form-item label="编号" prop="station">
-              <el-input v-model="temp.station" />
-            </el-form-item>
-             <el-form-item label="波段" prop="band">
-              <el-input v-model="temp.band" />
-            </el-form-item>
+          <el-form-item label="覆盖距离" prop="coverage">
+            <el-input v-model="temp.coverage" />
+          </el-form-item>
+          <el-form-item label="发射功率" prop="launch_power ">
+            <el-input v-model="temp.launch_power " />
+          </el-form-item>
+           <el-form-item label="等级" prop="level " >
+              <el-input v-model="temp.level " />
+            </el-form-item>     
           <el-form-item label="经度" prop="lon">
               <el-input v-model="temp.lon" />
             </el-form-item>
-            <el-form-item label="纬度" prop="lat">
+          <el-form-item label="纬度" prop="lat">
             <el-input v-model="temp.lat" />
           </el-form-item>
-           <el-form-item label="探距（海里）" prop="range">
-            <el-input v-model="temp.range" />
+          <el-form-item label="天线方位角" prop="sky_line_azimuth">
+            <el-input v-model="temp.sky_line_azimuth" />
           </el-form-item>
-          <el-form-item label="运行状态" prop="status">
-              <el-input v-model="update" @change="changeu" />
-            </el-form-item>
+          <el-form-item label="天线方位" prop="sky_line_coverage">
+            <el-input v-model="temp.sky_line_coverage" />
+          </el-form-item>
+          <el-form-item label="天线挂高" prop="sky_line_height">
+            <el-input v-model="temp.sky_line_height" />
+          </el-form-item>
+          <el-form-item label="天线倾角" prop="skyline_pitch">
+            <el-input v-model="temp.skyline_pitch" />
+          </el-form-item>
+           <el-form-item label="站点编号" prop="station_id">
+            <el-input v-model="temp.station_id" />
+          </el-form-item>
+          <el-form-item label="站点名称" prop="station_name">
+            <el-input v-model="temp.station_name" />
+          </el-form-item>
+          <el-form-item label="塔高" prop="tower_height">
+            <el-input v-model="temp.tower_height" />
+          </el-form-item>
+          <el-form-item label="传输方式" prop="trans_type">
+            <el-input v-model="temp.trans_type" />
+          </el-form-item>
+          <el-form-item label="类型" prop="type">
+            <el-input v-model="temp.type" />
+          </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -201,6 +251,7 @@ export default {
   components:{'leaflet-tablemap':LeafletTableMap},
   data() {
     return {
+      wharf:null,
      dialog: {
           visible: false,
           title: '',
@@ -208,6 +259,7 @@ export default {
           showMap:false,
           disabled:false
         },
+        delid:'',
       mapData:{},
       tableData: [], //表格展示的数据
       pages:1, //总页数
@@ -221,44 +273,28 @@ export default {
       dialogFormVisible:false, //编辑弹层显示与隐藏
       dialogFormVisible1:false, //新增弹层显示与隐藏
       addsForm:{   //新增数据
-        name:'',
-        lat:'',
-        lon:'',
-        range:'',
-        status:'',
-        band:'',
-        station:''
+        area:'',bulid_date:'',coverage:'',station_id:'',
+        lat:'',launch_power:'',level :'',skyline_pitch:'',
+        lon:'',sky_line_azimuth:'',sky_line_coverage:'',sky_line_height:'',
+        station_name:'',tower_height:'',trans_type :'',type:''
       },
-       delid:'',
       temp:{  //编辑的表单字段
-        id:'',
-        station:'',
-        name:'',
-        lat:'',
-        lon:'',
-        range:'',
-        status:'',
-        band:''
+        area:'',bulid_date:'',coverage:'',station_id:'',
+        lat:'',launch_power:'',level :'',skyline_pitch:'',
+        lon:'',sky_line_azimuth:'',sky_line_coverage:'',sky_line_height:'',
+        station_name:'',tower_height:'',trans_type :'',type:''
       },
       Business_exception:null,
-      update:'',
-       options:[{
-        value:'正常',
-        lable:'正常'
-      },{
-        value:'异常',
-        lable:'异常'
-      }],
-       uploadUrl:'radar/pushExcel',
+      //  visible: false,
+       uploadUrl:'tower/pushExcel',
        fileList: [],
     }
   },
-  filters:{},
   created() {
     this.getList();
   },
   methods: {
-     submitUpload(){
+       submitUpload(){
           this.$refs.upload.submit();
           // this.importdialog=true
       },
@@ -296,29 +332,22 @@ export default {
               // });
             }
           });
-      } ,
+      } ,  
      // 修改table header的背景色
         tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
           if (rowIndex === 0) {
             return 'background-color: #DEE8FE;color: #000;font-weight: 500;'
           }
         }, 
-      changeu(val){
-      console.log("val",val)
-      if(val=="异常"){
-        this.temp.status=true
-      }else if(val=='正常'){
-        this.temp.status=false
-      }
-    },
+
     getList(){  //获取数据
-         this.service.get( '/radar/page',{
+         this.service.get( '/tower/page',{
               params:{
            pageNumber: this.listQuery.pageNo,
           pageSize: this.listQuery.pageSize,
           name: this.listQuery.name}
          }).then(req => {
-          console.log("雷达数据",req)
+          console.log("铁塔数据",req)
           this.tableData = req.page.list
           this.rows=req.page.totalRow
         }) 
@@ -333,16 +362,17 @@ export default {
       },
     // 数据写入excel
     download() {
-      // var that = this;
+        
       require.ensure([], () => {
-        // eslint-disable-next-line camelcase,global-require
         const { export_json_to_excel } = require('@/vandor/export2Excel.js');
-        const tHeader = ['序号', '名称','编号','波段','经度','纬度','探距(海里)','运行状态']; // 表头
-        const filterVal = ['id', 'name','id','band','lat','lon','range','status']; // 值
+        const tHeader = ['所属区域', '创建时间','覆盖距离','纬度','发射功率','等级','经度','天线方位角','天线方位',
+        '天线挂高','天线倾角','站点编号','塔高','站点名称','传输方式','类型']; // 表头
+        const filterVal = ['area','bulid_date','coverage','lat','launch_power','level','lon','sky_line_azimuth','sky_line_coverage',
+        'sky_line_height','skyline_pitch','station_id','tower_height','station_name','trans_type','type']; // 值
         const list = this.tableData;
         console.log('后端返回的数据', list);
         const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, '雷达数据excel');
+        export_json_to_excel(tHeader, data, '铁塔数据excel');
       });
     },
     // 格式转换
@@ -353,7 +383,9 @@ export default {
     query(){ //按名称查询
       this.getList();
     },
-   
+    handleSubmit(row){
+      
+    },
     //当前条数变化
     handleSizeChange(val=this.listQuery.pageSize ){
       this.listQuery.pageSize = val;
@@ -366,17 +398,16 @@ export default {
     },
     //删除弹层
     handleDel(row){
-      console.log(row)
        this.delid=row.id
-       console.log("这行数据的id",this.delid)
+      //  console.log("这行数据的id",this.delid) 
       this.temp = {...row};
       this.dialogDelVisible = true; //弹层显示
     },
     //删除提交
     delData(){
-       this.service.get( '/radar/delete?id='+this.delid,{     
+      this.service.get( '/pier/delete?id='+this.delid,{     
          }).then(req => {
-          console.log("删除radar数据",req)
+          console.log("删除码头数据",req)
           this.getList();
           this.dialogDelVisible = false;
         }) 
@@ -384,11 +415,6 @@ export default {
      //编辑弹层
     handleUpdate(index,row){
      this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
-       if(this.temp.status==true){
-        this.update = "异常"
-      }else if(this.temp.status==false){
-       this.update = "正常"
-      }
       this.dialogFormVisible = true; //弹层显示
     },
     // 添加雷达
@@ -396,34 +422,22 @@ export default {
       this.dialogFormVisible1 = true; //弹层显示
     },
      AddData(){
-         console.log("this.addsForm",this.addsForm)
-        if(this.addsForm.status=='正常'){
-          this.addsForm.status='false'
-        }else if(this.addsForm.status=='异常'){
-          this.addsForm.status='true'
-        }
         let userList=this.addsForm;  
-        let {station,name,lat,lon,range,band,status} = userList;
-      
-          this.service.post('/radar/save',this.addsForm).then(res => {
-          console.log("新增的雷达数据",res)
-          this.getList(); 
+        let {area,bulid_date,coverage,station_id,lat,launch_power,skyline_pitch,level,lon,sky_line_azimuth,sky_line_coverage,
+        sky_line_height,tower_height,station_name,trans_type,type} = userList;
+          this.service.post('/tower/save',this.addsForm).then(res => {
+            console.log("新增的铁塔数据",res)
+            this.getList(); 
           this.dialogFormVisible1 = false;}
           );
     },
     //编辑提交
     updateData(){
-       this.service.post('/radar/update',{
-           id:this.temp.id,
-          station:this.temp.station,
-          name:this.temp.name,
-          lat:this.temp.lat,
-          lon:this.temp.lon,
-          range:this.temp.range,
-          status:this.temp.status,
-          band:this.temp.band
-       }).then(req => {
-          console.log("编辑雷达信息",req)
+         let userList=this.temp;  
+        let {area,bulid_date,coverage,station_id,lat,launch_power,skyline_pitch,level,lon,sky_line_azimuth,sky_line_coverage,
+        sky_line_height,tower_height,station_name,trans_type,type} = userList;
+       this.service.post('/tower/update',this.temp).then(req => {
+          console.log("编辑铁塔信息",req)
           this.getList();
           this.dialogFormVisible = false;
       })

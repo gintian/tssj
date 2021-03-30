@@ -2,9 +2,24 @@
  <div class="app-container" >
     <div class="container-title" >
         <h3>AIS</h3>
-         <el-button class="filter-item" type="primary"  @click="download()" >
-              导出
-         </el-button>
+        <div  style="display: flex;justify-content: space-between;">
+                <el-upload
+                      class="upload-demo"
+                       ref="upload"
+                      :http-request="uploadSectionFile" 
+                      accept=".xls"
+                      multiple
+                      :action="uploadUrl"
+                      :on-change="handleChange"
+                      :file-list="fileList">
+                      <el-button class="filter-item" type="primary"  style=" margin-right: 40px;" @click="submitUpload"  >
+                          导入
+                      </el-button>
+                 </el-upload>
+                <el-button class="filter-item" type="primary"  @click="download()" >
+                    导出
+                </el-button>
+         </div>
      </div>
     <div  class="container-middle" >
           <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="handleAdd()" >添加</el-button>
@@ -206,7 +221,6 @@ export default {
         range:'',
         status:'',
       },
-      Business_exception:null,
       update:'',
       options:[{
         value:'正常',
@@ -214,8 +228,9 @@ export default {
       },{
         value:'异常',
         lable:'异常'
-      }]
-      
+      }],
+       uploadUrl:'ais/pushExcel',
+       fileList: [],
     }
   },
   filters:{},
@@ -223,6 +238,45 @@ export default {
     this.getList();
   },
   methods: {
+        submitUpload(){
+          this.$refs.upload.submit();
+          // this.importdialog=true
+      },
+       // 导入数据
+       uploadSectionFile(item){
+        //  console.log("导入的数据",item,process.env.VUE_APP_BASE_API+this.uploadUrl)
+           const fileObj = item.file;
+        // FormData 对象
+          const form = new FormData();
+          // 文件对象
+          form.append('file', fileObj);  
+         this.$axios({
+            method: 'post',
+            url: 'http://192.168.1.36:8093/'+this.uploadUrl,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            data: form,
+          }).then((res) => {
+            // console.log("返回数据：",res);
+            //  console.log("返回数据状态码：",res.data.error);
+            if(res.data.error==0){
+              //  this.$message.success('成功导入船舶离线数据' + '!');
+               this.$alert('成功导入1条船舶离线数据!');
+              //  this.$message({
+              //   type: 'success',
+              //   message: '成功导入船舶离线数据!',
+              //   offset:500
+              // });
+              // this.$notify({
+              //   type: 'success',
+              //   message: '成功导入1条船舶离线数据!'
+              //   //  duration: 0
+              //   //  position: 'bottom-left' 默认右上角
+              // });
+            }
+          });
+      } ,  
      // 修改table header的背景色
         tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
           if (rowIndex === 0) {
@@ -247,6 +301,7 @@ export default {
          }).then(req => {
           console.log("AIS数据",req)
           this.tableData = req.page.list
+          this.rows=req.page.totalRow
         }) 
     },
      handleClickView(row) {
