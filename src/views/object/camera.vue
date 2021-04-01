@@ -376,13 +376,15 @@ export default {
         status:''
       },
        update:'',
-       options:[{
-        value:'正常',
-        lable:'正常'
-      },{
-        value:'异常',
-        lable:'异常'
-      }],
+      options:[{
+          value: false,
+          // label: '正常'
+           label: '启动'
+        }, {
+          value: true,
+          // label: '异常'
+           label: '停用'
+        }],
         uploadUrl:'camera/pushExcel',
        fileList1: [],
     }
