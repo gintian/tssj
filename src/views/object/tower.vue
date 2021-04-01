@@ -10,7 +10,7 @@
                       accept=".xls"
                       multiple
                       :action="uploadUrl"
-                      :on-change="handleChange"
+                    
                       :file-list="fileList">
                       <el-button class="filter-item" type="primary"  style=" margin-right: 40px;" @click="submitUpload"  >
                           导入
@@ -32,11 +32,11 @@
     :data="tableData"
     style="width: 100%"
     :header-cell-style="tableHeaderColor">
-    <el-table-column
+    <!-- <el-table-column
       prop="id"
       label="序号"
       align="center">
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column
       align="center"
       prop="station_name"
@@ -78,7 +78,7 @@
     <el-table-column label="操作" align="center">
       <template slot-scope="scope">
            <el-button
-          type="text" size="small" class="btn-upt" @click="handle(scope.$index, scope.row)"  >详情</el-button>
+          type="text" size="small" class="btn-upt"  @click="handleClickMore(scope.row)"  >详情</el-button>
         <el-button
           type="text" size="small" class="btn-upt" @click="handleUpdate(scope.$index, scope.row)"  >编辑</el-button>
         <el-button
@@ -154,7 +154,7 @@
     </el-dialog> 
 
   <!-- 编辑弹层功能 -->
-     <el-dialog title="编辑码头" :visible.sync="dialogFormVisible"     width="600px">
+     <el-dialog title="编辑铁塔" :visible.sync="dialogFormVisible"     width="600px">
       <el-form ref="updateForm"  :model="temp" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
            <el-form-item label="所属区域" prop="area" >
@@ -216,6 +216,60 @@
       </div>
     </el-dialog> 
 
+ <!-- 查看弹层功能 -->
+     <el-dialog title="铁塔详情" :visible.sync="dialogFormVisible2"     width="600px">
+      <el-form ref="updateForm"  :model="more" label-position="left" label-width="100px"
+       style="width: 400px; margin-left:50px;"  :disabled="dialog.disabled">
+           <el-form-item label="所属区域" prop="area" >
+              <el-input v-model="more.area" />
+            </el-form-item>     
+          <el-form-item label="创建时间" prop="bulid_date">
+              <el-input v-model="more.bulid_date" />
+            </el-form-item>
+          <el-form-item label="覆盖距离" prop="coverage">
+            <el-input v-model="more.coverage" />
+          </el-form-item>
+          <el-form-item label="发射功率" prop="launch_power ">
+            <el-input v-model="more.launch_power " />
+          </el-form-item>
+           <el-form-item label="等级" prop="level " >
+              <el-input v-model="more.level " />
+            </el-form-item>     
+          <el-form-item label="经度" prop="lon">
+              <el-input v-model="more.lon" />
+            </el-form-item>
+          <el-form-item label="纬度" prop="lat">
+            <el-input v-model="more.lat" />
+          </el-form-item>
+          <el-form-item label="天线方位角" prop="sky_line_azimuth">
+            <el-input v-model="more.sky_line_azimuth" />
+          </el-form-item>
+          <el-form-item label="天线方位" prop="sky_line_coverage">
+            <el-input v-model="more.sky_line_coverage" />
+          </el-form-item>
+          <el-form-item label="天线挂高" prop="sky_line_height">
+            <el-input v-model="more.sky_line_height" />
+          </el-form-item>
+          <el-form-item label="天线倾角" prop="skyline_pitch">
+            <el-input v-model="more.skyline_pitch" />
+          </el-form-item>
+           <el-form-item label="站点编号" prop="station_id">
+            <el-input v-model="more.station_id" />
+          </el-form-item>
+          <el-form-item label="站点名称" prop="station_name">
+            <el-input v-model="more.station_name" />
+          </el-form-item>
+          <el-form-item label="塔高" prop="tower_height">
+            <el-input v-model="more.tower_height" />
+          </el-form-item>
+          <el-form-item label="传输方式" prop="trans_type">
+            <el-input v-model="more.trans_type" />
+          </el-form-item>
+          <el-form-item label="类型" prop="type">
+            <el-input v-model="more.type" />
+          </el-form-item>
+      </el-form>
+    </el-dialog> 
     <!-- 删除弹层功能 -->
     <el-dialog  :visible.sync="dialogDelVisible"  custom-class="deleteDialog"   width="200px">
       <p>确定删除？</p>
@@ -243,8 +297,6 @@
 </template>
 
 <script>
-
-import TableMap from '../../../src/components/TableMap'
 import LeafletTableMap from '../../../src/components/LeafletTableMap'
 export default {
   name: 'ComplexTable',
@@ -272,6 +324,7 @@ export default {
       dialogDelVisible:false, //删除弹层显示与隐藏
       dialogFormVisible:false, //编辑弹层显示与隐藏
       dialogFormVisible1:false, //新增弹层显示与隐藏
+      dialogFormVisible2:false,  //查看
       addsForm:{   //新增数据
         area:'',bulid_date:'',coverage:'',station_id:'',
         lat:'',launch_power:'',level :'',skyline_pitch:'',
@@ -279,6 +332,12 @@ export default {
         station_name:'',tower_height:'',trans_type :'',type:''
       },
       temp:{  //编辑的表单字段
+        area:'',bulid_date:'',coverage:'',station_id:'',
+        lat:'',launch_power:'',level :'',skyline_pitch:'',
+        lon:'',sky_line_azimuth:'',sky_line_coverage:'',sky_line_height:'',
+        station_name:'',tower_height:'',trans_type :'',type:''
+      },
+      more:{  //编辑的表单字段
         area:'',bulid_date:'',coverage:'',station_id:'',
         lat:'',launch_power:'',level :'',skyline_pitch:'',
         lon:'',sky_line_azimuth:'',sky_line_coverage:'',sky_line_height:'',
@@ -294,6 +353,12 @@ export default {
     this.getList();
   },
   methods: {
+     handleClickMore(row)/* 详情 */ {
+        // console.log(row)
+          this.more = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
+        this.dialogFormVisible2 = true; //弹层显示
+          this.dialog.disabled = true;
+      },
        submitUpload(){
           this.$refs.upload.submit();
           // this.importdialog=true
@@ -398,16 +463,16 @@ export default {
     },
     //删除弹层
     handleDel(row){
-       this.delid=row.id
+       this.delid=row.station_id
       //  console.log("这行数据的id",this.delid) 
       this.temp = {...row};
       this.dialogDelVisible = true; //弹层显示
     },
     //删除提交
     delData(){
-      this.service.get( '/pier/delete?id='+this.delid,{     
+      this.service.get( '/tower/delete?station_id='+this.delid,{     
          }).then(req => {
-          console.log("删除码头数据",req)
+          console.log("删除铁塔数据",req)
           this.getList();
           this.dialogDelVisible = false;
         }) 

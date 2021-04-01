@@ -134,7 +134,7 @@ export let formRules = {
         {required: true, message: '请输入名称', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
-    stationName: [
+    station_name: [
         {required: true, message: '请输入名称', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
@@ -163,7 +163,7 @@ export let formRules = {
         {required: true, message: '请输入邮箱', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
-    telPhone: [
+    telphone: [
         {required: true, message: '请输入手机号', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
@@ -175,7 +175,7 @@ export let formRules = {
         {required: true, message: '请输入所属部门', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
-    totalLength: [
+    total_length: [
         {required: true, message: '请输入总长度', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
@@ -186,16 +186,16 @@ export let formRules = {
     station: [
         {required: true, message: '请输入编号', trigger: 'blur'}
     ],
-    stationId: [
+    station_id: [
         {required: true, message: '请输入编号', trigger: 'blur'}
     ],
     plainPassword: [
         {required: true, message: '请输入密码', trigger: 'blur'}
     ],
-    longitude: [
+    lon: [
         {required: true, validator: numberRules.testNumber('请输入经度'), trigger: 'blur'}
     ],
-    latitude: [
+    lat: [
         {required: true, validator: numberRules.testNumber('请输入纬度'), trigger: 'blur'}
     ],
     farDetectDistance: [
@@ -225,7 +225,7 @@ export let formRules = {
     group: [
         {required: true, message: '请选择分组', trigger: 'change'}
     ],
-    lever: [
+    level: [
         {required: true, message: '请选择海域类型', trigger: 'change'}
     ],
     showed: [
@@ -271,7 +271,7 @@ export let formRules = {
         {required: true, validator: numberRules.pAngle, trigger: 'blur'}
     ],
     password: [
-        {required: true, message: '请输入摄像头摄像头登录密码', trigger: 'blur'}
+        {required: true, message: '请输入登录密码', trigger: 'blur'}
     ],
     port: [
         {required: true, message: '请输入SDK端口', trigger: 'blur'}
@@ -283,7 +283,7 @@ export let formRules = {
         {required: true, validator: numberRules.tAngle, trigger: 'blur'}
     ],
     username: [
-        {required: true, message: '请输入摄像头登录用户名', trigger: 'blur'}
+        {required: true, message: '请输入登录用户名', trigger: 'blur'}
     ],
     videoUrl: [
         {required: true, message: '请输入视频流RTSP地址', trigger: 'blur'}

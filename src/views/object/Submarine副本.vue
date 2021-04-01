@@ -1,7 +1,7 @@
 <template>
  <div class="app-container" >
     <div class="container-title" >
-        <h3>AIS</h3>
+        <h3>海底光缆</h3>
         <div  style="display: flex;justify-content: space-between;">
                 <el-upload
                       class="upload-demo"
@@ -40,27 +40,16 @@
       align="center"
       prop="name"
       label="名称">
-      <!-- fixed:值有（true,left,right）列是否固定在左侧或者右侧，true 表示固定在左侧 -->
-      <!-- column 的 key，如果需要使用 filter-change 事件，则需要此属性标识是哪个 column 的筛选条件 -->
     </el-table-column>
     <el-table-column
-      prop="id"
-      label="编号"
-      align="center">
+      align="center"
+      prop="total_length"
+      label="总长度">
     </el-table-column>
-    
-    <el-table-column prop="lat,lon" label="位置" align="center"  min-width="90%">
-       <template slot-scope="scope">   
-            <span> 经度：{{scope.row.lon}}</span><br>
-            <span> 纬度：{{scope.row.lat}}</span>
-       </template>
-     <!-- align:	对齐方式,	值有left/center/right	默认left -->
-    </el-table-column>
-    <el-table-column prop="status" label="运行状态" align="center">
-      <template slot-scope="scope">
-            <span v-if="scope.row.status == true">异常</span>
-            <span v-if="scope.row.status == false">正常</span>
-      </template>
+    <el-table-column
+      align="center"
+      prop="controller_distance"
+      label="控制距离">
     </el-table-column>
     <el-table-column
       label="查看地图" 
@@ -81,31 +70,52 @@
   </el-table>
 <!-- 查看地图弹窗 -->
 <el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
-       <leaflet-tablemap :mapData="mapData"  markerType="ais" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
+      <leaflet-tablemap :mapData="mapData"  markerType="Submarine" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
 </el-dialog>
  <!-- 新增弹层功能 -->
-     <el-dialog title="添加AIS" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
+     <el-dialog title="添加海底光缆" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
       <el-form ref="updateForm"  :model="addsForm" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
           <el-form-item label="名称" prop="name" >
               <el-input v-model="addsForm.name" />
+            </el-form-item>     
+          <el-form-item label="控制距离" prop="controller_distance">
+              <el-input v-model="addsForm.controller_distance" />
             </el-form-item>
-            <el-form-item label="编号" prop="station">
-              <el-input v-model="addsForm.station" />
-            </el-form-item>
-          <el-form-item label="经度" prop="lon">
-              <el-input v-model="addsForm.lon" />
-            </el-form-item>
-            <el-form-item label="纬度" prop="lat">
-            <el-input v-model="addsForm.lat" />
+            <el-form-item label="总长度" prop="total_length ">
+            <el-input v-model="addsForm.total_length " />
           </el-form-item>
-          <el-form-item label="运行状态" prop="status">
-              <!-- <el-input v-model="addsForm.status" /> -->
-              <el-select  v-model="addsForm.status"  class="selectInput"  :popper-append-to-body="false"  style="width: 301px;">
-                  <el-option   v-for="item in options"  :value="item.value"   :label="item.label" :key="item.value">        
-                  </el-option>
-              </el-select>
-          </el-form-item>
+            <el-form-item
+                                v-for="(domain, index) in dynamicValidateForm.domains" :key="index">
+                            <el-row>
+                                <el-col :span="3">第{{index+1}}个点</el-col>
+                                <el-col :span="9">
+                                    <el-form-item label="经度"
+                                                  :rules="[{required: true, message: '请输入经度', trigger: 'blur'}]"
+                                                  :prop="'domains.' + index + '.lon'">
+                                        <el-input v-model="domain.lon" :disabled="dialog.disabled"></el-input >
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="9">
+                                    <el-form-item label="纬度"
+                                                  :rules="[{required: true, message: '请输入纬度', trigger: 'blur'}]"
+                                                  :prop="'domains.' + index + '.lat'">
+                                        <el-input v-model="domain.lat" :disabled="dialog.disabled"></el-input>
+                                    </el-form-item>
+                                </el-col>
+
+                                <el-col :span="1"><i class="el-icon-circle-plus-outline" @click="addDomain"
+                                                     style="cursor: pointer;font-size:20px;color: #409eff;margin-left: .5rem" v-show="interfaceType==='add'"> </i>
+                                </el-col>
+                                <el-col :span="1" style="margin-left: 10px  "><i class="el-icon-remove-outline" @click="reduceDomain(domain)"
+                                                     style="cursor: pointer;font-size:20px;color: #409eff;margin-left: .5rem" v-show="interfaceType==='add'"> </i>
+                                </el-col>
+                            </el-row>
+              </el-form-item>
+          <!-- <el-form-item label="点位信息" prop="points">
+            <el-input v-model="addsForm.points" />
+          </el-form-item> -->
+          
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible1 = false">
@@ -118,24 +128,21 @@
     </el-dialog> 
 
   <!-- 编辑弹层功能 -->
-     <el-dialog title="编辑AIS" :visible.sync="dialogFormVisible"     width="600px">
+     <el-dialog title="编辑码头" :visible.sync="dialogFormVisible"     width="600px">
       <el-form ref="updateForm"  :model="temp" label-position="left" label-width="100px"
        style="width: 400px; margin-left:50px;">
-            <el-form-item label="名称" prop="name" >
+         <el-form-item label="名称" prop="name" >
               <el-input v-model="temp.name" />
+            </el-form-item>     
+          <el-form-item label="控制距离" prop="controller_distance">
+              <el-input v-model="temp.controller_distance" />
             </el-form-item>
-            <el-form-item label="编号" prop="station">
-              <el-input v-model="temp.station" />
-            </el-form-item>
-          <el-form-item label="经度" prop="lon">
-              <el-input v-model="temp.lon" />
-            </el-form-item>
-            <el-form-item label="纬度" prop="lat">
-            <el-input v-model="temp.lat" />
+          <el-form-item label="点位信息" prop="points">
+            <el-input v-model="temp.points" />
           </el-form-item>
-          <el-form-item label="运行状态" prop="status">
-              <el-input v-model="update" @change="changeu" />
-            </el-form-item>
+          <el-form-item label="总长度" prop="total_length ">
+            <el-input v-model="temp.total_length " />
+          </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -182,66 +189,60 @@ export default {
   components:{'leaflet-tablemap':LeafletTableMap},
   data() {
     return {
-      ais:null,
+      interfaceType:"",
+      wharf:null,
      dialog: {
           visible: false,
           title: '',
           showBtn:true,
           showMap:false,
           disabled:false
-        }, 
-      mapData: {},
+        },
+        delid:'',
+      mapData:{},
       tableData: [], //表格展示的数据
       pages:1, //总页数
       rows:1, //总条数
       listQuery:{
         pageNumber:1, //当前页面
         pageSize:10, //条数
-        name:'' , //查询条件
-        id:''
+        name:''  //查询条件
       },
-      delid:'',
+      dynamicValidateForm: {//多边形经纬度
+          domains: [{lon: '', lat: ''}, {lon: '', lat: ''}],
+        },
       dialogDelVisible:false, //删除弹层显示与隐藏
       dialogFormVisible:false, //编辑弹层显示与隐藏
       dialogFormVisible1:false, //新增弹层显示与隐藏
       addsForm:{   //新增数据
         name:'',
-        lat:'',
-        lon:'',
-        status:'',
-        station:''
+        controller_distance:'',
+        points :'',
+        total_length:''
       },
       temp:{  //编辑的表单字段
         id:'',
-        station:'',
         name:'',
-        lat:'',
-        lon:'',
-        range:'',
-        status:'',
+        controller_distance:'',
+        points :'',
+        total_length:''
       },
-      update:'',
-      options:[{
-        value:'正常',
-        lable:'正常'
-      },{
-        value:'异常',
-        lable:'异常'
-      }],
-       uploadUrl:'ais/pushExcel',
+       uploadUrl:'seaLine/pushExcel',
        fileList: [],
+      Business_exception:null,
     }
   },
-  filters:{},
   created() {
     this.getList();
   },
   methods: {
         submitUpload(){
           this.$refs.upload.submit();
+          // this.importdialog=true
       },
        // 导入数据
        uploadSectionFile(item){
+        //  console.log("导入的数据",item,process.env.VUE_APP_BASE_API+this.uploadUrl)
            const fileObj = item.file;
         // FormData 对象
           const form = new FormData();
@@ -255,34 +256,49 @@ export default {
             },
             data: form,
           }).then((res) => {
+            // console.log("返回数据：",res);
+            //  console.log("返回数据状态码：",res.data.error);
             if(res.data.error==0){
+              //  this.$message.success('成功导入船舶离线数据' + '!');
                this.$alert('成功导入1条船舶离线数据!');
+              //  this.$message({
+              //   type: 'success',
+              //   message: '成功导入船舶离线数据!',
+              //   offset:500
+              // });
+              // this.$notify({
+              //   type: 'success',
+              //   message: '成功导入1条船舶离线数据!'
+              //   //  duration: 0
+              //   //  position: 'bottom-left' 默认右上角
+              // });
             }
           });
-      } ,  
+      } ,
+    addDomain() {
+        this.dynamicValidateForm.domains.push({lng: '', lat: ''});
+      },
+    reduceDomain(item){
+          var index = this.dynamicValidateForm.domains.indexOf(item)
+          if (index !== -1) {
+            this.dynamicValidateForm.domains.splice(index, 1)
+          }
+      },
      // 修改table header的背景色
         tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
           if (rowIndex === 0) {
             return 'background-color: #DEE8FE;color: #000;font-weight: 500;'
           }
         }, 
-    changeu(val){
-      console.log("val",val)
-      if(val=="异常"){
-        this.temp.status=true
-      }else if(val=='正常'){
-        this.temp.status=false
-        // console.log("this.temp.status",this.temp.status)
-      }
-    },
+
     getList(){  //获取数据
-         this.service.get( '/ais/page',{
-             params:{
+         this.service.get( '/seaLine/page',{
+              params:{
            pageNumber: this.listQuery.pageNo,
           pageSize: this.listQuery.pageSize,
           name: this.listQuery.name}
          }).then(req => {
-          console.log("AIS数据",req)
+          console.log("海底光缆数据",req)
           this.tableData = req.page.list
           this.rows=req.page.totalRow
         }) 
@@ -295,18 +311,17 @@ export default {
         // }
           this.mapData = row;
       },
+     
     // 数据写入excel
     download() {
-      // var that = this;
       require.ensure([], () => {
-        // eslint-disable-next-line camelcase,global-require
         const { export_json_to_excel } = require('@/vandor/export2Excel.js');
-        const tHeader = ['序号', '名称','编号','经度','纬度','运行状态']; // 表头
-        const filterVal = ['id', 'name','id','lat','lon','status']; // 值
+        const tHeader = ['序号', '名称','控制距离','点位信息','总长度']; // 表头
+        const filterVal = ['id', 'name','controller_distance','points','total_length']; // 值
         const list = this.tableData;
-        // console.log('后端返回的数据', list);
+        console.log('后端返回的数据', list);
         const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, 'ais数据表');
+        export_json_to_excel(tHeader, data, '海底光缆数据excel');
       });
     },
     // 格式转换
@@ -317,7 +332,9 @@ export default {
     query(){ //按名称查询
       this.getList();
     },
-    
+    handleSubmit(row){
+      
+    },
     //当前条数变化
     handleSizeChange(val=this.listQuery.pageSize ){
       this.listQuery.pageSize = val;
@@ -330,17 +347,16 @@ export default {
     },
     //删除弹层
     handleDel(row){
-      console.log(row)
        this.delid=row.id
-      //  console.log("这行数据的id",this.delid)
+      //  console.log("这行数据的id",this.delid) 
       this.temp = {...row};
       this.dialogDelVisible = true; //弹层显示
     },
     //删除提交
     delData(){
-         this.service.get( '/ais/delete?id='+this.delid,{     
+      this.service.get( '/seaLine/delete?id='+this.delid,{     
          }).then(req => {
-          // console.log("删除AIS数据",req)
+          console.log("删除码头数据",req)
           this.getList();
           this.dialogDelVisible = false;
         }) 
@@ -348,44 +364,31 @@ export default {
      //编辑弹层
     handleUpdate(index,row){
      this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
-    //  console.log('获取到的',this.temp)
-      if(this.temp.status==true){
-        this.update = "异常"
-      }else if(this.temp.status==false){
-       this.update = "正常"
-      }
       this.dialogFormVisible = true; //弹层显示
     },
     // 添加雷达
      handleAdd(){
       this.dialogFormVisible1 = true; //弹层显示
     },
-     AddData(){
-        // console.log("this.addsForm",this.addsForm)
-        if(this.addsForm.status=='正常'){
-          this.addsForm.status='false'
-        }else if(this.addsForm.status=='异常'){
-          this.addsForm.status='true'
-        }
+     AddData(){ 
         let userList=this.addsForm;  
-        let {station,name,lat,lon,status} = userList;
-          this.service.post('/ais/save',this.addsForm).then(res => {
-            // console.log("新增的AIS数据",res)
-          this.getList(); 
+        let {name,controller_distance,points,total_length} = userList;
+          this.service.post('/seaLine/save',this.addsForm).then(res => {
+            console.log("新增的海底光缆数据",res)
+            this.getList(); 
           this.dialogFormVisible1 = false;}
           );
     },
     //编辑提交
     updateData(){
-       this.service.post('/ais/update',{
-         id:this.temp.id,
-          station:this.temp.station,
+       this.service.post('/seaLine/update',{
+          id:this.temp.id,
           name:this.temp.name,
-          lat:this.temp.lat,
-         lon:this.temp.lon,
-        status:this.temp.status,
+          controller_distance:this.temp.controller_distance,
+          points:this.temp.points,
+          total_length:this.temp.total_length,
        }).then(req => {
-          // console.log("编辑AIS信息",req)
+          console.log("编辑电缆信息",req)
           this.getList();
           this.dialogFormVisible = false;
       })

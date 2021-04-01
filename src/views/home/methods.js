@@ -198,9 +198,16 @@ const map = {
       //  监听 mousemove 事件
       this.map.on('mousemove', (e) => {
         // console.log('监听mousemove',e)
-        L.popup().setLatLng(e.latlng)
-        .setContent('经纬度'+e.latlng.toString())
-        .openOn(this.map)
+        // L.popup().setLatLng(e.latlng)
+        // .setContent('经纬度'+e.latlng.toString())
+        // .openOn(this.map)
+        L.popup({ 'closeButton': false,  'className': 'pollutant-green' })
+        .setLatLng(e.latlng)
+        .setContent('经纬度'+e.latlng)
+        // .setContent(()=>{
+        //   return `<p>经纬度为：${e.latlng}</p>`
+        // })
+        .openOn(this.map);
       // let latlng = e.latlng;
       // console.log('监听mousemove经纬度',latlng );  
       });
@@ -600,7 +607,7 @@ const marker = {
   // },
   //初始化数据
   loadDefaultMarker() {
-    // this.loadSeaLineLayer()
+    this.loadSeaLineLayer()
     // let url = [
     //   {
     //     signal:'陆军海防部队',
@@ -1248,37 +1255,37 @@ const marker = {
         marker.addTo(this.markerLayersGroup)
       }
     })
-    // 海底光缆
-    this.service.get('/seaLine/allList',{
+     // 泊位
+     this.service.get('/berth/allList',{
       params:{
         name:1
       }
     }).then(res => {
-      console.log("区域内海底光缆信息",res)
+      console.log("区域内泊位信息",res)
       for (let e of res.list) {
         let bd09Arr = wgs84ToBD(e.lon, e.lat)
-        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/Submarine.png'))('海底光缆')
+        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/port.png'))('泊位')
         ((event) => {
           //摄像头信息框
-          console.log("海底光缆信息",e)
-          this.service.get('/seaLine/view', {
+          console.log("泊位信息",e)
+          this.service.get('/berth/view', {
             params:{
-              station_id:e.station_id
+              id:e.Id
             }
           }).then(res => {
-            console.log("海底光缆详细信息",res)
+            console.log("泊位详细信息",res)
             let a = Object.entries(this.showInfo)
-            console.log('海底光缆的',a)
+            console.log('泊位的',a)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
-            this.showInfo.sealine = true
-            if (this.hasLayer(this.map, 'sealine' + e.id).length > 0) {
-              res.sealine.showed = true
+            this.showInfo.berthage = true
+            if (this.hasLayer(this.map, 'berth' + e.id).length > 0) {
+              res.berth.showed = true
             } else {
-              res.sealine.showed = false
+              res.berth.showed = false
             }
-            this.dialogInfo.sealine = res.sealine
+            this.dialogInfo.berthage = res.berth
             // console.log('this.dialogInfo.tower',this.dialogInfo.tower)
           })
             
@@ -1286,44 +1293,6 @@ const marker = {
         marker.addTo(this.markerLayersGroup)
       }
     })
-     // 泊位
-    //  this.service.get('/berth/allList',{
-    //   params:{
-    //     name:1
-    //   }
-    // }).then(res => {
-    //   console.log("区域内泊位信息",res)
-    //   for (let e of res.list) {
-    //     let bd09Arr = wgs84ToBD(e.lon, e.lat)
-    //     let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/port.png'))('泊位')
-    //     ((event) => {
-    //       //摄像头信息框
-    //       console.log("泊位信息",e)
-    //       this.service.get('/berth/view', {
-    //         params:{
-    //           id:e.Id
-    //         }
-    //       }).then(res => {
-    //         console.log("泊位详细信息",res)
-    //         let a = Object.entries(this.showInfo)
-    //         console.log('泊位的',a)
-    //         a.forEach(e => {
-    //           this.showInfo[e[0]] = false
-    //         })
-    //         this.showInfo.berthage = true
-    //         if (this.hasLayer(this.map, 'berth' + e.id).length > 0) {
-    //           res.berth.showed = true
-    //         } else {
-    //           res.berth.showed = false
-    //         }
-    //         this.dialogInfo.berthage = res.berth
-    //         // console.log('this.dialogInfo.tower',this.dialogInfo.tower)
-    //       })
-            
-    //     })
-    //     marker.addTo(this.markerLayersGroup)
-    //   }
-    // })
     // 组织机构
     // this.service.get('/org/allList').then(res => {
     //   console.log("组织机构",res)
@@ -1361,69 +1330,74 @@ const marker = {
     //   }
     // })
   },
-  //leaflet 折线 没有设置透明度属性 只能删除重新绘制
-  // loadSeaLineLayer(){
-  //   this.service.post('/seaLine/allList', {
-  //     'isfocus':this.focusButton
-  //   }).then(res => {
-  //     for (let i of res.data) {
-  //       // console.log(i)
-  //       let p = [], r = []
-  //       i.points.forEach(e => {
-  //         let bd09Arr = wgs84ToBD(e.lon, e.lat)
-  //         p.push([bd09Arr[1], bd09Arr[0]])
-  //       })
-  //       i.region.forEach(e => {
-  //         // r.push([e.lat, e.lon])
-  //         let bd09Arr = wgs84ToBD(e.lon, e.lat)
-  //         r.push([parseFloat(bd09Arr[1].toFixed(6)), parseFloat(bd09Arr[0].toFixed(6))])
-  //       })
-  //       r.push(r[0])
-  //       let arrow = L.polyline(p, {
-  //         //颜色
-  //         color: 'rgba(255,137,135,0.62)'
-  //       }).addTo(this.seaLineLayer)
-  //       arrow.signal=i
-  //       arrow.isFocus=i.isFocus
+// 海底光缆
+  loadSeaLineLayer(){
+    this.service.get('/seaLine/allList', {
+        params:{
+            name:""
+          }
+    }).then(res => {
+      console.log("区域内海底光缆信息",res)
+      for (let i of res.list) {
+        // console.log('海底光缆信息',i)
+        let p = [], r = []
+        i.points.forEach(e => {
+          let bd09Arr = wgs84ToBD(e.lon, e.lat)
+          p.push([bd09Arr[1], bd09Arr[0]])
+        })
 
-  //       arrow.on('click', (e) => {
-  //         let a = Object.entries(this.showInfo)
-  //         a.forEach(e => {
-  //           this.showInfo[e[0]] = false
-  //         })
-  //         // console.log(i)
-  //         this.showInfo.seaLine = true
-  //         this.dialogInfo.seaLine = i
-  //       })
+        // i.region.forEach(e => {
+        //   // r.push([e.lat, e.lon])
+        //   let bd09Arr = wgs84ToBD(e.lon, e.lat)
+        //   r.push([parseFloat(bd09Arr[1].toFixed(6)), parseFloat(bd09Arr[0].toFixed(6))])
+        // })
+        // r.push(r[0])
 
-  //       var pd = L.polylineDecorator(r, {
-  //         //添加模式
-  //         patterns: [{
-  //           //模式符号的偏移位置
-  //           offset: 0,
-  //           //模式符号的重复间隔
-  //           repeat: 10,
-  //           //符号实例
-  //           symbol: L.Symbol.dash({
-  //             //符号大小
-  //             pixelSize: 5,
-  //             pathOptions: {
-  //               //颜色
-  //               color: '#d42727',
-  //               //线宽
-  //               weight: 1,
-  //               //透明度
-  //               opacity: 1
-  //             }
+        let arrow = L.polyline(p, {
+          //颜色
+          color: 'rgba(195,49,169,0.9)'
+        }).addTo(this.seaLineLayer)
 
-  //           })
-  //         }]
-  //       }).addTo(this.seaLineLayer)
-  //       pd.signal=i
-  //       pd.isFocus=i.isFocus
-  //     }
-  //   })
-  // },
+        arrow.signal=i
+        arrow.on('click', (e) => {
+          console.log("海底光缆信息",e)
+          let a = Object.entries(this.showInfo)
+          a.forEach(e => {
+            this.showInfo[e[0]] = false
+          })
+          // console.log(i)
+          this.showInfo.seaLine = true
+          this.dialogInfo.seaLine = i
+        })
+
+
+        // var pd = L.polylineDecorator(r, {
+        //   //添加模式
+        //   patterns: [{
+        //     //模式符号的偏移位置
+        //     offset: 0,
+        //     //模式符号的重复间隔
+        //     repeat: 10,
+        //     //符号实例
+        //     symbol: L.Symbol.dash({
+        //       //符号大小
+        //       pixelSize: 5,
+        //       pathOptions: {
+        //         //颜色
+        //         color: '#d42727',
+        //         //线宽
+        //         weight: 1,
+        //         //透明度
+        //         opacity: 1
+        //       }
+        //     })
+        //   }]
+        // }).addTo(this.seaLineLayer)
+        // pd.signal=i
+
+      }
+    })
+  },
   // 锚地消息框 点击事件
   showAnchArea(data) {
     // console.log(data)
@@ -1512,37 +1486,14 @@ const marker = {
     if (!data.focus) {
       console.log('关注', data.mmsi)
         this.service.get('/ship/focus?mmsi='+ data.mmsi,
-          // {
-          //   parmas:{
-          //      mmsi: data.mmsi
-          //   }
-          // }
           ).then(res=>{
             console.log("关注接口",res)
             if (res.error === 0) {
                this.$message.success('关注成功！')
             }
           })
-      // this.service.post('/focus/add', {
-      //   targetSign: data.targetSign,
-      //   description: data.description,
-      //   targetType: data.targetType
-      // }).then(res => {
-
-      //   console.log(res)
-      // })
     }
      else {
-      // console.log('取消')
-      // this.service.post('/focus/deleteBySignAndType', {
-      //   targetSign: data.targetSign,
-      //   targetType: data.targetType
-      // }).then(res => {
-      //   console.log(res)
-      //   if (res.code === 0) {
-      //     this.$message.success('成功')
-      //   }
-      // })
       this.service.get('/ship/cancelFocus',
       {
         parmas:{

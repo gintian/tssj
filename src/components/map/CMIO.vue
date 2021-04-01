@@ -146,10 +146,5 @@
     .down {
         padding: 5px;
         padding-left: 15px;
-        /*display: grid;*/
-        /*grid-template-columns: repeat(2,40.5%);*/
-        /* grid-template-rows: 50% 50%;*/
-        /* grid-row-gap: 1%;*/
-        /* grid-column-gap: 1%;*/
     }
 </style>

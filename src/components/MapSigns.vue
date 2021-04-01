@@ -56,8 +56,8 @@
               { img: require('../assets/mapSigns/01.png'), label: '雷达' }, 
                { img: require('../assets/mapSigns/Submarine.png'), label: '海底光缆' },
               { img: require('../assets/mapSigns/tower.png'), label: '铁塔' },
-              { img: require('../assets/mapSigns/camera.png'), label: '摄像头' ,width:'100'}
-              // { img: require('../assets/mapSigns/port.png'), label: '泊位'}
+              { img: require('../assets/mapSigns/camera.png'), label: '摄像头' ,width:'100'},
+              { img: require('../assets/mapSigns/port.png'), label: '泊位'}
             ],
              children2: [
               { img: require('../assets/mapSigns/aim01.png'), label: '雷达目标' },

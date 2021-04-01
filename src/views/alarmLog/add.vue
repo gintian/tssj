@@ -2,10 +2,10 @@
 <!-- 系统操作日志 -->
   <div class="app-container">
     <div class="filter-container">
-        <h3>业务异常（共{{total}}条）</h3>
+        <h3>操作日志（共{{total}}条）</h3>
         <div class="select_query"> 
             <el-form  style="display:grid;grid-template-columns: 1fr 1fr;"  :inline="true">
-                <el-form-item label="开始时间："  style="display:flex;margin:0;" label-width="100px" size="medium" v-model="listQuery.beginTime" >
+                <el-form-item label="开始时间："  style="display:flex;margin:0;" label-width="100px" size="medium" >
                     <el-date-picker
                             v-model="listQuery.beginTime"
                             type="date"
@@ -14,7 +14,7 @@
                             placeholder="">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="结束时间：" style="display:flex;margin:0;"  label-width="100px" size="medium"  v-model="listQuery.endTime">
+                <el-form-item label="结束时间：" style="display:flex;margin:0;"  label-width="100px" size="medium" >
                     <el-date-picker
                             v-model="listQuery.endTime"
                             type="date"
@@ -147,8 +147,9 @@ export default {
           +this.listQuery.name+'&&level='
           +this.listQuery.level+'&&beginTime='
           +this.listQuery.beginTime+'&&endTime='
-          +this.listQuery.endTime +'&&content='
-           +this.listQuery.content
+          +this.listQuery.endTime 
+          // +'&&content='
+          //  +this.listQuery.content
         ).then(req => {
           console.log("系统操作日志数据",req)
           this.list = req.page.list

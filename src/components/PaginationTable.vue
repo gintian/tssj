@@ -8,7 +8,7 @@
         border
          height="710px"
         style="width: 100%;height: 84%;"
-         :header-cell-style="tableHeaderColor"
+         :header-cell-style="{background:'#DEE8FE',color:'#000'}">
         >
         <el-table-column
           type="index"
@@ -193,11 +193,11 @@ export default {
   },
   methods: {
     // 修改table header的背景色
-        tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
-          if (rowIndex === 0) {
-            return 'background-color: #DEE8FE;color: #000;font-weight: 500;'
-          }
-        }, 
+        // tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
+        //   if (rowIndex === 0) {
+        //     return 'background-color: #C331A9;color: #000;font-weight: 500;'
+        //   }
+        // }, 
     handleSizeChange(val) {
      // console.log(`每页 ${val} 条`);
       this.$emit('handleSizeChange',val)
@@ -211,7 +211,7 @@ export default {
       this.$emit('handleClickPlay',row)
     },
     handleClickUpdata(row){
-      //console.log(`编辑: ${row}`);
+      console.log(`编辑: ${row}`);
        this.$emit('handleClickUpdata',row)
 
     },
@@ -221,12 +221,10 @@ export default {
 
     },
     handleClickDelete(row){
-     // console.log(`删除: ${row}`);
+     console.log(`删除: ${row}`);
        this.$emit('handleClickDelete',row)
     },
     handleClickTravel(row){
-
-
       this.$emit('handleClickTravel',row)
     },
     handleClickView(row){
@@ -347,7 +345,7 @@ export default {
     // color: #c8c8c8;
   }
   .el-table th, .el-table tr{
-    background: none!important;
+    // background: none!important;
   }
   .el-table--border::after, .el-table--group::after, .el-table::before{
     background: none!important;

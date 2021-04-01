@@ -44,16 +44,8 @@
     :data="tableData"
     style="width: 100%"
     :header-cell-style="tableHeaderColor">
-    <el-table-column
-      prop="id"
-      label="ID">
-    </el-table-column>
-    <el-table-column
-      prop="ship_name"
-      label="船名/MMSI"
-      >
-
-    </el-table-column>
+    <el-table-column  prop="id" label="ID"  align="center">  </el-table-column>
+    <el-table-column  prop="ship_name" label="船名/MMSI"  align="center" > </el-table-column>
     <el-table-column prop="type" label="分类" align="center" >
      <template slot-scope="scope">
             <span v-if="scope.row.type == 0">一类</span>
@@ -61,20 +53,11 @@
       </template>
     </el-table-column>
     
-    <el-table-column
-      prop="reason"
-      label="异常原因">
-    </el-table-column>
+    <el-table-column  prop="reason" label="异常原因"  align="center"></el-table-column>
 
-    <el-table-column
-      prop="creat_time" 
-      label="时间" >
-    </el-table-column>
+    <el-table-column   prop="creat_time"   label="时间"  align="center"> </el-table-column>
 
-    <!-- <el-table-column
-      prop="end_time" 
-      label="结束时间" >
-    </el-table-column> -->
+   
     <!-- <el-table-column label="查看轨迹" >
       <template slot-scope="scope">
         <el-button
@@ -82,13 +65,19 @@
       </template>
     </el-table-column> -->
 
-    <el-table-column label="查看地图" >
+    <el-table-column label="查看地图" align="center">
       <template slot-scope="scope">
         <el-button
           type="text" size="small" class="btn-upt" @click="handleClickView(scope.row)">查看</el-button>
       </template>
     </el-table-column>
 
+    <el-table-column  prop="end_time"   label="事件信息"  align="center"> 
+       <template slot-scope="scope">
+        <el-button
+          type="text" size="small" class="btn-upt" @click="handleClickMore(scope.row)">查看详情 </el-button>
+      </template>
+      </el-table-column>
     <!-- <el-table-column label="事件信息" prop="reason" >
       <template slot-scope="scope">
         <el-button  type="text" size="small" class="btn-upt"  @click="visible = !visible">详情</el-button>
@@ -104,7 +93,7 @@
   </el-table>
 
 <!-- 查看地图弹窗 -->
-<el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
+<el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog"  title="事件信息">
       <leaflet-tablemap :mapData="mapData"  markerType="suspicious" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
 </el-dialog>
   
@@ -116,7 +105,7 @@
  <!-- 新增弹层功能 -->
      <el-dialog title="添加可疑事件" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
       <el-form ref="updateForm"  :model="addsForm" label-position="left" label-width="100px"
-       style="width: 400px; margin-left:50px;">
+       style="width: 400px; margin-left:50px;"  >
              <!-- <el-form-item label="ID" prop="id"  >
               <el-input v-model="addsForm.id" />
             </el-form-item> -->
@@ -140,8 +129,7 @@
           </el-form-item>
           <el-form-item label="时间" prop="creat_time">
             <el-date-picker type="datetime" v-model="addsForm.creat_time" />
-          </el-form-item>
-          
+          </el-form-item> 
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible1 = false">
@@ -153,6 +141,33 @@
       </div>
     </el-dialog> 
 
+<!-- 查看弹层功能 -->
+     <el-dialog title="可疑事件详情" :visible.sync="dialogFormVisible"     width="600px">
+      <el-form ref="updateForm"  :model="temp" label-position="left" label-width="100px"
+       style="width: 400px; margin-left:50px;" :disabled="dialog.disabled">
+            <el-form-item label="船舶标识符" prop="mmsi">
+              <el-input v-model="temp.mmsi" />
+            </el-form-item>
+             <el-form-item label="船舶名称" prop="ship_name">
+            <el-input v-model="temp.ship_name" />
+          </el-form-item>
+          <el-form-item label="船舶类型" prop="ship_type">
+              <el-input v-model="temp.ship_type" />
+            </el-form-item>
+            <el-form-item label="异常时经度" prop="lon">
+              <el-input v-model="temp.lon" />
+            </el-form-item>
+            <el-form-item label="异常时纬度" prop="lat">
+              <el-input v-model="temp.lat" />
+            </el-form-item>
+          <el-form-item label="异常原因" prop="reason">
+            <el-input v-model.number="temp.reason" />
+          </el-form-item>
+          <el-form-item label="时间" prop="creat_time">
+            <el-date-picker type="datetime" v-model="temp.creat_time" />
+          </el-form-item> 
+      </el-form>
+    </el-dialog> 
 
     <!-- 分页 -->
     <el-pagination
@@ -207,7 +222,15 @@ export default {
       },
       ship_name:"",
        addsForm:{   //新增数据
-        // id:'',
+        creat_time:'',
+        lat:'',
+        lon:'',
+        mmsi:'',
+        reason:'',
+        ship_name:'',
+        ship_type:''
+      },
+      temp:{
         creat_time:'',
         lat:'',
         lon:'',
@@ -247,7 +270,12 @@ export default {
         // }
         this.mapData = row;
       },
-  
+       handleClickMore(row)/* 详情 */ {
+        // console.log(row)
+          this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
+        this.dialogFormVisible = true; //弹层显示
+          this.dialog.disabled = true;
+      },
      // 修改table header的背景色
         tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
           if (rowIndex === 0) {
@@ -381,10 +409,22 @@ border: 1px solid #0078FF;
     color: #0075EE;
     padding-left: 14px;
   }
+  // 查看地图
+  /deep/ .mapDialog{
+      .el-dialog__header{
+        background: #0075EE; 
+        height: 40px;
+        line-height: 40px;
+        .el-dialog__title{
+          color: white!important;
+          padding: 10px;
+        }
+      }    
+}
 // 弹出框
 /deep/.el-dialog{
   .el-dialog__header{
-    background: white;
+    // background: white;
     .el-dialog__title,.el-dialog__close{
       color: black;
     }

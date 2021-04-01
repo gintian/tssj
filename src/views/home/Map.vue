@@ -112,10 +112,10 @@
             class="open-shipdialog"
             v-for="item in objectnamelist"
             :key="item.id"
-            @click="ship_detail(item)"
+            @click="ship_detail(item.mmsi)"
           >
             <img src="../../assets/images/icon.png" />
-            {{item}}
+            {{item.name}}
           </li>
         </ul>
       </el-dialog>
@@ -1019,7 +1019,7 @@ export default {
           params: { name: this.objectname }
         })
         .then(res => {
-          // console.log("目标名称筛选", res)
+          console.log("目标名称筛选", res)
           this.dialogVisible1 = true;
           this.objectnamelist = res.result;
         });
@@ -1257,6 +1257,25 @@ export default {
 </script>
 
 <style scoped lang="less">
+/deep/#map  .pollutant-green .leaflet-popup-content-wrapper {//弹出层最外层样式
+  background-color: rgba(0, 0, 0,.6) !important;
+  color: white !important;
+  // font-weight: 700 !important;
+  text-align: center;
+  border-radius: 2px;
+}
+/deep/#map  .pollutant-green .leaflet-popup-content {//弹出层内容  
+  margin: 4px auto !important;
+  text-align: center;
+  // width: 45px;
+  font-size: 12px;
+}
+
+/deep/#map  .leaflet-popup-tip{
+  // border: none;
+    // background-color: rgba(0, 0, 0,.6) !important;
+    background:transparent !important;
+}
 * {
   margin: 0;
   padding: 0;

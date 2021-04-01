@@ -9,30 +9,33 @@
         </div>
         <div style="padding: 5px;">
             <div>
-                <table style="width: 100%;">
+                 <table style="width: 100%;">
                     <tr v-for="index in rowCount" :key="index">
                         <td class="title">{{ordArr[index-1].name}}：</td>
-                        <td class="value">{{tabObj[ordArr[index-1].prop]}}</td>
-
+                        <td class="value" style="width: 150px;">{{tabObj[ordArr[index-1].prop]}}</td>
                         <td class="title">{{ordArr[rowCount + index -1].name}}：</td>
                         <td class="value">{{tabObj[ordArr[rowCount + index -1].prop]}}</td>
+                    </tr>
+                    <tr v-if='ordArr.length%2===1'>
+                         <td class="title">{{ordArr[ordArr.length-1].name}}：</td>
+                        <td class="value" style="width: 150px;">{{tabObj[ordArr[ordArr.length-1].prop]}}</td>
+                    </tr> 
+                </table>
+                  <h4 style="margin: 5px 12px;color: red;">点位信息集合如下：</h4>
+                 <table style="width: 100%;" v-if="tabObj.points">
+                    <tr v-for="(item,index) in tabObj.points" :key="index">
+                        <td class="title">经度：</td>
+                        <td class="value">{{item.lon}}</td>
+                        <td class="title">纬度：</td>
+                        <td class="value">{{item.lat}}</td>
                     </tr>
                 </table>
             </div>
         </div>
                 <div class="down">
-                    <!--<el-button type="primary" @click="info" style="margin-left: 10px;margin-top: 5px;"  size="mini" icon="el-icon-warning-outline">信息</el-button>-->
-<!--                    <el-button type="primary" @click="info"  style="margin-left: 0px;margin-top: 5px;"  size="mini" icon="el-icon-view">船舶列表</el-button>-->
                     <div>
-<!--                        <span style="display: inline-block;padding:0 10px">关注</span>-->
-<!--                        <el-switch-->
-<!--                                v-model="tabObj.isFocus"-->
-<!--                                active-color="#13ce66"-->
-<!--                                @change="focus"-->
-<!--                        >-->
-<!--                        </el-switch>-->
-                        <el-button type="primary" @click="focus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-off" v-show="!tabObj.isFocus">关注</el-button>
-                        <el-button type="primary" @click="disFocus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-on"  v-show="tabObj.isFocus">取关</el-button>
+                        <!-- <el-button type="primary" @click="focus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-off" v-show="!tabObj.isFocus">关注</el-button>
+                        <el-button type="primary" @click="disFocus"  style="margin-left: 5px;margin-top: 5px;"  size="mini" icon="el-icon-star-on"  v-show="tabObj.isFocus">取关</el-button> -->
                     </div>
                 </div>
         <el-dialog
@@ -73,36 +76,25 @@
     },
     computed: {
       rowCount: function() {
-        return Math.ceil(this.ordArr.length/2);
+        return Math.floor(this.ordArr.length/2);
       },
     },
     watch:{
     
     },
     mounted(){
-      // console.log('shipTabObj',this.tabObj)
+      // console.log('tabObj',this.tabObj)
     },
     updated() {
-      // console.log('shipTabObj',this.tabObj)
+      // console.log('tabObj',this.tabObj)
     },
     data(){
       return {
         ordArr:[
           { id:0, name:'名称' ,prop:'name'},
-          { id:1, name:'总长(海里)' ,prop:'totalLength'},
-          { id:2, name:'经度' ,prop:'longitude'},
-          { id:3, name:'纬度' ,prop:'latitude'},
-          // { id:4, name:'是否展示' ,prop:'showedString'},
-          { id:5, name:'覆盖距离' ,prop:'coverage'},
-          { id:6, name:'发射功率' ,prop:'launchPower'},
-          { id:7, name:'等级' ,prop:'level'},
-          { id:8, name:'天线方位角' ,prop:'skyLineAzimuth'},
-          { id:9, name:'天线范围' ,prop:'skyLineCoverage'},
-          { id:10, name:'天线高度' ,prop:'skyLineHeight'},
-          { id:11, name:'天线倾角' ,prop:'skylinePitch'},
-          { id:12, name:'铁塔高度' ,prop:'towerHeight'},
-          { id:13, name:'传输方式' ,prop:'transType'},
-          { id:14, name:'类型' ,prop:'type'},
+          { id:1, name:'控制距离' ,prop:'controller_distance'},
+          // { id:3, name:'点位信息' ,prop:'points'},
+          { id:4, name:'总长度' ,prop:'total_length'}
         ],
         //urltypeArr
         dialogVisible:false,
@@ -132,14 +124,7 @@
         this.$emit('isFocus',{description:this.description,focus:false,targetType:6,targetSign:this.tabObj.id})
       },
       focus(){
-        // // console.log(this.tabObj.isFocus)
         this.dialogVisible=true
-        // if(this.tabObj.isFocus===true){
-        // }else{
-        //   this.$emit('isFocus',{description:this.description,focus:this.tabObj.isFocus,targetType:7,targetSign:this.tabObj.stationId})
-        // }
-        // this.$emit('isFocus',this.focus)
-
       },
       disFocus(){
         this.$set(this.tabObj,'isFocus',false)
@@ -153,20 +138,20 @@
     .main{
 
         display: grid;
-        /*grid-template-rows: 12% 67% 20%;*/
         height:auto;
         width: auto;
-        background: #305071;
+        /* background: #305071; */
+        background: white;
     }
-    .title{
-        text-align: right;
-        color: #ffffff;
+    .title{ 
+        text-indent: 10px;
+        color: black;
         font-size: 14px;
         font-weight: 400;
 
     }
     .value{
-        color: #e2e2e2;
+        color: black;
         font-size: 14px;
         font-weight: 400;
     }

@@ -158,7 +158,7 @@ const leftDrawer={
 }
 // 资源站
 const station={
-
+  markerCluster: null,//聚合class
   stationID:undefined,
 
   // ais radar camera 点击

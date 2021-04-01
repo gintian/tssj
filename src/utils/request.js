@@ -47,20 +47,24 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const { data, code, result, message } = response
-    // console.log(response)
+    // console.log('response',response)
     // if(response.headers['jwtToken']){
     //   store.commit('setJToken',response.headers['jwtToken'])
     // }
-    if (data.error !== 0) {
-      console.log('data', data)
-      // if(status===500) 处理token过期等
-
-      Vue.prototype.$message({ message: data.msg, type: 'error' });
-      Promise.reject(data.msg);
-      return data
-
-    } else {
-      // console.log(response)
+    
+    if(data.error ==-999){
+      router.push('/')
+      Vue.prototype.$message('请重新登录')   
+      }
+     else  if (data.error !== 0) {
+          console.log('data', data)
+          // if(status===500) 处理token过期等
+    
+          Vue.prototype.$message({ message: data.msg, type: 'error' });
+          Promise.reject(data.msg);
+          return data
+        }
+    else {
       return data
     }
   },

@@ -72,7 +72,7 @@
  <!-- 新增弹层功能 -->
      <el-dialog title="添加新用户" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
       <el-form ref="updateForm"  :model="addsForm" label-position="left" label-width="100px"
-       style="width: 400px; margin-left:50px;">
+       style="width: 400px; margin-left:50px;"  :rules="formRules">
 
           <el-form-item label="ID" prop="id" v-show="false">
               <el-input v-model="addsForm.id" />
@@ -113,7 +113,7 @@
   <!-- 编辑弹层功能 -->
      <el-dialog title="编辑用户" :visible.sync="dialogFormVisible"    custom-class="addDialog"    width="600px">
       <el-form ref="updateForm"  :model="temp" label-position="left" label-width="100px"
-       style="width: 400px; margin-left:50px;">
+       style="width: 400px; margin-left:50px;"  :rules="formRules">
           <el-form-item label="ID" prop="id" v-show="false">
               <el-input v-model="temp.id" />
             </el-form-item>
@@ -161,6 +161,7 @@
 
 <script>
 import { sha512 } from 'js-sha512'
+import {formRules} from '../../utils/formRules';
 export default {
   name: 'ComplexTable',
   data() {
@@ -173,6 +174,7 @@ export default {
         pageSize:10, //条数
         name:''  //查询条件
       },
+        formRules:formRules,
       dialogDelVisible:false, //删除弹层显示与隐藏
       dialogFormVisible:false, //编辑弹层显示与隐藏
       dialogFormVisible1:false, //新增弹层显示与隐藏

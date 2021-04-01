@@ -44,6 +44,7 @@ export default {
   watch: {
     
     mapData(val){
+      console.log('mapData',val)
         if (this.markerType === "Anchorage") {
         this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/03.png"))(1)(() => {}).addTo(this.map);
         this.map.setView([val.lat, val.lon], 13);
@@ -82,12 +83,13 @@ export default {
         this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/camera.png"))(4)(() => {}).addTo(this.map);
         this.map.setView([val.lat, val.lon], 13);
         }else if(this.markerType === "port"){
-        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/camera.png"))(4)(() => {}).addTo(this.map);
+        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/port.png"))(4)(() => {}).addTo(this.map);
         this.map.setView([val.lat, val.lon], 13);
         }
         else if(this.markerType === "suspicious"){
         this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/aim03.png"))(5)(() => {}).addTo(this.map);
         this.map.setView([val.lat, val.lon], 13);
+
         }else if(this.markerType === "suspiciousTrail"){
         this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/aim03.png"))(6)(() => {}).addTo(this.map);
         this.map.setView([val.lat, val.lon], 13);
@@ -113,6 +115,7 @@ export default {
         //     iconAnchor: [15,22]
         //   })
         // }).addTo(this.animateLayer);
+        
         // var polyline = L.polyline(points, { color: 'red' }).addTo(this.animateLayer);
         // var myMovingMarker = L.Marker.movingMarker(points,
         //   duration,{
@@ -140,8 +143,60 @@ export default {
     //   this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/01.png"))(4)(() => {}).addTo(this.map);
     //     this.map.setView([this.mapData.lat,this.mapData.lon], 13);
   },
-
+  updated(){
+     this.addMarker(this.markerType)
+  },
   methods: {
+           addMarker(tp) {
+              // console.log(this.markData)
+                console.log(tp)
+                const mp = {
+                    'polyline': (wgs84ToBD) => {
+                        // var sy = new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+                        //     scale: 0.6,//图标缩放大小
+                        //     strokeColor:'#fff',//设置矢量图标的线填充颜色
+                        //     strokeWeight: '2',//设置线宽
+                        // });
+                        // var icons = new BMap.IconSequence(sy, '10', '30');// 创建polyline对象
+                      let pois = []
+                      for(let i of this.mapData){
+                        // console.log(i.lon,i.lat)
+                        let bd09Arr = wgs84ToBD(val.lat,val.lon)
+                        pois.push([bd09Arr[1], bd09Arr[0]])
+                      }
+                        var polyline =L.Polyline(pois, {
+                            //颜色
+                            color: 'rgba(255,137,135,0.62)'
+                        });
+                        return polyline
+                    },
+                }
+                this.map.addOverlay(mp[tp]());
+            },
+    // 创建标记
+   createMarker(lat,lng,width,height,img,Angle=0){
+    //标记样式
+    var icon = L.icon({
+      //图标地址
+      iconUrl: img,
+      //图标大小
+      iconSize: [width, height]
+    })
+    //标记
+    var Marker = L.marker([lat, lng], {
+      //添加图标
+      icon: icon,
+      rotationAngle: Angle,
+    })
+    return (signal)=>{
+      Marker.signal=signal;
+      return fun =>{
+        Marker.on("click", fun);
+        return Marker;
+      }
+
+    }
+  },
      // 创建多边形区域
   createPolygon(type,waters,signal,style){
     let map = {
@@ -194,13 +249,49 @@ export default {
         icon: icon,
         rotationAngle: Angle
       });
+      var  clicked= L.marker([lat, lng], {
+          icon:L.icon({
+            iconUrl: require('../assets/mapicon/aim.png'),
+            iconSize: [32,32],
+            iconAnchor: [16,16]
+          })
+        });
       return signal => {
         Marker.signal = signal;
+        // console.log('signal',signal)
         return fun => {
-          Marker.on("click", fun);
+            // console.log('fun',fun)
+          // Marker.on("click", fun);
+           Marker.on("click", ()=>{
+             this.handleMapMarerClick(val);
+            //  console.log('click',signal)
+              //  Marker.signal=clicked;
+              //  console.log('signal', Marker.signal)
+              //   L.popup().setLatLng(signal.latlng)
+		          //           .setContent(setContent(signal))
+		          //           .openOn(this.map);//通过popup添加点击弹出框
+
+           });
+         
           return Marker;
         };
       };
+    },
+      handleMapMarerClick(val){
+     mapData=val
+        console.log('item',val)
+      let drp = item.drp || '--';
+      let content = `<div class="boundaryMask-popup">`
+      + `<p class="title">${val.stnm}</p>`
+        + `<ul class="info">`
+      + `<li><span>经度：</span>${drp}</li>`
+        +`</ul>`
+      + `<div style="width:100%;height:200px" id="pptnMapChart"></div>`
+      +` </div>`;
+      L.popup({minWidth : 350})
+      .setLatLng([val.lttd, val.lgtd])
+      .setContent(content)
+      .openOn(this.map);
     },
     mapInit() {
       this.map = L.map("allmap1", {

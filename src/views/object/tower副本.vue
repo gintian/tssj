@@ -1,11 +1,11 @@
 <template>
     <div id="target">
         <div id="target_main">
-            <div id="target_right">
-                <div class="app-container" >
-                  <div class="container-title" >
-                    <h3>泊位</h3>
-                    <div  style="display: flex;justify-content: space-between;">
+                <div id="target_right">
+                    <div class="app-container" >
+                    <div class="container-title" >
+                        <h3>铁塔</h3>
+                         <div  style="display: flex;justify-content: space-between;">
                 <el-upload
                       class="upload-demo"
                        ref="upload"
@@ -22,50 +22,32 @@
                     导出
                 </el-button>
          </div>
-                </div>
+                    </div>
                 <div  class="container-middle">
                             <el-button type="primary"  class="filter-item"  @click="add" icon="el-icon-plus" >添加
                             </el-button>
-                            <el-dialog
-                                    :title=dialog.title
-                                    :visible.sync=dialog.visible
-                                    custom-class="videoDialog"
-                                    width="30%"
-                                    top='9vh'
-                                    :before-close="handleClose">
-                                <el-form label-position="left" label-width="80px" :model="formLabelAlign" ref="ruleForm" :rules="formRules">
-                                    <el-form-item v-for="item in addData" :key="item.id" :label="item.name" :prop="item.prop">
-                                        <el-input v-model="formLabelAlign[item.prop]" v-if="item.id<14" :disabled="dialog.disabled" ></el-input>
-                                        <div>
-                                            <!-- <el-select v-model="formLabelAlign.inPort" placeholder="请选择" v-if="item.id==3"  :disabled="dialog.disabled" >
-                                                <el-option
-                                                        v-for="i in portData"
-                                                        :key="i.id"
-                                                        :label="i.name"
-                                                        :value="i.id">
-                                                </el-option>
-                                            </el-select> -->
-                                            <el-select v-model="formLabelAlign.status" placeholder="请选择" v-if="item.id==5" :disabled="dialog.disabled" >
-                                                <el-option
-                                                        v-for="i in statusSelect"
-                                                        :key="i.value"
-                                                        :label="i.label"
-                                                        :value="i.value">
-                                                </el-option>
-                                            </el-select>
-                                        </div>
-                                    </el-form-item>
-                                </el-form>
-                                <span slot="footer" class="dialog-footer" v-show="dialog.showBtn">
-                    <el-button @click="dialog.visible = false">取 消</el-button>
-                    <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
-                    </span>
-                            </el-dialog>
-                            <div  class="select_query">
-                                <el-input  placeholder="请输入名称" class="filter-item" v-model="listQuery.name"  style="width: 200px;" />
+                <el-dialog
+                        :title=dialog.title
+                        :visible.sync=dialog.visible
+                        width="30%"
+                        custom-class="videoDialog"
+                        :before-close="handleClose">
+                    <el-form label-position="left" label-width="80px" :model="formLabelAlign" ref="ruleForm" :rules="formRules">
+                        <el-form-item v-for="item in addData" :key="item.id" :label="item.name" :prop="item.prop">
+                            <el-input v-model="formLabelAlign[item.prop]" v-if="item.id!=17" :disabled="dialog.disabled" ></el-input>  
+                        </el-form-item>
+
+                    </el-form>
+                    <span slot="footer" class="dialog-footer" v-show="dialog.showBtn">
+          <el-button @click="dialog.visible = false">取 消</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+        </span>
+                </el-dialog>
+                 <div  class="select_query">
+                                <el-input  placeholder="请输入内容" class="filter-item" v-model="searchTxt"  style="width: 200px;" />
                                     <el-button  class="filter-item" type="primary" icon="el-icon-search" @click="queryData">搜索 </el-button>
                             </div>
-                </div>
+  </div>
                 <PaginationTab
                         :tableData='tableData'
                         :tabTop='tabTop'
@@ -81,31 +63,31 @@
                         @handleClickDelete='handleClickDelete'
                         @handleClickView='handleClickView'
                 />
+
                 <el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
-                    <leaflet-tablemap :mapData="mapData"  markerType="port" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
+                    <leaflet-tablemap :mapData="mapData"  markerType="tower" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
                 </el-dialog>
             </div>
         </div>
-     </div>
+  </div>
     </div>
 </template>
 
 <script>
   import {formRules} from '../../utils/formRules';
   import PaginationTab from '../../components/PaginationTable'
-//   import TableMap from '../../../src/components/TableMap'
-import LeafletTableMap from '../../../src/components/LeafletTableMap'
+  // import VideoView from '../../../../zfwtowperiod/src/components/VideoView'
+ import LeafletTableMap from '../../../src/components/LeafletTableMap'
   export default {
-    name: 'port',
+    name: 'tower',
     components: {
       PaginationTab,
       // VideoView,
-    //   'table-map':TableMap
-    'leaflet-tablemap':LeafletTableMap
+       'leaflet-tablemap':LeafletTableMap
     },
     data() {
       return {
-        secondaryUrl: '/berth',
+        secondaryUrl: '/tower',
         interfaceType:'',
         dialog: {
           visible: false,
@@ -116,77 +98,67 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
         },
         formRules:formRules,
         formLabelAlign: {
-          name: '',
-          lon: '',
-          lat: '',
-          jettyId: '',
-          status: '',
-          jettyName:'',
-          // used:'',
-          ability:'',
-          capacity:'',
-          contact:'',
-          depth:'',
-          // description:'',
-          length:'',
-          org_name:'',
-          telphone:'',
-          uses:'',
-          // health:'',
-          // duty:'',
+          stationName: '',
+          stationId: '',
+          longitude: '',
+          latitude: '',
+          area: '',
+          bulidDate:'',
+          coverage:'',
+          launchPower:'',
+          level:'',
+          skyLineAzimuth:'',
+          skyLineCoverage:'',
+          skyLineHeight:'',
+          skylinePitch:'',
+          towerHeight:'',
+          transType:'',
+          type:'',
+          health:'',
         },
         addData: [
-          {id: 0, prop: 'name', name: '名称'},
-          {id: 1, prop: 'lon', name: '经度'},
-          {id: 2, prop: 'lat', name: '纬度'},
-          {id: 3, prop: 'jettyId', name: '所在码头编号'},
-          {id: 4, prop: 'jettyName', name: '所在码头名称'},
-          {id: 5, prop: 'status', name: '状态'},
-          {id: 6, prop: 'ability', name: '兼靠能力'},
-          {id: 7, prop: 'capacity', name: '靠泊能力'},
-          {id: 8, prop: 'contact', name: '联系人'},
-          {id: 9, prop: 'depth', name: '前沿水深'},
-          {id: 10, prop: 'length', name: '泊位长度'},
-          {id: 11, prop: 'org_name', name: '企业名称'},
-          {id: 12, prop: 'telphone', name: '联系电话'},
-          {id: 13, prop: 'uses', name: '用途'},
+          {id: 0, prop: 'station_name', name: '铁塔名称'},
+          {id: 1, prop: 'station_id', name: '编号'},
+          {id: 2, prop: 'lon', name: '经度'},
+          {id: 4, prop: 'lat', name: '纬度'},
+          {id: 5, prop: 'area', name: '地区'},
+          {id: 6, prop: 'bulid_date', name: '修建时间'},
+          {id: 7, prop: 'coverage', name: '覆盖距离'},
+          {id: 8, prop: 'launch_power', name: '发射功率'},
+          {id: 9, prop: 'level', name: '等级'},
+          {id: 10, prop: 'sky_line_azimuth', name: '天线方位角'},
+          {id: 11, prop: 'sky_line_coverage', name: '天线范围'},
+          {id: 12, prop: 'sky_line_height', name: '天线高度'},
+          {id: 13, prop: 'skyline_pitch', name: '天线倾角'},
+          {id: 14, prop: 'tower_height', name: '铁塔高度'},
+          {id: 15, prop: 'trans_type', name: '传输方式'},
+          {id: 16, prop: 'type', name: '类型'}
         ],
-        statusSelect: [{
-          value: false,
-          label: '正常'
-        }, {
-          value: true,
-          label: '异常'
-        }],
-        // urlTypeSelect:[],
-        portData:[],
         mapData:[],
-
-        listQuery:{
-            pageNumber:1, //当前页面
-            pageSize:10, //条数
-            name:'' , //查询条件
-        },
+        page: 1,
+        limit: 10,
         total: 100,
         imageUrl: '',
+        searchTxt:'',
         tableData: [],
         tabTop: [
-          { id: 1, prop: 'name', name: '名称' },
-          { id: 2, prop: 'lon', name: '经度' },
-          { id: 3, prop: 'lat', name: '纬度' },
-          { id: 4, prop: 'status2', name: '运行状态' }
+          { id: 1, prop: 'station_name', name: '名称' },
+          // { id: 1, prop: 'name', name: '所属资源站' },
+          { id: 2, prop: 'station_id', name: '编号' },
+          { id: 3, prop: 'lon', name: '经度' },
+          { id: 4, prop: 'lat', name: '纬度' }
         ],
-         uploadUrl:'berth/pushExcel',
-          fileList: [],
+         uploadUrl:'tower/pushExcel',
+            fileList: [],
       }
     },
     mounted() {
       this.queryData()
-      this.loadportData()
+      // this.loadStationData()
       // this.queryData();
     },
     methods: {
-        submitUpload(){
+         submitUpload(){
           this.$refs.upload.submit();
           // this.importdialog=true
       },
@@ -211,34 +183,24 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
             if(res.data.error==0){
               //  this.$message.success('成功导入船舶离线数据' + '!');
                this.$alert('成功导入1条船舶离线数据!');
-              //  this.$message({
-              //   type: 'success',
-              //   message: '成功导入船舶离线数据!',
-              //   offset:500
-              // });
-              // this.$notify({
-              //   type: 'success',
-              //   message: '成功导入1条船舶离线数据!'
-              //   //  duration: 0
-              //   //  position: 'bottom-left' 默认右上角
-              // });
             }
           });
       } ,  
-      loadportData(){
-        this.service.get('/berth/page',{ params:{
-            pageNumber: this.pageNo,
-            pageSize: this.pageSize,
-            name: this.name}}).then(res=>{
-          this.portData=res.page.list
+      loadStationData(){
+        this.service.get('/station/findAll').then(res=>{
+          this.stationData=res.data
+          console.log(res)
+        })
+        this.service.get('/project/aisUrlType').then(res=>{
+          this.urlTypeSelect=res.data
           console.log(res)
         })
       },
       add() {
-        this.interfaceType = 'save'
+        this.interfaceType = 'add'
         this.formLabelAlign = {}
         this.dialog.visible = true
-        this.dialog.title = '码头泊位添加'
+        this.dialog.title = '铁塔添加'
         this.dialog.disabled=false
         this.dialog.showBtn = true;
         this.resetForm('ruleForm')//重置
@@ -246,33 +208,65 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
       handleClose(done) {
         done()
       },
-   
-      handleSizeChange(val)/* 调整分页每页条数 */ {
-        this.listQuery.pageSize=val
-        console.log(`每页 ${val} 条`)
-        this.service.get(this.secondaryUrl + '/page', {
-        params:{
-            pageNumber: this.listQuery.pageNo,
-            pageSize: this.listQuery.pageSize,
-            name: this.listQuery.name}
-         }).then(req => {
-          console.log(req)
-          this.tableData = req.page.list
-          this.total = req.page.totalRow
+      loadIslandList() {
+
+        this.service.get('/tower/page').then(res => {
+          // console.log(res.data)
+          this.islandList = res.page.list
         })
       },
-      handleCurrentChange(val) /* 跳页 */ {
-        this.listQuery.pageNo=val
-        console.log(`当前页: ${val}`)
+      handleSizeChange(val)/* 调整分页每页条数 */ {
+        this.limit = val
+        console.log(`每页 ${val} 条`)
         this.service.get(this.secondaryUrl + '/page', {
-           params:{
-            pageNumber: this.listQuery.pageNo,
-            pageSize: this.listQuery.pageSize,
-            name: this.listQuery.name}
+          'page': this.page,
+          'limit': this.limit,
+          'condition': this.searchTxt
         }).then(req => {
           console.log(req)
           this.tableData = req.page.list
           this.total = req.page.totalRow
+          // let islandName = {}
+          // for (let i of this.islandList) {//将岛屿id 与 name 提取
+          //   islandName[i.id] = i.name
+          // }
+          // // console.log(islandName)
+          for (let d of this.tableData) {
+            d['position'] = '经度' + d.longitude + ' 纬度' + d.latitude
+            // d['islandName'] = islandName[d['attributionId']]
+            // if (d['status']) {
+            //   d['status2'] = '正常'
+            // } else {
+            //   d['status2'] = '异常'
+            // }
+          }
+        })
+      },
+      handleCurrentChange(val) /* 跳页 */ {
+        this.page = val
+        console.log(`当前页: ${val}`)
+        this.service.get(this.secondaryUrl + '/page', {
+          'page': this.page,
+          'limit': this.limit,
+          'condition': this.searchTxt
+        }).then(req => {
+          console.log(req)
+          this.tableData = req.page.list
+          this.total = req.page.totalRow
+          // let islandName = {}
+          // for (let i of this.islandList) {//将岛屿id 与 name 提取
+          //   islandName[i.id] = i.name
+          // }
+          // // console.log(islandName)
+          for (let d of this.tableData) {
+            d['position'] = '经度' + d.longitude + ' 纬度' + d.latitude
+            // d['islandName'] = islandName[d['attributionId']]
+            // if (d['status']) {
+            //   d['status2'] = '正常'
+            // } else {
+            //   d['status2'] = '异常'
+            // }
+          }
         })
       },
       handleClickUpdata(row)/* 修改 */ {
@@ -280,7 +274,13 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
         this.resetForm('ruleForm')//重置
         this.interfaceType = 'update'
         this.formLabelAlign = {...row}
-        this.dialog.title = '码头泊位修改'
+        this.dialog.title = '铁塔修改'
+        // if (row.imgUrl) {
+        //   this.addPic = row.imgUrl
+        //
+        // } else {
+        //   // this.addPic = require('../../../assets/政法委无人岛日间/Page 13基础设施-雷达_slices/编组 9.png')
+        // }
         this.dialog.disabled = false;
         this.dialog.visible = true
         this.dialog.showBtn = true
@@ -291,14 +291,14 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
         this.interfaceType = 'more'
         this.formLabelAlign = {...row}
         this.dialog.visible = true
-        this.dialog.title  = '码头泊位详情'
+        this.dialog.title  = '铁塔详情'
         this.dialog.disabled = true;
         this.dialog.showBtn = false
       },
       handleClickDelete(row)/* 删除 */ {
         console.log(row)
         this.service.get(this.secondaryUrl + '/delete', {
-          id: row.id
+          id: row.stationId
         }).then(req => {
           // this.tableData = req.data.list;
           this.queryData()
@@ -308,13 +308,13 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
           //  return false;
         })
       },
-      handleClose(done)/* 点击遮罩触发 */ {
-        done() //取消弹框
-      },
       handleClickView(row) {
         console.log('查看地图')
         this.dialog.showMap = true
-         this.mapData = row;
+        // if (row.waters) {
+        //   row = { ...row, ...row.waters }
+        // }
+        this.mapData = row;
       },
       resetForm(formName) {
         if (this.$refs[formName] !== undefined) {
@@ -326,12 +326,14 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
         this.$refs[formName].validate((valid) => {
           if (valid) {
             // alert('submit!'); /basicData/personnel/add
-            console.log('提交数据',this.formLabelAlign)
+            // console.log(this.formLabelAlign)
             this.service.post(this.secondaryUrl + '/' + this.interfaceType, {
               ...this.formLabelAlign
             }).then(res => {
-              console.log(res)
-              if(res.error===0){
+              // console.log(res)
+
+              // this.tableData = req.data.list;
+              if(res.code===0){
                 this.dialog.visible = false
               }
               this.queryData()
@@ -339,6 +341,8 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
               this.$message({ message: err.msg, type: 'error' })
               console.log(err)
               this.queryData()
+
+              //  return false;
             })
           } else {
             console.log('error submit!!')
@@ -347,19 +351,70 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
         })
       },
       queryData() /* 查询数据 */ {
-        //    this.loadportData();
         this.service.get(this.secondaryUrl + '/page', {
-          params:{
-            pageNumber: this.listQuery.pageNo,
-            pageSize: this.listQuery.pageSize,
-            name: this.listQuery.name}
+          'page': this.page,
+          'limit': this.limit,
+          'condition': this.searchTxt
         }).then(req => {
-          // console.log('查询数据',req)
+          // console.log(req)
           this.tableData = req.page.list
           this.total = req.page.totalRow
+          // let islandName = {}
+          // for (let i of this.islandList) {//将岛屿id 与 name 提取
+          //   islandName[i.id] = i.name
+          // }
+          // // console.log(islandName)
+          for (let d of this.tableData) {
+            d['position'] = '经度' + d.longitude + ' 纬度' + d.latitude
+            // d['islandName'] = islandName[d['attributionId']]
+            // if (d['status']) {
+            //   d['status2'] = '正常'
+            // } else {
+            //   d['status2'] = '异常'
+            // }
+          }
         })
       },
-     
+      imgUp(e) {//图片上传
+        var files = this.$refs.avatarInput.files
+
+        // let pic = this.$refs.pic
+        let can = this.$refs.can
+        console.log(files[0].name)
+
+        let imgStr = /\.(jpg|jpeg|png|bmp|BMP|JPG|PNG|JPEG)$/
+        if (!imgStr.test(files[0].name)) {
+          this.$message.error('只能上传图片!')
+          // alert("文件不是图片类型");
+          return false
+        } else {
+          this.formLabelAlign.imgFileName = files[0].name
+          let img1 = new Image()
+          img1.src = URL.createObjectURL(files[0])
+          let context = can.getContext('2d')
+
+          let _this = this
+
+          img1.onload = function() {
+            var nw = img1.naturalWidth
+            var nh = img1.naturalHeight
+            can.setAttribute('width', nw + 'px')
+            can.setAttribute('height', nh + 'px')
+            can.setAttribute('opacity', '0')
+            //绘制进canvas
+            context.drawImage(img1, 0, 0, nw, nh)
+            //二进制流转化函数
+            let bin = can.toDataURL('image/jpeg')
+            //二进制流传入“显示图片”
+            // pic.src = bin;
+            _this.addPic = bin
+            _this.formLabelAlign.imgFile = bin
+          }
+
+          // console.log(this.formLabelAlign)
+        }
+
+      },
       disMmsi(){
         // console.log(id,this.interfaceType)
         if(this.interfaceType=='update'){

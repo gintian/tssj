@@ -10,7 +10,7 @@
                       accept=".xls"
                       multiple
                       :action="uploadUrl"
-                      :on-change="handleChange"
+                  
                       :file-list="fileList">
                       <el-button class="filter-item" type="primary"  style=" margin-right: 40px;" @click="submitUpload"  >
                           导入
