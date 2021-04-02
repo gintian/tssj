@@ -1238,32 +1238,33 @@ const marker = {
         let bd09Arr = wgs84ToBD(e.lon, e.lat)
         let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/tower.png'))('铁塔')(() => {})
         this.MarkerClusterGroup.addLayer(marker);
-        ((event) => {
-          //摄像头信息框
-          // console.log("铁塔信息",e)
-          this.service.get('/tower/view', {
-            params:{
-              station_id:e.station_id
-            }
-          }).then(res => {
-            // console.log("铁塔详细信息",res)
-            let a = Object.entries(this.showInfo)
-            // console.log('铁塔的',a)
-            a.forEach(e => {
-              this.showInfo[e[0]] = false
-            })
-            this.showInfo.tower = true
-            if (this.hasLayer(this.map, 'tower' + e.id).length > 0) {
-              res.tower.showed = true
-            } else {
-              res.tower.showed = false
-            }
-            this.dialogInfo.tower = res.tower
-            // console.log('this.dialogInfo.tower',this.dialogInfo.tower)
-          })
+
+        // ((event) => {
+        //   //摄像头信息框
+        //   // console.log("铁塔信息",e)
+        //   this.service.get('/tower/view', {
+        //     params:{
+        //       station_id:e.station_id
+        //     }
+        //   }).then(res => {
+        //     // console.log("铁塔详细信息",res)
+        //     let a = Object.entries(this.showInfo)
+        //     // console.log('铁塔的',a)
+        //     a.forEach(e => {
+        //       this.showInfo[e[0]] = false
+        //     })
+        //     this.showInfo.tower = true
+        //     if (this.hasLayer(this.map, 'tower' + e.id).length > 0) {
+        //       res.tower.showed = true
+        //     } else {
+        //       res.tower.showed = false
+        //     }
+        //     this.dialogInfo.tower = res.tower
+        //     // console.log('this.dialogInfo.tower',this.dialogInfo.tower)
+        //   })
             
-        })
-        marker.addTo(this.markerLayersGroup)
+        // })
+        // marker.addTo(this.markerLayersGroup)
       }
     })
      // 泊位
@@ -2466,13 +2467,6 @@ const area={
         console.log('points',e.layer.toGeoJSON().geometry.coordinates);
         this.drawData.positions.push(point)
         this.drawData.radius = e.layer.options.radius
-        // this.currentDraw = e.layer
-        // console.log(point[0][0], point[0][1], point[2][0], point[2][1])
-        // L.circle([point[1],point[0]], { radius: e.layer.options.radius, color: 'red', fillColor: '#f03', fillOpacity: 1 }).addTo(this.map);
-        // // L.circle([point[2][1],point[2][0]], { radius: 30, color: 'red', fillColor: '#f03', fillOpacity: 1 }).addTo(this.map);
-        // let neArr = bd09towgs84(point[2][0], point[2][1])
-        // let swArr = bd09towgs84(point[0][0], point[0][1])
-        // console.log(neArr, swArr)
       })
     } else if (id === 2) {//矩形
       this.map.pm.enableDraw('Rectangle', {

@@ -936,12 +936,12 @@ export default {
     this.drawLayer = new L.FeatureGroup().addTo(this.map);
     this.areadefineLayer = new L.FeatureGroup().addTo(this.drawLayer);
 
-        this.MarkerClusterGroup =  new L.markerClusterGroup({
-      showCoverageOnHover: false,
-      zoomToBoundsOnClick: true,
-      chunkedLoading: true,
-      maxClusterRadius: 40, //默认80
-    }).addTo(this.map);
+      this.MarkerClusterGroup =  new L.markerClusterGroup({
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true,
+        chunkedLoading: true,
+        maxClusterRadius: 40, //默认80
+      }).addTo(this.map);
 
     this.planeLayer = new L.FeatureGroup().addTo(this.map);
     this.animateLayer = new L.FeatureGroup().addTo(this.map);
@@ -960,7 +960,7 @@ export default {
     this.loadDefaultMarker();
     this.loadLeftDrawer();
     this.ShipStatistical();
-    // console.log("markerLayersGroup", this.markerLayersGroup);
+    
     setTimeout(() => {
       this.websocketsend(
         JSON.stringify({
