@@ -34,7 +34,7 @@
                         :before-close="handleClose">
                     <el-form label-position="left" label-width="80px" :model="formLabelAlign" ref="ruleForm" :rules="formRules">
                         <el-form-item v-for="item in addData" :key="item.id" :label="item.name" :prop="item.prop">
-                            <el-input v-model="formLabelAlign[item.prop]" v-if="item.id<3" :disabled="dialog.disabled" ></el-input>  
+                            <el-input v-model="formLabelAlign[item.prop]" v-if="item.id<4" :disabled="dialog.disabled" ></el-input>  
                         </el-form-item>
                     </el-form>
                     <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="55px" width="40%" label-position="right"
@@ -83,6 +83,7 @@
                         :total='total'
                         :isUpdata=true
                         :isView=true
+                        :isDelete=true
                         markerType='point'
                         :isMore=true
                         @handleClickMore='handleClickMore'
@@ -134,8 +135,9 @@
         addData: [
           {id: 0, prop: 'name', name: '名称'},
           {id: 1, prop: 'total_length', name: '总长度'},
-          {id: 2, prop: 'controller_distance', name: '控制距离'},
-          {id: 3, prop: 'points', name: '海底光缆节点集'},
+            {id: 2, prop: 'area', name: '区域'},
+          {id: 3, prop: 'controller_distance', name: '控制距离'},
+          {id: 4, prop: 'points', name: '海底光缆节点集'}
         ],
         
         dynamicValidateForm: {//多边形经纬度
@@ -155,7 +157,8 @@
         tabTop: [
           { id: 1, prop: 'name', name: '名称' },
           { id: 2, prop: 'total_length', name: '总长度' },
-          {id: 3, prop: 'controller_distance', name: '控制距离'},
+          {id: 3, prop: 'area', name: '区域'},
+          {id: 4, prop: 'controller_distance', name: '控制距离'}     
         ]
       }
     },
@@ -296,6 +299,7 @@
       },
       handleClickDelete(row)/* 删除 */ {
         console.log('删除row',row)
+        // this.interfaceType = 'delete'
         this.service.get(this.secondaryUrl + '/delete', {
             params:{
           id: row.id}

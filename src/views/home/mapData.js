@@ -160,7 +160,7 @@ const leftDrawer={
 const station={
   markerCluster: null,//聚合class
   stationID:undefined,
-
+  MarkerClusterGroup:null,//铁塔聚合
   // ais radar camera 点击
   stationCheck:{
     station:true,//控制地图移动中 资源站不能被点击显示详情框

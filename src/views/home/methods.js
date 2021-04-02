@@ -1222,11 +1222,22 @@ const marker = {
       }
     })
     // 铁塔
+    // this.service.get('/tower/findAll').then(res => {
+    //   // console.log(res.data,'tower')
+    //   for (let i of res.data) {
+    //     // console.log(i)
+    //     let bd09Arr = wgs84ToBD(i.longitude, i.latitude)
+    //     let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets/mapSigns/base4.svg'))('铁塔')(() => {})
+    //     this.MarkerClusterGroup.addLayer(marker);
+    //   }
+    
+    // })
     this.service.get('/tower/allList').then(res => {
       console.log("区域内铁塔信息",res)
       for (let e of res.list) {
         let bd09Arr = wgs84ToBD(e.lon, e.lat)
-        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/tower.png'))('铁塔')
+        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/tower.png'))('铁塔')(() => {})
+        this.MarkerClusterGroup.addLayer(marker);
         ((event) => {
           //摄像头信息框
           // console.log("铁塔信息",e)
@@ -1330,6 +1341,8 @@ const marker = {
     //   }
     // })
   },
+
+
 // 海底光缆
   loadSeaLineLayer(){
     this.service.get('/seaLine/allList', {

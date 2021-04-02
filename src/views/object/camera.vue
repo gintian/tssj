@@ -49,7 +49,7 @@
             <span> 纬度：{{scope.row.lat}}</span>
        </template>
     </el-table-column>
-
+     <el-table-column align="center" prop="area" label="区域"></el-table-column>  
      <el-table-column  align="center" prop="status"  label="运行状态">
         <template slot-scope="scope">
             <span v-if="scope.row.status == true" style="color:red;">停用</span>
@@ -206,6 +206,9 @@
           <el-form-item label="纬度" prop="lat">
             <el-input v-model="addsForm.lat" />
           </el-form-item>
+          <el-form-item label="区域" prop="area">
+            <el-input v-model="addsForm.area" />
+          </el-form-item>
           <el-form-item label="视频流地址" prop="videoUrl">
             <el-input v-model="addsForm.videoUrl" />
           </el-form-item>
@@ -243,9 +246,9 @@
           <el-form-item label="视频流地址" prop="videoUrl">
             <el-input v-model="temp.videoUrl" />
           </el-form-item>
-          <!-- <el-form-item label="运行状态" prop="status">
-              <el-input v-model="update" @change="changeu" />
-            </el-form-item> -->
+          <el-form-item label="区域" prop="area">
+              <el-input  v-model="temp.area" />
+            </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -364,7 +367,8 @@ export default {
         lat:'',
         lon:'',
         videoUrl:'',
-        status:''
+        status:'',
+        area:""
       },
 
       temp:{  //编辑的表单字段
@@ -373,7 +377,8 @@ export default {
         lat:'',
         lon:'',
         videoUrl:'',
-        status:''
+        status:'',
+        area:""
       },
        update:'',
       options:[{
@@ -639,7 +644,7 @@ handleVodRemove(file, fileList) {
     AddVideoData(){
       let userList=this.AddVideoForm;  
         let {name,camer_id,videoUrl} = userList;
-          this.service.post('/video/add',this.AddVideoForm).then(res => {
+          this.service.post('/video/save',this.AddVideoForm).then(res => {
             console.log("新增的视频数据",res)
           this.Videolist(); 
           this.AddVideodialog = false;}
@@ -660,7 +665,7 @@ handleVodRemove(file, fileList) {
     },
      AddData(){
         let userList=this.addsForm;  
-        let {name,lat,lon,videoUrl,status} = userList;
+        let {name,lat,lon,videoUrl,status,area} = userList;
           this.service.post('/camera/save',this.addsForm).then(res => {
             // console.log("新增的摄像头数据",res)
             this.getList(); 
@@ -686,7 +691,8 @@ handleVodRemove(file, fileList) {
           lat:this.temp.lat,
           lon:this.temp.lon,
           videoUrl:this.temp.videoUrl,
-          status:this.temp.status
+          status:this.temp.status,
+          area:this.temp.area,
        }).then(req => {
           console.log("编辑摄像头信息",req)
           this.getList();

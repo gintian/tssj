@@ -1,6 +1,6 @@
 // import { addMyMarker, mapComopentFun } from './mapComponentFactory'
 import { wgs84ToBD } from '../../utils/coordinateConvert'
-import { addMyMarker, mapComopentFun,addPolygon } from '../../../../zhhf/src/views/home/mapComponentFactory'
+// import { addMyMarker, mapComopentFun,addPolygon } from '../../../../zhhf/src/views/home/mapComponentFactory'
 import { addRadarDom } from '../../../src/views/home/mapComponentFactory'
 // import { updateShipMapv, addShipPointCollection } from '../../../src/views/home/copyZfwMapFun'
 let ShipDataImgMap = {

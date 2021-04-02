@@ -19,6 +19,9 @@ import './utils/leaflet.polylineDecorator'
 import 'leaflet.tilelayer.colorfilter' //图层颜色
 import 'leaflet.chinatmsproviders'
 
+import  'leaflet.markercluster'//聚合
+import  'leaflet.markercluster/dist/MarkerCluster.Default.css'//聚合样式
+
 import '@geoman-io/leaflet-geoman-free';
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 

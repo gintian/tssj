@@ -38,6 +38,7 @@
       <el-table-column prop="id" label="序号" align="center"></el-table-column>
       <el-table-column align="center" prop="name" label="名称"></el-table-column>
       <el-table-column align="center" prop="describe" label="描述"></el-table-column>
+      <el-table-column align="center" prop="area" label="区域"></el-table-column>
       <el-table-column prop="type" label="锚地类型" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.type == 0">圆形</span>
@@ -45,7 +46,7 @@
           <span v-if="scope.row.type == 2">多边形</span>
         </template>
       </el-table-column>
-      <el-table-column prop="radius" label="区域" align="center">
+      <el-table-column prop="radius" label="区域半径" align="center">
         <template slot-scope="scope">
           <span>半径{{scope.row.radius}}海里</span>
         </template>
@@ -108,7 +109,7 @@
         <el-form-item v-for="item in addData" :key="item.id" :label="item.name" :prop="item.prop">
           <el-input
             v-model="formLabelAlign[item.prop]"
-            v-if="item.id<4"
+            v-if="item.id<5"
             :disabled="dialog.disabled"
           ></el-input>
 
@@ -475,6 +476,7 @@ export default {
         { id: 1, prop: "lon", name: "经度" },
         { id: 2, prop: "lat", name: "纬度" },
         { id: 3, prop: "describe", name: "描述" },
+        { id: 4, prop: "ares", name: "区域" },
         { id: 6, prop: "type", name: "区域类型" }
       ],
       typeList: [
@@ -501,7 +503,8 @@ export default {
         lat: "", //维度
         lon: "", //经度
         type: "", //类型
-        describe: ""
+        describe: "",
+        area:''
         // radius:'',
       },
         rows:1, //总条数
@@ -514,7 +517,8 @@ export default {
         lon: "", //经度
         type: "", //类型
         radius: "",
-        describe: ""
+        describe: "",
+        area:""
       },
        uploadUrl:'anchorage/pushExcel',
        fileList: [],
@@ -663,11 +667,6 @@ export default {
         { lon: "", lat: "" },
         { lon: "", lat: "" }
       ];
-      // this.dialog.visible = true
-      // this.dialog.title = '锚地添加'
-      // this.dialog.disabled=false
-      // this.dialog.showBtn = true;
-      // this.resetForm('ruleForm')//重置
     },
     AddData() /* 提交表单 */ {
       // alert('submit!'); /basicData/personnel/add
@@ -713,7 +712,8 @@ export default {
           lat: this.temp.lat,
           lon: this.temp.lon,
           type: this.temp.type,
-          describe: this.temp.describe
+          describe: this.temp.describe,
+          area:this.temp.area,
         })
         .then(req => {
           console.log("编辑锚地信息", req);

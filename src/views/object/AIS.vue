@@ -40,15 +40,17 @@
       align="center"
       prop="name"
       label="名称">
-      <!-- fixed:值有（true,left,right）列是否固定在左侧或者右侧，true 表示固定在左侧 -->
-      <!-- column 的 key，如果需要使用 filter-change 事件，则需要此属性标识是哪个 column 的筛选条件 -->
     </el-table-column>
     <el-table-column
       prop="id"
       label="编号"
       align="center">
     </el-table-column>
-    
+     <el-table-column
+      align="center"
+      prop="area"
+      label="区域">
+    </el-table-column>
     <el-table-column prop="lat,lon" label="位置" align="center"  min-width="90%">
        <template slot-scope="scope">   
             <span> 经度：{{scope.row.lon}}</span><br>
@@ -96,8 +98,11 @@
           <el-form-item label="经度" prop="lon">
               <el-input v-model="addsForm.lon" />
             </el-form-item>
-            <el-form-item label="纬度" prop="lat">
+             <el-form-item label="纬度" prop="lat">
             <el-input v-model="addsForm.lat" />
+          </el-form-item>
+            <el-form-item label="区域" prop="area">
+            <el-input v-model="addsForm.area" />
           </el-form-item>
           <el-form-item label="运行状态" prop="status">
               <!-- <el-input v-model="addsForm.status" /> -->
@@ -132,6 +137,9 @@
             </el-form-item>
             <el-form-item label="纬度" prop="lat">
             <el-input v-model="temp.lat" />
+          </el-form-item>
+           <el-form-item label="区域" prop="lat">
+            <el-input v-model="temp.area" />
           </el-form-item>
           <el-form-item label="运行状态" prop="status">
               <el-input v-model="update" @change="changeu" />
@@ -209,7 +217,8 @@ export default {
         lat:'',
         lon:'',
         status:'',
-        station:''
+        station:'',
+        area:''
       },
       temp:{  //编辑的表单字段
         id:'',
@@ -219,6 +228,7 @@ export default {
         lon:'',
         range:'',
         status:'',
+        area:''
       },
       update:'',
       options:[{
@@ -368,7 +378,7 @@ export default {
           this.addsForm.status='true'
         }
         let userList=this.addsForm;  
-        let {station,name,lat,lon,status} = userList;
+        let {station,name,lat,lon,status,area} = userList;
           this.service.post('/ais/save',this.addsForm).then(res => {
             // console.log("新增的AIS数据",res)
           this.getList(); 
@@ -384,6 +394,7 @@ export default {
           lat:this.temp.lat,
          lon:this.temp.lon,
         status:this.temp.status,
+        area:this.temp.area,
        }).then(req => {
           // console.log("编辑AIS信息",req)
           this.getList();

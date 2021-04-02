@@ -63,6 +63,11 @@
       label="探距（海里）"
       align="center">
     </el-table-column>
+     <el-table-column
+      prop="area"
+      label="区域"
+      align="center">
+    </el-table-column>
     <el-table-column prop="status" label="运行状态" align="center">
       <template slot-scope="scope">
             <span v-if="scope.row.status == true">异常</span>
@@ -119,6 +124,9 @@
                   </el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="区域" prop="area">
+              <el-input v-model="addsForm.area" />
+            </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible1 = false">
@@ -154,6 +162,9 @@
           </el-form-item>
           <el-form-item label="运行状态" prop="status">
               <el-input v-model="update" @change="changeu" />
+            </el-form-item>
+            <el-form-item label="区域" prop="area">
+              <el-input v-model="temp.area" />
             </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -227,7 +238,8 @@ export default {
         range:'',
         status:'',
         band:'',
-        station:''
+        station:'',
+        area:""
       },
        delid:'',
       temp:{  //编辑的表单字段
@@ -238,7 +250,8 @@ export default {
         lon:'',
         range:'',
         status:'',
-        band:''
+        band:'',
+        area:''
       },
       Business_exception:null,
       update:'',
@@ -403,7 +416,7 @@ export default {
           this.addsForm.status='true'
         }
         let userList=this.addsForm;  
-        let {station,name,lat,lon,range,band,status} = userList;
+        let {station,name,lat,lon,range,band,status,area} = userList;
       
           this.service.post('/radar/save',this.addsForm).then(res => {
           console.log("新增的雷达数据",res)
@@ -421,7 +434,8 @@ export default {
           lon:this.temp.lon,
           range:this.temp.range,
           status:this.temp.status,
-          band:this.temp.band
+          band:this.temp.band,
+          area:this.temp.area,
        }).then(req => {
           console.log("编辑雷达信息",req)
           this.getList();

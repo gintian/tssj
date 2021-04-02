@@ -44,6 +44,11 @@
     </el-table-column>
     <el-table-column
       align="center"
+      prop="area"
+      label="区域">
+    </el-table-column>
+    <el-table-column
+      align="center"
       prop="describe"
       label="描述">
     </el-table-column>
@@ -90,9 +95,12 @@
           <el-form-item label="纬度" prop="lat">
             <el-input v-model="addsForm.lat" />
           </el-form-item>
+          <el-form-item label="区域" prop="area">
+            <el-input v-model="addsForm.area" />
+          </el-form-item>
           <el-form-item label="描述" prop="describe">
             <el-input v-model="addsForm.describe" />
-          </el-form-item>
+          </el-form-item> 
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible1 = false">
@@ -116,6 +124,9 @@
             </el-form-item>
           <el-form-item label="纬度" prop="lat">
             <el-input v-model="temp.lat" />
+          </el-form-item>
+          <el-form-item label="区域" prop="area">
+            <el-input v-model="temp.area" />
           </el-form-item>
           <el-form-item label="描述" prop="describe">
             <el-input v-model="temp.describe" />
@@ -191,14 +202,16 @@ export default {
         name:'',
         lat:'',
         lon:'',
-        describe:''
+        describe:'',
+        area:""
       },
       temp:{  //编辑的表单字段
         id:'',
         name:'',
         lat:'',
         lon:'',
-        describe:''
+        describe:'',
+        area:""
       },
        uploadUrl:'pier/pushExcel',
        fileList: [],
@@ -338,7 +351,7 @@ export default {
     },
      AddData(){
         let userList=this.addsForm;  
-        let {name,lat,lon,describe} = userList;
+        let {name,lat,lon,describe,area} = userList;
           this.service.post('/pier/save',this.addsForm).then(res => {
             console.log("新增的码头数据",res)
             this.getList(); 
@@ -353,6 +366,7 @@ export default {
           lat:this.temp.lat,
           lon:this.temp.lon,
           describe:this.temp.describe,
+           area:this.temp.area,
        }).then(req => {
           console.log("编辑码头信息",req)
           this.getList();
