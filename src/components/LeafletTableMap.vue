@@ -46,7 +46,18 @@ export default {
     };
   },
   watch: {
-    
+      // mapData: {
+      //   handler(val, oldName) {
+      //     if (this.markerType === "Anchorage") {
+      //       this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/03.png"))(1)(() => {}).addTo(this.map);
+      //       this.map.setView([val.lat, val.lon], 13);
+      //     }
+      //     // this.fullName = newName ;
+      //   },
+      //   immediate: true,
+      //   deep:true
+      // },
+
     mapData(val){
       console.log('mapData',val)
         if (this.markerType === "Anchorage") {
@@ -133,15 +144,20 @@ export default {
         // myMovingMarker.start();
 
         }
-    }
 
+    }
   },
+  //  computed:{
+  //      msg(){
+  //        return this.mapData;
+  //      }
+  //    },
   mounted() {
     this.mapInit();
     // console.log(this.mapData)
-      this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/aim03.png"))(1)(() => {}).addTo(this.map);
-      this.handleMapMarerClick(this.mapData)
-      this.map.setView([this.mapData.lat,this.mapData.lon], 13);
+      // this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/aim03.png"))(1)(() => {}).addTo(this.map);
+      // this.handleMapMarerClick(this.mapData)
+      // this.map.setView([this.mapData.lat,this.mapData.lon], 13);
     //   this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/ais.png"))(2)(() => {}).addTo(this.map);
     //   this.map.setView([this.mapData.lat,this.mapData.lon], 13);
     //   this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/02.png"))(3)(() => {}).addTo(this.map);

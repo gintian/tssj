@@ -68,9 +68,9 @@
                         </el-form-item>
                     </el-form>
                     <span slot="footer" class="dialog-footer" v-show="dialog.showBtn">
-          <el-button @click="dialog.visible = false">取 消</el-button>
-          <el-button type="primary" @click="handleRules('ruleForm','dynamicValidateForm')">确 定</el-button>
-        </span>
+                      <el-button @click="dialog.visible = false">取 消</el-button>
+                      <el-button type="primary" @click="handleRules('ruleForm','dynamicValidateForm')">确 定</el-button>
+                    </span>
                 </el-dialog>
                 <div  class="select_query">
                                 <el-input  placeholder="请输入名称" class="filter-item" v-model="listQuery.name"  style="width: 200px;" />
@@ -95,8 +95,8 @@
                 />
 
                 <el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
-      <leaflet-tablemap :mapData="mapData"  markerType="Submarine" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
-</el-dialog>
+                      <leaflet-tablemap :mapData="mapData"  markerType="Submarine" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
+                </el-dialog>
             </div>
         </div>
 </div>
@@ -111,7 +111,6 @@
     // name: 'seaLine',
     components: {
       PaginationTab,
-      // VideoView,
      'leaflet-tablemap':LeafletTableMap
     },
     data() {
@@ -135,7 +134,7 @@
         addData: [
           {id: 0, prop: 'name', name: '名称'},
           {id: 1, prop: 'total_length', name: '总长度'},
-            {id: 2, prop: 'area', name: '区域'},
+          {id: 2, prop: 'area', name: '区域'},
           {id: 3, prop: 'controller_distance', name: '控制距离'},
           {id: 4, prop: 'points', name: '海底光缆节点集'}
         ],
@@ -414,7 +413,6 @@
             /*padding: 1rem 2rem;*/
             display: flex;
             /*height: calc(100% - 2rem);*/
-
             #target_right {
                 /*margin-left: 2rem;*/
                 flex: 1;
@@ -430,6 +428,11 @@
                         overflow-y: scroll;
                         /*max-height: 350px;*/
                         height:  calc(90% - 130px);
+                        // .el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before {
+                        //           content: '*';
+                        //           color: #F56C6C;
+                        //           margin-right: 4px;
+                        //       }
                     }
                 }
                

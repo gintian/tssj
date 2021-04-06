@@ -13,10 +13,32 @@ const numberRules = {
           }
       }
     },
-    'farDetectDistance': (rule, value, callback) => {
+    'range': (rule, value, callback) => {
         let reg = /^\d+$|^\d+\.\d+$/g;
         if (String(value)==='undefined'||String(value)==='') {
             callback(new Error('请输入探测距离'));
+        } else if (!reg.test(value)) {
+
+            callback(new Error('请输入数字'));
+        } else {
+            callback();
+        }
+    },
+    'lat': (rule, value, callback) => {
+        let reg = /^\d+$|^\d+\.\d+$/g;
+        if (String(value)==='undefined'||String(value)==='') {
+            callback(new Error('请输入纬度'));
+        } else if (!reg.test(value)) {
+
+            callback(new Error('请输入数字'));
+        } else {
+            callback();
+        }
+    },
+    'lon': (rule, value, callback) => {
+        let reg = /^\d+$|^\d+\.\d+$/g;
+        if (String(value)==='undefined'||String(value)==='') {
+            callback(new Error('请输入经度'));
         } else if (!reg.test(value)) {
 
             callback(new Error('请输入数字'));
@@ -130,14 +152,118 @@ const numberRules = {
 
 
 export let formRules = {
+    // 海底光缆
+    total_length: [
+        {required: true, message: '请输入总长度', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    area: [
+        {required: true, message: '请输入区域', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    controller_distance: [
+        {required: true, message: '请输入控制距离', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    points: [
+        {required: true, message: '请输入点位信息', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    // 泊位
     name: [
         {required: true, message: '请输入名称', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
+    ability: [
+        {required: true, message: '请输入兼靠能力', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    capacity: [
+        {required: true, message: '请输入靠泊能力', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    contact: [
+        {required: true, message: '请输入联系人', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    depth: [
+        {required: true, message: '请输入前沿水深', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    description: [
+        {required: true, message: '请输入描述', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    jettyId: [
+        {required: true, message: '请输入所在码头编号', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    jettyName: [
+        {required: true, message: '请输入所在码头名称', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    length: [
+        {required: true, message: '请输入泊位长度', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    org_name : [
+        {required: true, message: '请输入所在企业名称', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    uses: [
+        {required: true, message: '请输入用途', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+// 铁塔
     station_name: [
         {required: true, message: '请输入名称', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
+    tower_height: [
+        {required: true, message: '请输入塔高', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    trans_type: [
+        {required: true, message: '请输入传输方式', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    type: [
+        {required: true, message: '请输入类型', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    
+    skyline_pitch: [
+        {required: true, message: '请输入天线倾角', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    sky_line_height: [
+        {required: true, message: '请输入天线挂高', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    sky_line_coverage: [
+        {required: true, message: '请输入天线方位', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    sky_line_azimuth: [
+        {required: true, message: '请输入天线方位角', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    launch_power: [
+        {required: true, message: '请输入发射功率', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    coverage: [
+        {required: true, message: '请输入覆盖距离', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    bulid_date: [
+        {required: true, message: '请输入创建时间', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    level: [
+        {required: true, message: '请输入等级', trigger: 'blur'}
+    ],
+
     userName: [
         {required: true, message: '请输入用户名', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
@@ -175,17 +301,20 @@ export let formRules = {
         {required: true, message: '请输入所属部门', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
-    total_length: [
-        {required: true, message: '请输入总长度', trigger: 'blur'},
-        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-    ],
+
+   
     orderby: [
         {required: true, message: '请输入序号', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
+// 雷达
     station: [
         {required: true, message: '请输入编号', trigger: 'blur'}
     ],
+    band: [
+        {required: true, message: '请输入波段', trigger: 'blur'}
+    ],
+    
     station_id: [
         {required: true, message: '请输入站点编号', trigger: 'blur'}
     ],
@@ -198,7 +327,7 @@ export let formRules = {
     lat: [
         {required: true, validator: numberRules.testNumber('请输入纬度'), trigger: 'blur'}
     ],
-    farDetectDistance: [
+    range: [
         {required: true, validator: numberRules.testNumber('请输入探测距离'), trigger: 'blur'}
     ],
     scope: [
@@ -219,15 +348,16 @@ export let formRules = {
     radarId: [
         {required: true, message: '请选择所属雷达', trigger: 'change'}
     ],
-    waveType: [
-        {required: true, message: '请选择波段', trigger: 'change'}
-    ],
+    // waveType: [
+    //     {required: true, message: '请选择波段', trigger: 'change'}
+    // ],
     group: [
         {required: true, message: '请选择分组', trigger: 'change'}
     ],
-    level: [
-        {required: true, message: '请选择海域类型', trigger: 'change'}
-    ],
+    // level: [
+    //     {required: true, message: '请选择海域类型', trigger: 'change'}
+    // ],
+    
     showed: [
         {required: true, message: '请选择是否隐藏', trigger: 'change'}
     ],

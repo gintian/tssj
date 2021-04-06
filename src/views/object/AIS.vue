@@ -88,7 +88,7 @@
  <!-- 新增弹层功能 -->
      <el-dialog title="添加AIS" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
       <el-form ref="updateForm"  :model="addsForm" label-position="left" label-width="100px"
-       style="width: 400px; margin-left:50px;">
+       style="width: 400px; margin-left:50px;"    :rules="formRules">
           <el-form-item label="名称" prop="name" >
               <el-input v-model="addsForm.name" />
             </el-form-item>
@@ -125,7 +125,7 @@
   <!-- 编辑弹层功能 -->
      <el-dialog title="编辑AIS" :visible.sync="dialogFormVisible"     width="600px">
       <el-form ref="updateForm"  :model="temp" label-position="left" label-width="100px"
-       style="width: 400px; margin-left:50px;">
+       style="width: 400px; margin-left:50px;" :rules="formRules">
             <el-form-item label="名称" prop="name" >
               <el-input v-model="temp.name" />
             </el-form-item>
@@ -183,7 +183,7 @@
 
 <script>
 
-import TableMap from '../../../src/components/TableMap'
+import {formRules} from '../../utils/formRules';
 import LeafletTableMap from '../../../src/components/LeafletTableMap'
 export default {
   name: 'ComplexTable',
@@ -197,7 +197,9 @@ export default {
           showBtn:true,
           showMap:false,
           disabled:false
-        }, 
+        },
+        
+      formRules:formRules,
       mapData: {},
       tableData: [], //表格展示的数据
       pages:1, //总页数
