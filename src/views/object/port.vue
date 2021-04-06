@@ -33,9 +33,10 @@
                                     width="30%"
                                     top='9vh'
                                     :before-close="handleClose">
+                                    <!-- 控制input的显隐v-if="item.id<14"  -->
                                 <el-form label-position="left" label-width="80px" :model="formLabelAlign" ref="ruleForm" :rules="formRules">
                                     <el-form-item v-for="item in addData" :key="item.id" :label="item.name" :prop="item.prop">
-                                        <el-input v-model="formLabelAlign[item.prop]" v-if="item.id<14" :disabled="dialog.disabled" ></el-input>
+                                        <el-input v-model="formLabelAlign[item.prop]"  v-if="item.id<5||item.id>5&&item.id<14" :disabled="dialog.disabled" ></el-input>
                                         <div>
                                             <el-select v-model="formLabelAlign.status" placeholder="请选择" v-if="item.id==5" :disabled="dialog.disabled" >
                                                 <el-option
@@ -49,13 +50,13 @@
                                     </el-form-item>
                                 </el-form>
                                 <span slot="footer" class="dialog-footer" v-show="dialog.showBtn">
-                    <el-button @click="dialog.visible = false">取 消</el-button>
-                    <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
-                    </span>
+                                  <el-button @click="dialog.visible = false">取 消</el-button>
+                                  <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+                                </span>
                             </el-dialog>
                             <div  class="select_query">
                                 <el-input  placeholder="请输入名称" class="filter-item" v-model="listQuery.name"  style="width: 200px;" />
-                                    <el-button  class="filter-item" type="primary" icon="el-icon-search" @click="queryData">搜索 </el-button>
+                                <el-button  class="filter-item" type="primary" icon="el-icon-search" @click="queryData">搜索 </el-button>
                             </div>
                 </div>
                 <PaginationTab
@@ -112,9 +113,8 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
           lon: '',
           lat: '',
           jettyId: '',
-          status: '',
           jettyName:'',
-          // used:'',
+          status: '',
           ability:'',
           capacity:'',
           contact:'',
@@ -202,12 +202,12 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
             //  console.log("返回数据状态码：",res.data.error);
             if(res.data.error==0){
               //  this.$message.success('成功导入船舶离线数据' + '!');
-               this.$alert('成功导入1条船舶离线数据!');
-              //  this.$message({
-              //   type: 'success',
-              //   message: '成功导入船舶离线数据!',
-              //   offset:500
-              // });
+              //  this.$alert('成功导入1条船舶离线数据!');
+               this.$message({
+                type: 'success',
+                message: res.data.msg,
+                offset:500
+              });
               // this.$notify({
               //   type: 'success',
               //   message: '成功导入1条船舶离线数据!'
@@ -406,5 +406,9 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
         }
     }
 
-
+// /deep/.el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before {
+//     content: '*';
+//     color: #F56C6C;
+//     margin-right: 4px;
+// }
 </style>

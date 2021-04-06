@@ -809,7 +809,7 @@ import homeMethods from "./methods";
 import mapSocketFun, { mapSocket } from "./mapSocket";
 import mapUtils from "../../utils/mapUtils";
 import { mapData } from "./mapData";
-import { actions } from "./noIf";
+
 import Dropdown from "../../components/Dropdown.vue";
 import ButtonGroup from "../../components/ButtonGroup.vue";
 import MapControl from "../../components/map/MapControl";
@@ -854,7 +854,6 @@ import groupTree from "../../components/groupTree.vue";
 import MapSigns from "../../components/MapSigns.vue";
 import Statistics from "../../components/Statistics.vue";
 import CountrySigns from "../../components/CountrySigns .vue";
-import { wgs84ToBD } from "../../utils/coordinateConvert";
 import { formRules } from "../../utils/formRules";
 
 import VideoPlayer from "../../components/VideoPlayer";

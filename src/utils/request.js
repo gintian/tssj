@@ -59,7 +59,6 @@ service.interceptors.response.use(
      else  if (data.error !== 0) {
           console.log('data', data)
           // if(status===500) 处理token过期等
-    
           Vue.prototype.$message({ message: data.msg, type: 'error' });
           Promise.reject(data.msg);
           return data

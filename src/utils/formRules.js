@@ -187,7 +187,7 @@ export let formRules = {
         {required: true, message: '请输入编号', trigger: 'blur'}
     ],
     station_id: [
-        {required: true, message: '请输入编号', trigger: 'blur'}
+        {required: true, message: '请输入站点编号', trigger: 'blur'}
     ],
     plainPassword: [
         {required: true, message: '请输入密码', trigger: 'blur'}

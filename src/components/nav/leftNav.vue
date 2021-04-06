@@ -25,7 +25,7 @@
               </el-submenu>
               <el-menu-item v-else-if="item.leaf&&item.children&&item.children.length" :index="item.children[0].path"
                             :class="$route.path==item.children[0].path?'is-active':''" v-show="item.menuShow"  style="height:94px;line-height:33px;padding-top:20px;">
-                <i :class="item.iconCls"></i><span slot="title">{{item.children[0].name}}</span>
+                <i :class="item.iconCls" style="width:144px;"></i><span slot="title">{{item.children[0].name}}</span>
               </el-menu-item>
             </template>
           </template>

@@ -53,7 +53,6 @@
             <span> 经度：{{scope.row.lon}}</span><br>
             <span> 纬度：{{scope.row.lat}}</span>
        </template>
-     <!-- align:	对齐方式,	值有left/center/right	默认left -->
     </el-table-column>
      <el-table-column
       align="center"

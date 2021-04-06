@@ -1,0 +1,204 @@
+Date : 2021-04-06 14:02:38
+Directory : e:\Desktop\tssj
+Total : 143 files,  40160 codes, 4182 comments, 2170 blanks, all 46512 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| Vue        |         82 |     19,872 |      2,357 |      1,012 |     23,241 |
+| JSON       |          3 |     12,225 |          0 |          3 |     12,228 |
+| JavaScript |         38 |      6,413 |      1,747 |        887 |      9,047 |
+| CSS        |          5 |        868 |         48 |        176 |      1,092 |
+| HTML       |          2 |        433 |          4 |         53 |        490 |
+| XML        |         11 |        236 |         13 |         31 |        280 |
+| Less       |          1 |         98 |         13 |          4 |        115 |
+| Markdown   |          1 |         15 |          0 |          4 |         19 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                              | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                 |        143 |     40,160 |      4,182 |      2,170 |     46,512 |
+| public                                                                            |          1 |         16 |          2 |          1 |         19 |
+| src                                                                               |        137 |     27,974 |      4,143 |      2,159 |     34,276 |
+| src\assets                                                                        |         19 |      1,641 |         73 |        249 |      1,963 |
+| src\assets\css                                                                    |          3 |        398 |         39 |         63 |        500 |
+| src\assets\iconfont                                                               |          6 |      1,039 |         24 |        186 |      1,249 |
+| src\assets\mapSigns                                                               |          5 |         68 |          5 |          0 |         73 |
+| src\assets\mapSigns\plane                                                         |          4 |         56 |          4 |          0 |         60 |
+| src\assets\mapicon                                                                |          1 |         10 |          1 |          0 |         11 |
+| src\assets\table                                                                  |          4 |        126 |          4 |          0 |        130 |
+| src\assets\table\radar                                                            |          4 |        126 |          4 |          0 |        130 |
+| src\common                                                                        |          2 |        113 |         33 |         16 |        162 |
+| src\components                                                                    |         62 |     11,534 |      1,647 |        668 |     13,849 |
+| src\components\editor                                                             |          2 |        157 |         84 |         10 |        251 |
+| src\components\map                                                                |         40 |      6,674 |        918 |        412 |      8,004 |
+| src\components\nav                                                                |          1 |        120 |          7 |          6 |        133 |
+| src\element                                                                       |          1 |         55 |          2 |          3 |         60 |
+| src\router                                                                        |          7 |        362 |         97 |         41 |        500 |
+| src\router\modules                                                                |          6 |        146 |         11 |         10 |        167 |
+| src\store                                                                         |          4 |        118 |         37 |         15 |        170 |
+| src\store\modules                                                                 |          2 |         89 |         32 |          5 |        126 |
+| src\utils                                                                         |         11 |      2,268 |        245 |        385 |      2,898 |
+| src\utils\Leaflet.LinearMeasurement                                               |          2 |        592 |         35 |        166 |        793 |
+| src\vandor                                                                        |          2 |        448 |         56 |         83 |        587 |
+| src\views                                                                         |         27 |     11,346 |      1,936 |        679 |     13,961 |
+| src\views\Suspicious                                                              |          1 |        435 |         22 |         20 |        477 |
+| src\views\alarmLog                                                                |          3 |        576 |         58 |         29 |        663 |
+| src\views\dept                                                                    |          1 |        420 |         25 |         25 |        470 |
+| src\views\home                                                                    |          8 |      4,663 |      1,315 |        448 |      6,426 |
+| src\views\login                                                                   |          1 |        143 |         14 |         10 |        167 |
+| src\views\object                                                                  |         12 |      4,980 |        490 |        144 |      5,614 |
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                          | language   | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| e:\Desktop\tssj\README.md                                                         | Markdown   |         15 |          0 |          4 |         19 |
+| e:\Desktop\tssj\babel.config.js                                                   | JavaScript |          5 |          0 |          1 |          6 |
+| e:\Desktop\tssj\package-lock.json                                                 | JSON       |     12,069 |          0 |          1 |     12,070 |
+| e:\Desktop\tssj\package.json                                                      | JSON       |         56 |          0 |          1 |         57 |
+| e:\Desktop\tssj\public\index.html                                                 | HTML       |         16 |          2 |          1 |         19 |
+| e:\Desktop\tssj\src\App.vue                                                       | Vue        |         33 |         16 |          4 |         53 |
+| e:\Desktop\tssj\src\assets\css\index.css                                          | CSS        |         29 |          0 |          0 |         29 |
+| e:\Desktop\tssj\src\assets\css\object.less                                        | Less       |         98 |         13 |          4 |        115 |
+| e:\Desktop\tssj\src\assets\css\style.css                                          | CSS        |        271 |         26 |         59 |        356 |
+| e:\Desktop\tssj\src\assets\iconfont\demo.css                                      | CSS        |        435 |         19 |         86 |        540 |
+| e:\Desktop\tssj\src\assets\iconfont\demo_index.html                               | HTML       |        417 |          2 |         52 |        471 |
+| e:\Desktop\tssj\src\assets\iconfont\iconfont.css                                  | CSS        |         54 |          0 |         16 |         70 |
+| e:\Desktop\tssj\src\assets\iconfont\iconfont.js                                   | JavaScript |          1 |          0 |          0 |          1 |
+| e:\Desktop\tssj\src\assets\iconfont\iconfont.json                                 | JSON       |        100 |          0 |          1 |        101 |
+| e:\Desktop\tssj\src\assets\iconfont\iconfont.svg                                  | XML        |         32 |          3 |         31 |         66 |
+| e:\Desktop\tssj\src\assets\mapSigns\aim3.svg                                      | XML        |         12 |          1 |          0 |         13 |
+| e:\Desktop\tssj\src\assets\mapSigns\plane\fly1.svg                                | XML        |         15 |          1 |          0 |         16 |
+| e:\Desktop\tssj\src\assets\mapSigns\plane\fly2.svg                                | XML        |         11 |          1 |          0 |         12 |
+| e:\Desktop\tssj\src\assets\mapSigns\plane\fly3.svg                                | XML        |         15 |          1 |          0 |         16 |
+| e:\Desktop\tssj\src\assets\mapSigns\plane\fly4.svg                                | XML        |         15 |          1 |          0 |         16 |
+| e:\Desktop\tssj\src\assets\mapicon\focus.svg                                      | XML        |         10 |          1 |          0 |         11 |
+| e:\Desktop\tssj\src\assets\table\radar\5.svg                                      | XML        |         31 |          1 |          0 |         32 |
+| e:\Desktop\tssj\src\assets\table\radar\6.svg                                      | XML        |         32 |          1 |          0 |         33 |
+| e:\Desktop\tssj\src\assets\table\radar\7.svg                                      | XML        |         32 |          1 |          0 |         33 |
+| e:\Desktop\tssj\src\assets\table\radar\8.svg                                      | XML        |         31 |          1 |          0 |         32 |
+| e:\Desktop\tssj\src\common\dateutil.js                                            | JavaScript |        102 |         32 |         14 |        148 |
+| e:\Desktop\tssj\src\common\util.js                                                | JavaScript |         11 |          1 |          2 |         14 |
+| e:\Desktop\tssj\src\components\404.vue                                            | Vue        |         33 |          0 |          1 |         34 |
+| e:\Desktop\tssj\src\components\ButtonGroup.vue                                    | Vue        |        104 |          4 |          6 |        114 |
+| e:\Desktop\tssj\src\components\CountrySigns  - 副本.vue                             | Vue        |        180 |         17 |          8 |        205 |
+| e:\Desktop\tssj\src\components\CountrySigns .vue                                  | Vue        |        478 |         56 |          9 |        543 |
+| e:\Desktop\tssj\src\components\DevInfoList.vue                                    | Vue        |         98 |          1 |          4 |        103 |
+| e:\Desktop\tssj\src\components\Dropdown.vue                                       | Vue        |        142 |         14 |          8 |        164 |
+| e:\Desktop\tssj\src\components\HelloWorld.vue                                     | Vue        |         16 |          0 |          4 |         20 |
+| e:\Desktop\tssj\src\components\LeafletTableMap.vue                                | Vue        |        223 |        119 |         17 |        359 |
+| e:\Desktop\tssj\src\components\MapSigns.vue                                       | Vue        |        153 |          7 |          6 |        166 |
+| e:\Desktop\tssj\src\components\MyPaginationTab.vue                                | Vue        |        129 |         13 |         11 |        153 |
+| e:\Desktop\tssj\src\components\PaginationTable.vue                                | Vue        |        318 |         26 |         35 |        379 |
+| e:\Desktop\tssj\src\components\ShipTab.vue                                        | Vue        |         50 |          0 |          6 |         56 |
+| e:\Desktop\tssj\src\components\Statistics.vue                                     | Vue        |         57 |          2 |          3 |         62 |
+| e:\Desktop\tssj\src\components\TableMap.vue                                       | Vue        |        139 |         17 |         12 |        168 |
+| e:\Desktop\tssj\src\components\VerticalityTab.vue                                 | Vue        |        107 |         62 |          4 |        173 |
+| e:\Desktop\tssj\src\components\VideoPlayer.vue                                    | Vue        |        451 |         90 |         21 |        562 |
+| e:\Desktop\tssj\src\components\VideoView.vue                                      | Vue        |        609 |         75 |         47 |        731 |
+| e:\Desktop\tssj\src\components\editor\editor.vue                                  | Vue        |        120 |         63 |          8 |        191 |
+| e:\Desktop\tssj\src\components\editor\emoji.js                                    | JavaScript |         37 |         21 |          2 |         60 |
+| e:\Desktop\tssj\src\components\groupTree.vue                                      | Vue        |      1,098 |        130 |         35 |      1,263 |
+| e:\Desktop\tssj\src\components\map\AisDataTab.vue                                 | Vue        |        127 |         27 |          7 |        161 |
+| e:\Desktop\tssj\src\components\map\AisInfoView.vue                                | Vue        |        146 |         22 |         11 |        179 |
+| e:\Desktop\tssj\src\components\map\AnchInfoView.vue                               | Vue        |        124 |         13 |          3 |        140 |
+| e:\Desktop\tssj\src\components\map\Berth.vue                                      | Vue        |        139 |         20 |          8 |        167 |
+| e:\Desktop\tssj\src\components\map\CMIO.vue                                       | Vue        |        122 |         20 |          9 |        151 |
+| e:\Desktop\tssj\src\components\map\Camera.vue                                     | Vue        |        133 |         19 |          8 |        160 |
+| e:\Desktop\tssj\src\components\map\CustomArea.vue                                 | Vue        |        174 |         21 |          9 |        204 |
+| e:\Desktop\tssj\src\components\map\Customs.vue                                    | Vue        |        122 |         20 |          9 |        151 |
+| e:\Desktop\tssj\src\components\map\DailyEventDiag.vue                             | Vue        |        132 |          8 |         14 |        154 |
+| e:\Desktop\tssj\src\components\map\FI.vue                                         | Vue        |        123 |         20 |          9 |        152 |
+| e:\Desktop\tssj\src\components\map\FocusDialog.vue                                | Vue        |        154 |          4 |          7 |        165 |
+| e:\Desktop\tssj\src\components\map\LeftDrawer.vue                                 | Vue        |        739 |        136 |         24 |        899 |
+| e:\Desktop\tssj\src\components\map\MSA.vue                                        | Vue        |        122 |         25 |          9 |        156 |
+| e:\Desktop\tssj\src\components\map\MapControl.vue                                 | Vue        |         48 |          4 |          7 |         59 |
+| e:\Desktop\tssj\src\components\map\MarpoInfoView.vue                              | Vue        |        123 |         26 |          9 |        158 |
+| e:\Desktop\tssj\src\components\map\MilidivisInfoView .vue                         | Vue        |        122 |         27 |          9 |        158 |
+| e:\Desktop\tssj\src\components\map\NavyInfoView.vue                               | Vue        |        123 |         20 |          9 |        152 |
+| e:\Desktop\tssj\src\components\map\OFA.vue                                        | Vue        |        122 |         25 |          9 |        156 |
+| e:\Desktop\tssj\src\components\map\ObjectSelect.vue                               | Vue        |         96 |          7 |          6 |        109 |
+| e:\Desktop\tssj\src\components\map\PSB.vue                                        | Vue        |        122 |         25 |          9 |        156 |
+| e:\Desktop\tssj\src\components\map\PierInfoView.vue                               | Vue        |        172 |         46 |          9 |        227 |
+| e:\Desktop\tssj\src\components\map\PlaneInfoView.vue                              | Vue        |        106 |         17 |         11 |        134 |
+| e:\Desktop\tssj\src\components\map\PortInfoView.vue                               | Vue        |        126 |         25 |         10 |        161 |
+| e:\Desktop\tssj\src\components\map\RadarDataTab.vue                               | Vue        |        127 |         23 |         14 |        164 |
+| e:\Desktop\tssj\src\components\map\RadarInfoView.vue                              | Vue        |        262 |         26 |         19 |        307 |
+| e:\Desktop\tssj\src\components\map\SeaLineInfoView.vue                            | Vue        |        156 |          6 |          5 |        167 |
+| e:\Desktop\tssj\src\components\map\SelectMarker.vue                               | Vue        |        172 |         11 |          7 |        190 |
+| e:\Desktop\tssj\src\components\map\SelectShip.vue                                 | Vue        |        117 |          2 |          6 |        125 |
+| e:\Desktop\tssj\src\components\map\ShipAreaCount.vue                              | Vue        |         87 |         11 |         12 |        110 |
+| e:\Desktop\tssj\src\components\map\ShipCount.vue                                  | Vue        |         81 |          8 |         12 |        101 |
+| e:\Desktop\tssj\src\components\map\ShipDetailView.vue                             | Vue        |        370 |         24 |         21 |        415 |
+| e:\Desktop\tssj\src\components\map\ShipHistroyView.vue                            | Vue        |        125 |          2 |          4 |        131 |
+| e:\Desktop\tssj\src\components\map\ShipInfoView.vue                               | Vue        |        206 |         46 |          3 |        255 |
+| e:\Desktop\tssj\src\components\map\StationInfoView.vue                            | Vue        |        253 |         37 |         17 |        307 |
+| e:\Desktop\tssj\src\components\map\Tower.vue                                      | Vue        |        140 |         18 |          8 |        166 |
+| e:\Desktop\tssj\src\components\map\TowerInfoView.vue                              | Vue        |        164 |         27 |          7 |        198 |
+| e:\Desktop\tssj\src\components\map\TuliView.vue                                   | Vue        |         29 |          0 |          4 |         33 |
+| e:\Desktop\tssj\src\components\map\VideoView.vue                                  | Vue        |        598 |         75 |         47 |        720 |
+| e:\Desktop\tssj\src\components\map\importExcel.vue                                | Vue        |        163 |         16 |          7 |        186 |
+| e:\Desktop\tssj\src\components\map\layerSelect.vue                                | Vue        |        107 |          9 |          4 |        120 |
+| e:\Desktop\tssj\src\components\nav\leftNav.vue                                    | Vue        |        120 |          7 |          6 |        133 |
+| e:\Desktop\tssj\src\components\selectdate.vue                                     | Vue        |        198 |          5 |          3 |        206 |
+| e:\Desktop\tssj\src\element\index.js                                              | JavaScript |         55 |          2 |          3 |         60 |
+| e:\Desktop\tssj\src\main.js                                                       | JavaScript |         56 |          1 |         16 |         73 |
+| e:\Desktop\tssj\src\router\index.js                                               | JavaScript |        216 |         86 |         31 |        333 |
+| e:\Desktop\tssj\src\router\modules\index.js                                       | JavaScript |          7 |          1 |          2 |         10 |
+| e:\Desktop\tssj\src\router\modules\plan.js                                        | JavaScript |          7 |          0 |          1 |          8 |
+| e:\Desktop\tssj\src\router\modules\system.js                                      | JavaScript |         34 |          5 |          3 |         42 |
+| e:\Desktop\tssj\src\router\modules\target.js                                      | JavaScript |         69 |          5 |          2 |         76 |
+| e:\Desktop\tssj\src\router\modules\user.js                                        | JavaScript |         17 |          0 |          1 |         18 |
+| e:\Desktop\tssj\src\router\modules\war.js                                         | JavaScript |         12 |          0 |          1 |         13 |
+| e:\Desktop\tssj\src\store\getters.js                                              | JavaScript |          5 |          0 |          2 |          7 |
+| e:\Desktop\tssj\src\store\index.js                                                | JavaScript |         24 |          5 |          8 |         37 |
+| e:\Desktop\tssj\src\store\modules\loginStore.js                                   | JavaScript |         72 |          0 |          2 |         74 |
+| e:\Desktop\tssj\src\store\modules\user.js                                         | JavaScript |         17 |         32 |          3 |         52 |
+| e:\Desktop\tssj\src\utils\Leaflet.LinearMeasurement\Leaflet.LinearMeasurement.css | CSS        |         79 |          3 |         15 |         97 |
+| e:\Desktop\tssj\src\utils\Leaflet.LinearMeasurement\Leaflet.LinearMeasurement.js  | JavaScript |        513 |         32 |        151 |        696 |
+| e:\Desktop\tssj\src\utils\MovingMarker.js                                         | JavaScript |        231 |         20 |         54 |        305 |
+| e:\Desktop\tssj\src\utils\MyXNotification.js                                      | JavaScript |         20 |          2 |          5 |         27 |
+| e:\Desktop\tssj\src\utils\coordinateConvert.js                                    | JavaScript |         89 |         24 |          6 |        119 |
+| e:\Desktop\tssj\src\utils\formRules.js                                            | JavaScript |        271 |         13 |         10 |        294 |
+| e:\Desktop\tssj\src\utils\leaflet.canvas-markers.js                               | JavaScript |        378 |          0 |         20 |        398 |
+| e:\Desktop\tssj\src\utils\leaflet.polylineDecorator.js                            | JavaScript |        345 |         66 |         68 |        479 |
+| e:\Desktop\tssj\src\utils\mapUtils.js                                             | JavaScript |         83 |         32 |          8 |        123 |
+| e:\Desktop\tssj\src\utils\proj4leaflet.js                                         | JavaScript |        215 |         18 |         40 |        273 |
+| e:\Desktop\tssj\src\utils\request.js                                              | JavaScript |         44 |         35 |          8 |         87 |
+| e:\Desktop\tssj\src\vandor\Blob.js                                                | JavaScript |        342 |         45 |         57 |        444 |
+| e:\Desktop\tssj\src\vandor\export2Excel.js                                        | JavaScript |        106 |         11 |         26 |        143 |
+| e:\Desktop\tssj\src\views\Home.vue                                                | Vue        |        129 |         12 |          3 |        144 |
+| e:\Desktop\tssj\src\views\Suspicious\index.vue                                    | Vue        |        435 |         22 |         20 |        477 |
+| e:\Desktop\tssj\src\views\alarmLog\add.vue                                        | Vue        |        237 |         34 |          9 |        280 |
+| e:\Desktop\tssj\src\views\alarmLog\index.vue                                      | Vue        |        175 |         18 |         13 |        206 |
+| e:\Desktop\tssj\src\views\alarmLog\validate.vue                                   | Vue        |        164 |          6 |          7 |        177 |
+| e:\Desktop\tssj\src\views\dept\index.vue                                          | Vue        |        420 |         25 |         25 |        470 |
+| e:\Desktop\tssj\src\views\home\Map.vue                                            | Vue        |      1,659 |         94 |        111 |      1,864 |
+| e:\Desktop\tssj\src\views\home\mapComponentFactory.js                             | JavaScript |        403 |        134 |         87 |        624 |
+| e:\Desktop\tssj\src\views\home\mapComputed.js                                     | JavaScript |         21 |          6 |          5 |         32 |
+| e:\Desktop\tssj\src\views\home\mapData.js                                         | JavaScript |        266 |         53 |         32 |        351 |
+| e:\Desktop\tssj\src\views\home\mapSocket.js                                       | JavaScript |        120 |         34 |         10 |        164 |
+| e:\Desktop\tssj\src\views\home\mapWatch.js                                        | JavaScript |        203 |        177 |         29 |        409 |
+| e:\Desktop\tssj\src\views\home\methods.js                                         | JavaScript |      1,648 |        749 |        123 |      2,520 |
+| e:\Desktop\tssj\src\views\home\noIf.js                                            | JavaScript |        343 |         68 |         51 |        462 |
+| e:\Desktop\tssj\src\views\login\loginView.vue                                     | Vue        |        143 |         14 |         10 |        167 |
+| e:\Desktop\tssj\src\views\object\AIS.vue                                          | Vue        |        375 |         26 |          8 |        409 |
+| e:\Desktop\tssj\src\views\object\Anchorage.vue                                    | Vue        |        653 |         70 |         12 |        735 |
+| e:\Desktop\tssj\src\views\object\Anchorage11.vue                                  | Vue        |        313 |         19 |         11 |        343 |
+| e:\Desktop\tssj\src\views\object\Berthage.vue                                     | Vue        |        287 |         15 |         10 |        312 |
+| e:\Desktop\tssj\src\views\object\Submarine.vue                                    | Vue        |        391 |         38 |         18 |        447 |
+| e:\Desktop\tssj\src\views\object\Submarine副本.vue                                  | Vue        |        356 |         33 |         12 |        401 |
+| e:\Desktop\tssj\src\views\object\camera.vue                                       | Vue        |        661 |         59 |         13 |        733 |
+| e:\Desktop\tssj\src\views\object\port.vue                                         | Vue        |        363 |         44 |          8 |        415 |
+| e:\Desktop\tssj\src\views\object\radar.vue                                        | Vue        |        406 |         34 |         10 |        450 |
+| e:\Desktop\tssj\src\views\object\tower.vue                                        | Vue        |        466 |         35 |         13 |        514 |
+| e:\Desktop\tssj\src\views\object\tower副本.vue                                      | Vue        |        376 |         81 |         17 |        474 |
+| e:\Desktop\tssj\src\views\object\wharf.vue                                        | Vue        |        333 |         36 |         12 |        381 |
+| e:\Desktop\tssj\vue.config.js                                                     | JavaScript |         25 |         37 |          3 |         65 |
+| Total                                                                             |            |     40,160 |      4,182 |      2,170 |     46,512 |
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
