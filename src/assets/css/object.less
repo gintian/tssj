@@ -87,13 +87,24 @@
     }
     // 星号
 /deep/ .addDialog{
-  .el-form-item__label::before{
-    content: '*';
-    color: red;
-    margin-right: 10px;
-    font-size: 20px;
-    position: relative;
-    top: 6px;
+  overflow: auto;
+  max-height: 70%;
+  .el-dialog__header {
+    // background: white;
+    position: fixed;
+    z-index: 9999;
+    width: 30%;
+  }
+  .el-dialog__body {
+    margin-top: 40px;
+    .el-form-item__label::before{
+      content: '*';
+      color: red;
+      margin-right: 10px;
+      font-size: 20px;
+      position: relative;
+      top: 6px;
+    }
   }
 }
 

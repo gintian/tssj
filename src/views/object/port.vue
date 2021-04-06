@@ -379,8 +379,6 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
                     overflow: hidden;
                 }
                 /deep/.videoDialog{
-                    // height: 100%;
-                    // height: 600px;
                     overflow: auto;
                     max-height: 70%;
                     .el-dialog__header {
@@ -396,6 +394,9 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
                         // height:  calc(90% - 130px);
                     }
                     .el-dialog__footer{
+                       position: -webkit-sticky;
+                        position: sticky;
+                        top: 0;
                         // position:sticky;
                         //   position: fixed;
                         // z-index: 99999999999;
@@ -405,10 +406,4 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
             }
         }
     }
-
-// /deep/.el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before {
-//     content: '*';
-//     color: #F56C6C;
-//     margin-right: 4px;
-// }
 </style>
