@@ -1222,16 +1222,6 @@ const marker = {
       }
     })
     // 铁塔
-    // this.service.get('/tower/findAll').then(res => {
-    //   // console.log(res.data,'tower')
-    //   for (let i of res.data) {
-    //     // console.log(i)
-    //     let bd09Arr = wgs84ToBD(i.longitude, i.latitude)
-    //     let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets/mapSigns/base4.svg'))('铁塔')(() => {})
-    //     this.MarkerClusterGroup.addLayer(marker);
-    //   }
-    
-    // })
     this.service.get('/tower/allList').then(res => {
       console.log("区域内铁塔信息",res)
       for (let e of res.list) {

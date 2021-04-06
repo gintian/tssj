@@ -183,7 +183,6 @@
 </template>
 
 <script>
-// import TableMap from '../../../src/components/TableMap'
 import LeafletTableMap from '../../../src/components/LeafletTableMap'
 export default {
   name: 'ComplexTable',

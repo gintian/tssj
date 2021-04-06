@@ -858,11 +858,6 @@ import { wgs84ToBD } from "../../utils/coordinateConvert";
 import { formRules } from "../../utils/formRules";
 
 import VideoPlayer from "../../components/VideoPlayer";
-//   import {
-//     addMyMarker,
-//     addPolygon, customMarker, addStationDom,
-//     mapComopentFun, addRadarDom
-//   } from './mapComponentFactory'
 export default {
   name: "Map",
   components: {
@@ -937,9 +932,9 @@ export default {
     this.areadefineLayer = new L.FeatureGroup().addTo(this.drawLayer);
 
       this.MarkerClusterGroup =  new L.markerClusterGroup({
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true,
-        chunkedLoading: true,
+        showCoverageOnHover: false,  //不显示覆盖范围
+        zoomToBoundsOnClick: true,  //标记可点击
+        chunkedLoading: true,  //分块加载
         maxClusterRadius: 40, //默认80
       }).addTo(this.map);
 
@@ -960,7 +955,7 @@ export default {
     this.loadDefaultMarker();
     this.loadLeftDrawer();
     this.ShipStatistical();
-    
+
     setTimeout(() => {
       this.websocketsend(
         JSON.stringify({
@@ -1203,30 +1198,6 @@ export default {
     },
     loadVideo() {
       this.dialogInfo.camera = [{ name: "1231", id: "1" }];
-      // const loadInfo = e => {
-      //     this.service.post('http://218.205.125.100:8093/camera/view', {
-      //         id: e.id
-      //     })
-      //         .then(res => {
-      //             // console.log(res)
-      //             this.dialogInfo.camera = [res.data]
-      //             this.showInfo.camera = true
-      //         })
-      // }
-      // this.$axios.post('http://218.205.125.100:8093/camera/findAll', {
-      //     stationId: 4
-      // }).then(res => {
-      //     console.log(res.data)
-      //     this.dialogInfo.camera = res.data
-      //     this.showInfo.camera = true
-      //     res.data.forEach(e => {
-      //
-      //         let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
-      //         let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 10, require('../../assets/mapSigns/system4.png'), e.pAngle)('视频监控站')
-      //         ((ev) => {loadInfo(e)})
-      //         marker.addTo(this.stationLayerGroup)
-      //     })
-      // })
     }
   },
   directives: {

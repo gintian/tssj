@@ -150,19 +150,33 @@ export default {
           +this.listQuery.endTime 
           // +'&&content='
           //  +this.listQuery.content
-        ).then(req => {
-          console.log("系统操作日志数据",req)
-          this.list = req.page.list
-          this.total = req.page.totalRow //总条数
-          this.pages = req.page.totalPage;  //总页数
+        ).then(res => {
+          console.log("系统操作日志数据",res)
+             if(res.error===0){
+              this.list = res.page.list
+              this.total = res.page.totalRow //总条数
+              this.pages = res.page.totalPage;  //总页数
+            }else if(res.error===-1){
+            this.open(res.dmessage)
+          } 
         })
     },
+    open(e) {
+        this.$alert('您未输入查询条件/查询条件不正确，请重新输入', '温馨提示', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: e
+            });
+          }
+        });
+      },
     query(){ //查询
-
     //  console.log(new Date(this.listQuery.beginTime).toLocaleDateString().replace(/\//g,'-'),'beginTime')
+        console.log(new Date(this.listQuery.endTime).toLocaleDateString().replace(/\//g,'-'),'endTime')
      this.listQuery.beginTime=new Date(this.listQuery.beginTime).toLocaleDateString().replace(/\//g,'-')
      this.listQuery.endTime=new Date(this.listQuery.endTime).toLocaleDateString().replace(/\//g,'-')
-
       this.getList();
       },
     //当前条数变化

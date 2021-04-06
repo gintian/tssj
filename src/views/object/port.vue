@@ -37,14 +37,6 @@
                                     <el-form-item v-for="item in addData" :key="item.id" :label="item.name" :prop="item.prop">
                                         <el-input v-model="formLabelAlign[item.prop]" v-if="item.id<14" :disabled="dialog.disabled" ></el-input>
                                         <div>
-                                            <!-- <el-select v-model="formLabelAlign.inPort" placeholder="请选择" v-if="item.id==3"  :disabled="dialog.disabled" >
-                                                <el-option
-                                                        v-for="i in portData"
-                                                        :key="i.id"
-                                                        :label="i.name"
-                                                        :value="i.id">
-                                                </el-option>
-                                            </el-select> -->
                                             <el-select v-model="formLabelAlign.status" placeholder="请选择" v-if="item.id==5" :disabled="dialog.disabled" >
                                                 <el-option
                                                         v-for="i in statusSelect"

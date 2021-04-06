@@ -2,7 +2,7 @@
     <div class="main">
       <div style="display: grid;grid-template-columns: 88% 12%;background:#2770D4;color: #eee;    padding: 3px;">
             <div style="padding:3px 0 3px 10px">{{titleName}}雷达信息</div>
-            <div style="padding: 0 4px;text-align: right;">
+            <div style="padding:4px;text-align: right;">
                 <el-button type="text" @click="remove" style="padding: 0;color: #eee;">X
                 </el-button>
             </div>

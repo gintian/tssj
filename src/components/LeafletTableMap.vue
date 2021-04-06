@@ -8,7 +8,7 @@
 <script>
 import { wgs84ToBD } from "../utils/coordinateConvert";
 export default {
-  name: "TableMap",
+  name: "LeafletTableMap",
   props: {
     mapData: {
       type: Object,
@@ -16,6 +16,10 @@ export default {
         return {};
       }
     },
+    // mapData:{
+    //         type:Array,
+    //         default:()=>[]
+    //     },
     // trailData: {
     //   type: Object,
     //   default: () => {
@@ -88,6 +92,7 @@ export default {
         }
         else if(this.markerType === "suspicious"){
         this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/aim03.png"))(5)(() => {}).addTo(this.map);
+        this.handleMapMarerClick(val)
         this.map.setView([val.lat, val.lon], 13);
 
         }else if(this.markerType === "suspiciousTrail"){
@@ -134,8 +139,9 @@ export default {
   mounted() {
     this.mapInit();
     // console.log(this.mapData)
-    //   this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/03.png"))(1)(() => {}).addTo(this.map);
-    //   this.map.setView([this.mapData.lat,this.mapData.lon], 13);
+      this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/aim03.png"))(1)(() => {}).addTo(this.map);
+      this.handleMapMarerClick(val)
+      this.map.setView([this.mapData.lat,this.mapData.lon], 13);
     //   this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/ais.png"))(2)(() => {}).addTo(this.map);
     //   this.map.setView([this.mapData.lat,this.mapData.lon], 13);
     //   this.createMarker(this.mapData.lat,this.mapData.lon,15,30,require("../assets/mapSigns/02.png"))(3)(() => {}).addTo(this.map);
@@ -262,14 +268,15 @@ export default {
         return fun => {
             // console.log('fun',fun)
           // Marker.on("click", fun);
-           Marker.on("click", ()=>{
+           Marker.on("click", (val)=>{
+              //  Marker.signal=clicked;
              this.handleMapMarerClick(val);
             //  console.log('click',signal)
               //  Marker.signal=clicked;
               //  console.log('signal', Marker.signal)
               //   L.popup().setLatLng(signal.latlng)
 		          //           .setContent(setContent(signal))
-		          //           .openOn(this.map);//通过popup添加点击弹出框
+		          //           .openOn(this.map);
 
            });
          
@@ -277,29 +284,54 @@ export default {
         };
       };
     },
-      handleMapMarerClick(val){
-     mapData=val
+
+//  handleMapMarerClick(lat, lng, name, type, creat_time=0, end_time = 0,status){
+   handleMapMarerClick(val){
         console.log('item',val)
-      let drp = item.drp || '--';
-      let content = `<div class="boundaryMask-popup">`
-      + `<p class="title">${val.stnm}</p>`
-        + `<ul class="info">`
-      + `<li><span>经度：</span>${drp}</li>`
-        +`</ul>`
-      + `<div style="width:100%;height:200px" id="pptnMapChart"></div>`
-      +` </div>`;
-      L.popup({minWidth : 350})
-      .setLatLng([val.lttd, val.lgtd])
-      .setContent(content)
-      .openOn(this.map);
-    },
+              //  if(val.status==0){
+              //     return  "异常"
+              //   }else if(val.status==1){
+              //     return  val.status='正常'
+              //   }
+             let c=L.circle(val, {radius: 10,color:'green',fillColor:'greeb'}).addTo(this.map);
+              var p1 = L.popup("<l-popup :content='profile1-1+'</l-popup>")
+              .setContent(()=>{
+                return `<ul class="info">`
+                        + `<li><span>经度：</span>${val.lon}</li>`
+                        + `<li><span>纬度：</span>${val.lat}</li>`
+                        + `<li><span>船舶名称：</span>${val.ship_name}</li>`
+                        + `<li><span>船舶类型：</span>${val.ship_type}</li>`
+                        + `<li><span>开始时间：</span>${val.creat_time}</li>`
+                        + `<li><span>结束时间：</span>${val.end_time}</li>`
+                        // + `<li><span>运行状态：</span>${val.status}</li>`
+                      +`</ul>`
+              })
+              c.bindPopup(p1,{minWidth:100,maxHeight:200}).openPopup() 
+      // let content = `<div class="boundaryMask-popup" >`
+      // // + `<p class="title">${name}</p>`
+      //   + `<ul class="info">`
+      //     + `<li><span>经度：</span>${val.lon}</li>`
+      //     + `<li><span>纬度：</span>${val.lat}</li>`
+      //     + `<li><span>船舶名称：</span>${val.ship_name}</li>`
+      //     + `<li><span>船舶类型：</span>${val.ship_type}</li>`
+      //     + `<li><span>开始时间：</span>${val.creat_time}</li>`
+      //     + `<li><span>结束时间：</span>${val.end_time}</li>`
+      //     + `<li><span>运行状态：</span>${val.status}</li>`
+      //   +`</ul>`
+      // +` </div>`;
+      // L.popup({minWidth : 150})
+      // // .setLatLng([val.lon, val.lat])
+      // .setContent(content)
+      // .openOn(this.map);
+  },
+
     mapInit() {
       this.map = L.map("allmap1", {
         crs: L.CRS.EPSG3857,
         attributionControl: false, //不添加属性说明控件
         center: [30.969907662611103, 122.50475884137897], //显示中心
-        minZoom: 4, //最小显示等级
-        maxZoom: 16, //最大显示等级
+        minZoom: 4, 
+        maxZoom: 16, 
         zoom: 11, //当前显示等级
         zoomControl: false,
         doubleClickZoom: false
