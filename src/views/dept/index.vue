@@ -265,31 +265,52 @@ export default {
     },
   
     // 重置密码
-      reset(row){
-        // console.log(row)
-        this.reid=row.id
-         this.repassword=row.password
-          this.$confirm('是否重置密码？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消', type: 'warning' })
-          .then(() => { 
-            this.service.post('/user/changePassword',{
-              id:this.reid,
-              password:sha512(this.repassword)
-            }).then((response) => {
-              console.log('重置密码',response)
-
-
-              this.$message.success('成功设置密码' + '!');
-              this.getList()})
-            .catch((response) => {
-              this.$message.error('设置失败!');
-            });
+      // reset(row){
+      //   // console.log(row)
+      //   this.reid=row.id
+      //    this.repassword=row.password
+      //     this.$confirm('是否重置密码？', '提示', {
+      //       confirmButtonText: '确定',
+      //       cancelButtonText: '取消', type: 'warning' })
+      //     .then(() => { 
+      //       this.service.post('/user/changePassword',{
+      //         id:this.reid,
+      //         password:sha512(this.repassword)
+      //       }).then((response) => {
+      //         console.log('重置密码',response)
+      //         this.$message.success('成功设置密码' + '!');
+      //         this.getList()})
+      //       .catch((response) => {
+      //         this.$message.error('设置失败!');
+      //       });
             
-          }) 
-          .catch(() => {
-          this.$message.info('已取消操作!');
-        });
+      //     }) 
+      //     .catch(() => {
+      //     this.$message.info('已取消操作!');
+      //   });
+      // },
+       reset(row) {
+          this.reid=row.id
+         this.repassword=row.password
+        this.$prompt('请输入新密码', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+          // inputErrorMessage: '邮箱格式不正确'
+          }).then(({ value }) => {
+             this.service.post('/user/changePassword',{
+              id:this.reid,
+              password:sha512(this.repassword)})
+          this.$message({
+            type: 'success',
+            message: '您输入的新密码是: ' + value
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });       
+        })
       },
      //编辑弹层
     handleUpdate(index,row){

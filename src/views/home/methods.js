@@ -203,10 +203,11 @@ const map = {
         // .openOn(this.map)
         L.popup({ 'closeButton': false,  'className': 'pollutant-green' })
         .setLatLng(e.latlng)
-        .setContent('经纬度'+e.latlng)
-        // .setContent(()=>{
-        //   return `<p>经纬度为：${e.latlng}</p>`
-        // })
+        .setContent(()=>{
+          // return `<p>${e.latlng.lat,e.latlng.lng}</p>`
+          return `<p>${(e.latlng.lat).toFixed(6)}
+          ${(e.latlng.lng).toFixed(6)}</p>`
+        })
         .openOn(this.map);
       // let latlng = e.latlng;
       // console.log('监听mousemove经纬度',latlng );  
@@ -1350,12 +1351,12 @@ const marker = {
           p.push([bd09Arr[1], bd09Arr[0]])
         })
 
-        // i.region.forEach(e => {
-        //   // r.push([e.lat, e.lon])
-        //   let bd09Arr = wgs84ToBD(e.lon, e.lat)
-        //   r.push([parseFloat(bd09Arr[1].toFixed(6)), parseFloat(bd09Arr[0].toFixed(6))])
-        // })
-        // r.push(r[0])
+        i.region.forEach(e => {
+          // r.push([e.lat, e.lon])
+          let bd09Arr = wgs84ToBD(e.lon, e.lat)
+          r.push([parseFloat(bd09Arr[1].toFixed(6)), parseFloat(bd09Arr[0].toFixed(6))])
+        })
+        r.push(r[0])
 
         let arrow = L.polyline(p, {
           //颜色
@@ -1375,29 +1376,34 @@ const marker = {
         })
 
 
-        // var pd = L.polylineDecorator(r, {
-        //   //添加模式
-        //   patterns: [{
-        //     //模式符号的偏移位置
-        //     offset: 0,
-        //     //模式符号的重复间隔
-        //     repeat: 10,
-        //     //符号实例
-        //     symbol: L.Symbol.dash({
-        //       //符号大小
-        //       pixelSize: 5,
-        //       pathOptions: {
-        //         //颜色
-        //         color: '#d42727',
-        //         //线宽
-        //         weight: 1,
-        //         //透明度
-        //         opacity: 1
-        //       }
-        //     })
-        //   }]
-        // }).addTo(this.seaLineLayer)
-        // pd.signal=i
+        var pd = L.polylineDecorator(r, {
+              color:'#ffffff',
+              fillOpacity:.5,
+          //添加模式
+          patterns: [{
+            //模式符号的偏移位置
+            offset: 0,
+            //模式符号的重复间隔
+            repeat: 10,
+            //符号实例
+            symbol: L.Symbol.dash({
+              // color:'#ffffff',
+              // opacity:.5,
+              //符号大小
+              pixelSize: 5,
+              pathOptions: {
+                //颜色
+                // color: '#d42727',
+                color: '#585858',
+                //线宽
+                weight: 1,
+                //透明度
+                opacity: 1
+              }
+            })
+          }]
+        }).addTo(this.seaLineLayer)
+        pd.signal=i
 
       }
     })

@@ -216,6 +216,7 @@
     <div id="mapSigns" style=" position: absolute;right:8px; bottom:35%;z-index: 400;" v-drag>
       <map-signs></map-signs>
     </div>
+   
     <!--       统计-->
     <div
       id="Statistics"
@@ -234,6 +235,14 @@
         :ship="areaShipData.length"
       ></mapControl>
     </div>
+   <!-- 层级、区域船舶显示 -->
+    <div id="mapControl2" style=" position: absolute;left: 10px; bottom:1%;z-index: 400;">
+      <mapControl2
+        v-model="mapZoom"
+        :ship="areaShipData.length"
+      ></mapControl2>
+    </div>
+
     <!-- 目标等6个图例 -->
     <div
       style="right: 0%;  top: 15%;  position: absolute;  z-index: 400;  background: #FAFAFA;   border-radius: 10px 0px 0px 10px;"
@@ -331,13 +340,13 @@
     </div>
 
     <!--            船舶密度功能-->
-    <!-- <div  id="shipCount"  style="width: 100%;height: 100%;position: absolute;right: 0; top:0;z-index: 400;" v-show="showShipCount" >
+    <div  id="shipCount"  style="width: 100%;height: 100%;position: absolute;left: 30%; top:50%;z-index: 400;" v-show="showShipCount" >
             <ShipCount @hide="showShipCount=false" v-model="shipCountData"></ShipCount>
-    </div>-->
+    </div>
     <!--            船舶统计功能-->
-    <!-- <div  id="shipAreaCount"  style="width: 500px;height: 250px;position: absolute;right: 35%; top:10%;z-index: 400;" v-show="showShipAreaCount" >
+    <div  id="shipAreaCount"  style="width: 500px;height: 250px;position: absolute;right: 35%; top:10%;z-index: 400;" v-show="showShipAreaCount" >
             <ShipAreaCount @hide="showShipAreaCount=false,drawLayer.clearLayers()" v-model="shipAreaCountData"></ShipAreaCount>
-    </div>-->
+    </div>
 
     <!-- 锚地 信息框 -->
     <div
@@ -813,6 +822,7 @@ import { mapData } from "./mapData";
 import Dropdown from "../../components/Dropdown.vue";
 import ButtonGroup from "../../components/ButtonGroup.vue";
 import MapControl from "../../components/map/MapControl";
+import MapControl2 from "../../components/map/MapControl2";
 import SelectMarker from "../../components/map/SelectMarker";
 import ObjectSelect from "../../components/map/ObjectSelect"; //目标筛选
 import layerSelect from "../../components/map/layerSelect"; //图层筛选
@@ -864,6 +874,7 @@ export default {
     Dropdown,
     ButtonGroup,
     MapControl,
+    MapControl2,
     SelectMarker,
     ObjectSelect,
     layerSelect,

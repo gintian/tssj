@@ -1,12 +1,12 @@
 <template>
 
     <div>
-        <!-- <p style="color: white" v-show="zoom>=11">当前区域船只：{{ship}}艘</p> -->
+        <!-- <p style="color: black" v-show="zoom>=11">当前区域船只：{{ship}}艘</p> -->
         <div id="btn">
           <div>
             <button  @click="add" ><i class="el-icon-plus" style="width: 20px;padding: 5px"></i></button>
-            <!-- <span style="color: white;margin: 0 7px">{{zoom}}</span> -->
-            </div>
+            <!-- <span style="color: black;margin: 0 7px">{{zoom}}</span> -->
+         </div>
             
             <div>
             <button  @click="minus" ><i class="el-icon-minus" style="width: 20px;padding: 5px"></i></button>
