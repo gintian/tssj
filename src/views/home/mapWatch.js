@@ -35,9 +35,9 @@ let ShipDataImgMap = {
   3:(shipType)=>{
     return { imgName:'aim01.png',sizeWidth:26, sizeHeight:26 }  //雷达目标
   },
-  4:(shipType)=>{
-    return { imgName:'aim03.png',sizeWidth:26, sizeHeight:26 }  //异常目标
-  },
+  // 4:(shipType)=>{
+  //   return { imgName:'aim03.png',sizeWidth:26, sizeHeight:26 }  //异常目标
+  // },
 }
 // let flyDataImg=function(speed) {
 

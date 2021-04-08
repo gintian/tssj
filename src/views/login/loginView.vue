@@ -34,7 +34,6 @@
   import { sha512 } from 'js-sha512'
   // import service from '../../tools/request'
   // import {login} from '../../api/user'
-
   export default {
     name: 'Login',
     data() {
@@ -80,7 +79,6 @@
           console.log("登录返回的数据",res.data)
           if(res.data.error===0){
           this.$store.dispatch('setUserData', res)
-
           this.$store.commit('setJSESSIONID', res.data.JSESSIONID)
           this.$router.push({ path: '/map' })
           }else if(res.data.error===-1){

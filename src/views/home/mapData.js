@@ -176,6 +176,8 @@ const station={
 const menu={
   dropdownTitleData: [ //下拉框 视图渲染 数据
     { id: 1, icon:['fas', 'bullseye'], title: '目标' },
+    { id: 6, icon: ['fas','layer-group'], title: '图层'} ,
+    { id: 7, icon: ['fas','filter'], title: '筛船' },
     // {
     //   id: 0, icon: ['fas','crosshairs'], title: '目标',
     //   // dropdownInfoData: [
@@ -210,8 +212,7 @@ const menu={
     { id: 5, icon: ['fas','sync'], title: '复位' },
     
    
-    { id: 6, icon: ['fas','layer-group'], title: '图层'} ,
-    { id: 7, icon: ['fas','filter'], title: '筛船' },
+   
     { id: 8, icon: ['fas','download'], title: '导入' },
       // dropdownInfoData: [
       //   // { id: 0, icon: 'home', name: '资源站' ,ishttpGET:true},

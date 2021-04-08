@@ -242,7 +242,14 @@
         :ship="areaShipData.length"
       ></mapControl2>
     </div>
-
+    <!-- 显示经纬度 -->
+     <div id="MapLang" style=" position: absolute;left: 10px; bottom:-5%;z-index: 400;">
+      <!-- <MapLang > </MapLang> -->
+      <div class="btn"  >
+          <div class="lat">{{MapLanglat}}</div>
+          <div class="lon">{{MapLanglon}}</div>
+       </div>   
+    </div>
     <!-- 目标等6个图例 -->
     <div
       style="right: 0%;  top: 15%;  position: absolute;  z-index: 400;  background: #FAFAFA;   border-radius: 10px 0px 0px 10px;"
@@ -823,6 +830,7 @@ import Dropdown from "../../components/Dropdown.vue";
 import ButtonGroup from "../../components/ButtonGroup.vue";
 import MapControl from "../../components/map/MapControl";
 import MapControl2 from "../../components/map/MapControl2";
+import MapLang from "../../components/map/MapLang";
 import SelectMarker from "../../components/map/SelectMarker";
 import ObjectSelect from "../../components/map/ObjectSelect"; //目标筛选
 import layerSelect from "../../components/map/layerSelect"; //图层筛选
@@ -875,6 +883,7 @@ export default {
     ButtonGroup,
     MapControl,
     MapControl2,
+    MapLang,
     SelectMarker,
     ObjectSelect,
     layerSelect,
@@ -918,7 +927,9 @@ export default {
       ...mapSocket,
       formRules: formRules,
       item: "",
-      objectArea: ""
+      objectArea: "",
+      MapLanglat:'',
+      MapLanglon:''
     };
   },
   computed: {
@@ -985,8 +996,16 @@ export default {
     this.loadShip();
     this.selecarea();
     this.queryArea(); //区域筛选
+       this.MapLang()
   },
   methods: {
+    MapLang(){
+            this.map.on('mousemove', (e) => {
+                // console.log('监听mousemove',e)
+                this.MapLanglat=(e.latlng.lat).toFixed(6)
+                this.MapLanglon=(e.latlng.lng).toFixed(6)
+            });
+        },
     choosed() {
       // console.log(item)
       this.searchdialog = true;
@@ -1245,6 +1264,20 @@ export default {
 </script>
 
 <style scoped lang="less">
+.btn{
+    position: absolute;
+    bottom: 68px;
+    left: 10px;
+    text-align: center;
+    border-radius: 3px;
+    padding: 5px 3px;
+    font-size: 12px;
+    background-color: rgba(255, 255, 255, 0.63);
+    color: #333;
+    box-shadow: 2px 2px 6px rgb(0 0 0 / 27%);
+    width: 100px;
+    height: 40px;
+}
 /deep/#map  .pollutant-green .leaflet-popup-content-wrapper {//弹出层最外层样式
   background-color: rgba(0, 0, 0,.6) !important;
   color: white !important;

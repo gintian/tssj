@@ -1,4 +1,5 @@
 import request from '../../utils/request'
+// import request from '../../utils/request'
 export default {
   state: {
     user:{},
@@ -57,6 +58,7 @@ export default {
         }).catch(error => {
           reject(error)
         })
+        
       })
     },
     setUserData({commit},data){

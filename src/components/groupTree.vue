@@ -683,7 +683,7 @@ export default {
     renderContent(h, { node, data, store }) {
       return (
         <span class="custom-tree-node" style="width:100%">
-          <i class="el-icon-bell" style="width:20px;color:#2770D4;">
+          <i  class="el-icon-bell" style="width:20px;color:#2770D4;">
             {" "}
             &nbsp;
           </i>
@@ -698,11 +698,7 @@ export default {
             class="tree_node_op "
             style="font-size: 14px;float:right;color:#2770D4;"
           >
-            <i
-              class={this.showOrdHide(data)}
-              on-click={ev => this.showArea(ev, store, data)}
-              style="margin-left:5px"
-            ></i>
+            <i class={this.showOrdHide(data)}    on-click={ev => this.showArea(ev, store, data)} style="margin-left:5px" ></i>
             <i
               class="el-icon-s-claim"
               style="margin-left:5px"
@@ -735,11 +731,13 @@ export default {
       }
     },
     showOrdHide(data) /* 绘制/隐藏区域   icon 样式*/ {
-      // console.log(data,'showOrdHide')
+      console.log(data,'showOrdHide')
       if (data.name) {
-        if (data.show === false) {
+        if (data.show) {
+          console.log('1243',data.show)
           // return 'show-icon-view el-icon-view'
           return "el-icon-turn-off";
+          //  } else if(data.show === true) {
         } else {
           // return ' el-icon-view'
           return "el-icon-open";
@@ -794,8 +792,6 @@ export default {
           });
           data.edit = false;
         }
-
-        // console.log(data)
       }
     },
     showAllArea(data, type) /*显示所有区域*/ {
@@ -922,8 +918,6 @@ export default {
     },
     showArea(ev, store, data) {
       console.log('showArea',data)
-      data.show = true;
-      console.log("树形数据", data);
 
        let market = {}
         const m = {
@@ -936,18 +930,19 @@ export default {
             market = mark
             market.tp = m[mark.type]
           }
+            market.centerx=market.lon
+            market.centery=market.lat
+          if(market.type===1){
+            market.lat1=market.points[0].lat
+            market.lon1=market.points[0].lon
+            market.lat2=market.points[1].lat
+            market.lon2=market.points[1].lon
+          }
         }
-      //   if (data.show) {
-      //     console.log('hide')
-      //     var allOverlay = this.map.getOverlays()
-      //     this.removeMarker(data.id)
-      //   } else {
-      //     console.log('show')
-      //     this.addMarker(market,data)
-      //   }
+        // console.log('market',market)
       if (data.show) {
         console.log("hide");
-        console.log(data);
+        console.log("hidemarket",data);
         this.areaLayer.eachLayer(item => {
           console.log(item);
           if (item.signal === "area" + data.id) {
@@ -957,7 +952,8 @@ export default {
       
       } else {
         console.log("show");
-        console.log("market",market, data);
+        console.log("showmarket",data);
+        
         const m = {
           "0": "circle",
           "1": "polygon",
@@ -974,7 +970,7 @@ export default {
           "area" + market.id,
           this.areaTypeStyle[market.level]
         )(wgs84ToBD).addTo(this.areaLayer);
-      }
+    }
       data.show = !data.show;
     },
     focusArea(ev, store, data) /*关注区域*/ {

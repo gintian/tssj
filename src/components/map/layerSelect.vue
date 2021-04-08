@@ -46,6 +46,11 @@
               { img: require('../../assets/mapSigns/ais.png'), is:true,name: 'ais' },
               { img: require('../../assets/mapSigns/02.png'), is:true,name: '码头' },
               { img: require('../../assets/mapSigns/03.png'), is:true,name: '锚地' },   
+              { img: require('../../assets/mapSigns/Submarine.png'),is:true, name: '海底光缆' },
+              { img: require('../../assets/mapSigns/tower.png'), is:true,name: '铁塔' },
+              { img: require('../../assets/mapSigns/camera.png'),is:true, name: '摄像头' },
+              { img: require('../../assets/mapSigns/port.png'),is:true, name: '泊位'},
+              { img: require('../../assets/mapSigns/dept.png'),is:true, name: '海防单位'},
           ],
       }
     },
@@ -81,7 +86,7 @@
     }
 #selectShipDom{
     width: 135px;
-    height: 220px;
+    height: 426px;
     background: white;
     .title{
         width: 100%;

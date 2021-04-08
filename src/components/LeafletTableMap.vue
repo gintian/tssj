@@ -109,7 +109,11 @@ export default {
         }else if(this.markerType === "suspiciousTrail"){
         this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/aim03.png"))(6)(() => {}).addTo(this.map);
         this.map.setView([val.lat, val.lon], 13);
-
+         }
+        else if(this.markerType === "coast"){
+        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/aim03.png"))(5)(() => {}).addTo(this.map);
+        this.handleMapMarerClick(val)
+        this.map.setView([val.lat, val.lon], 13);
         // let points = [],duration=[]
         // // res.data.forEach(val => {
         //   let bd09Arr = wgs84ToBD(parseFloat(val.lon), parseFloat(val.lat))

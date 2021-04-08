@@ -105,7 +105,6 @@
     },
     data() {
       return {
-
           tableTop:[
             { id: 0, name: '纬度', prop: 'lat' },
             { id: 1, name: '经度', prop: 'lon' },

@@ -13,7 +13,7 @@ import Wharf from '@/views/object/wharf'
 import camera from '@/views/object/camera'
 import Tower from '@/views/object/tower'
 import Submarine from '@/views/object/Submarine' 
-// import Berthage from '@/views/object/Berthage'
+import Coast from '@/views/object/Coast'
 import port from '@/views/object/port'
 
 import EnterpriseList from '@/views/alarmLog/index.vue'  //告警日志
@@ -223,6 +223,17 @@ let router = new VueRouter({
                     menuShow: true,
                     children: [
                         {path: '/object/Submarine', component: Submarine, name: '海底光缆', menuShow: true},
+                    ]
+                },
+
+                {
+                    path: '/Coast',
+                    component: LeftNav,
+                    leaf: true, // 只有一个节点
+                    iconCls: 'iconfont icon-cidai',
+                    menuShow: true,
+                    children: [
+                        {path: '/object/Coast', component: Coast, name: '海防单位', menuShow: true},
                     ]
                 },
                 

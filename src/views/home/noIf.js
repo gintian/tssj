@@ -49,26 +49,8 @@ actions = () => {
   const actionFunAmyMarker = function(obj) {
 
     return (e) => {
-
-      // console.log(obj,e)
-      // if (obj.name === '锚地' || obj.name === '码头' || e.showed) {
-      //   // if (obj.name === '码头泊位') {
-      //   //   // console.log(obj)
-      //   // }
-      //   let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
-      //   let myMarker = addMyMarker(bd09Arr[0], bd09Arr[1])
-      //   (obj.height ? obj.height : obj.size, obj.width ? obj.width : obj.size, require('../../assets' + obj.img), e.pAngle)
-      //   (obj.name)
-      //   ((E) => obj.clickFun.bind(this)(e))
-      //   myMarker.setZIndex(1)
-      //   myMarker.idName = e.id + ',' + e.name
-      //   // console.log(this.clickItem.name)
-      //   this.map.addOverlay(myMarker)// 将标注添加到地图中
-      // }
-
       // if(e.showed){
-        let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
-
+      let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
       let marker= this.createMarker(bd09Arr[1],bd09Arr[0],obj.size,obj.size,require('../../assets' + obj.img))(obj.name)(()=>{})
       marker.addTo(this.markerLayersGroup)
         // this.markerLayers.add
@@ -410,8 +392,8 @@ actions = () => {
       return {}
     }],
 
-    [/^true_(锚地|码头|ais)$/, function() {
-      console.log( "markerLayersGroup",this.markerLayersGroup)
+    [/^true_(锚地|码头|ais|海底光缆|铁塔|摄像头|泊位)$/, function() {
+      console.log("markerLayersGroup",this.markerLayersGroup)
       this.markerLayersGroup.eachLayer(item=>{
         if(item.signal===this.clickedMarker.name){
           item.setOpacity(1)
@@ -421,7 +403,7 @@ actions = () => {
     }],
   
  
-    [/^false_(锚地|码头|ais)$/, function() {
+    [/^false_(锚地|码头|ais|海底光缆|铁塔|摄像头|泊位)$/, function() {
       this.markerLayersGroup.eachLayer(item=>{
         if(item.signal===this.clickedMarker.name){
           item.setOpacity(0)
@@ -434,8 +416,6 @@ actions = () => {
       //  console.log(this.clickedMarker.name,groupMap[this.clickedMarker.name])
       // console.log(this.departmentLayers.getLayers(),this['orgLayer'+groupMap[this.clickedMarker.name]].getLayers())
       this.departmentLayers.removeLayer(this['orgLayer' + groupMap[this.clickedMarker.name]])
-      // this.departmentLayers.rem
-      // this.hideOverlay(this.clickItem.name)
       return {}
     }],
     [/^true_(海军|陆军海防部队|军分区|海警局|公安局|海事局|海洋与渔业局|军民融合办|海关|边检)/, function() {
@@ -447,7 +427,8 @@ actions = () => {
     [/^true_海防单位$/, function() {
       for (let i = 1; i < 11; i++) {
         // console.log(this['orgLayer'+i])
-        this.departmentLayers.addLayer(this['orgLayer' + i])
+        // this.departmentLayers.addLayer(this['orgLayer' + i])
+        this.departmentLayers.addLayer(i)
       }
       return {}
     }],

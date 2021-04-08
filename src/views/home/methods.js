@@ -201,14 +201,15 @@ const map = {
         // L.popup().setLatLng(e.latlng)
         // .setContent('经纬度'+e.latlng.toString())
         // .openOn(this.map)
-        L.popup({ 'closeButton': false,  'className': 'pollutant-green' })
-        .setLatLng(e.latlng)
-        .setContent(()=>{
-          // return `<p>${e.latlng.lat,e.latlng.lng}</p>`
-          return `<p>${(e.latlng.lat).toFixed(6)}
-          ${(e.latlng.lng).toFixed(6)}</p>`
-        })
-        .openOn(this.map);
+        // L.popup({ 'closeButton': false,  'className': 'pollutant-green' })
+        // .setLatLng(e.latlng)
+        // .setContent(()=>{
+        //   // return `<p>${e.latlng.lat,e.latlng.lng}</p>`
+        //   return `<p>${(e.latlng.lat).toFixed(6)}
+        //  <span>,</span>
+        //   ${(e.latlng.lng).toFixed(6)}</p>`
+        // })
+        // .openOn(this.map);
       // let latlng = e.latlng;
       // console.log('监听mousemove经纬度',latlng );  
       });
@@ -447,7 +448,7 @@ const menu = {
   },
   // 目标筛选
   ObjectSelect(val) {
-    // console.log('目标',val)
+    console.log('目标',val)
     this.clickedMarker = val
     if(val.name=='异常目标'){
       this.isAbnormalShip=val.is
@@ -576,70 +577,38 @@ const menu = {
 // 覆盖物
 const marker = {
   // 部门初始化数据
-  // loadGroupData() {
-  //   const map = {
-  //     1: '海军',
-  //     2: '陆军海防部队',
-  //     3: '军分区',
-  //     4: '海警局',
-  //     5: '公安局',
-  //     6: '海事局',
-  //     7: '海洋与渔业局',
-  //     8: '军民融合办',
-  //     9: '海关',
-  //     10: '边检'
-  //   }
-    
-  //   this.service.get('/org/allList', {}).then(res => {
-  //     console.log("组织机构",res)
-  //     res.data.forEach(val => {
-  //       // console.log(map[val.type])
-  //       let bd09Arr = wgs84ToBD(val.longitude, val.latitude)
-  //       let myMarker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets/mapSigns/organization' + val.type + '.png'))
-  //       (map[val.type])
-  //       ()
-  //       this['orgLayer' + val.type].signal = map[val.type]
-  //       // let x=new L.layer
-  //       // this['orgLayer'+val.type]=
-  //       myMarker.addTo(this['orgLayer' + val.type])
-  //     })
-  //     // }
-  //   })
-  // },
+  loadGroupData() {
+    // const map = {
+    //   1: '海军',
+    //   2: '陆军海防部队',
+    //   3: '军分区',
+    //   4: '海警局',
+    //   5: '公安局',
+    //   6: '海事局',
+    //   7: '海洋与渔业局',
+    //   8: '军民融合办',
+    //   9: '海关',
+    //   10: '边检'
+    // }
+    // this.service.get('/org/allList', {}).then(res => {
+    //   console.log("组织机构",res)
+    //   res.data.forEach(val => {
+    //     // console.log(map[val.type])
+    //     let bd09Arr = wgs84ToBD(val.longitude, val.latitude)
+    //     let myMarker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets/mapSigns/organization' + val.type + '.png'))
+    //     (map[val.type])
+    //     ()
+    //     this['orgLayer' + val.type].signal = map[val.type]
+    //     // let x=new L.layer
+    //     // this['orgLayer'+val.type]=
+    //     myMarker.addTo(this['orgLayer' + val.type])
+    //   })
+    //   // }
+    // })
+  },
   //初始化数据
   loadDefaultMarker() {
     this.loadSeaLineLayer()
-    // let url = [
-    //   {
-    //     signal:'陆军海防部队',
-    //     name:'port',
-    //     click:true,
-    //     img:'/mapSigns/11.png'
-    //   },
-    //   {
-    //     signal: '海军',
-    //     name: 'port1',
-    //     click: true,
-    //     img: '/mapSigns/12.png'
-    //   },
-    //   {
-    //     signal: '海警局',
-    //     click: true,
-    //     name: 'port2',
-    //     img: '/mapSigns/13.png'
-    //   },
-    //   {
-    //     signal: '军分区',
-    //     click: false,
-    //     name: 'port3',
-    //     img: '/mapSigns/14.png'
-    //   },
-    //   {
-    //     signal: '海事局',
-    //     name: 'port4',
-    //     click: true,
-    //     img: '/mapSigns/15.png'
-    //   },
     //   {
     //     signal: '公安局',
     //     click: true,
@@ -714,12 +683,17 @@ const marker = {
               id:e.id
             }
           }).then(res => {
-            // console.log("组织机构选项",res)
+            console.log("组织机构选项",res)
             let a = Object.entries(this.showInfo)
             // console.log('组织机构',a)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
+          //   this.map.setView([latitude,longitude], 12 , { 
+          //     pan: { animate: true , duration: 0.5 }, 
+          //     zoom: { animate: true }, 
+          //     animate: true
+          // })
             this.showInfo.port = true
             if (this.hasLayer(this.map, 'port' + e.id).length > 0) {
               res.org.showed = true
@@ -727,10 +701,10 @@ const marker = {
               res.org.showed = false
             }
             this.dialogInfo.port = res.org
-            console.log('this.dialogInfo.port',this.dialogInfo.port)
+            // console.log('this.dialogInfo.port',this.dialogInfo.port)
           })
         })
-        marker.addTo(this.markerLayersGroup)
+        marker.addTo(this.departmentLayers)
       }
       }
     })
@@ -764,7 +738,7 @@ const marker = {
                 // console.log('this.dialogInfo.berth',this.dialogInfo.berth)
               })
             })
-            marker.addTo(this.markerLayersGroup)
+            marker.addTo(this.departmentLayers)
            }
           }
         })
@@ -797,7 +771,7 @@ const marker = {
                 this.dialogInfo.mary = res.org
               })
             })
-            marker.addTo(this.markerLayersGroup)
+            marker.addTo(this.departmentLayers)
            }
           }
         })
@@ -829,7 +803,7 @@ const marker = {
                 this.dialogInfo.milidivi = res.org
               })
             })
-            marker.addTo(this.markerLayersGroup)
+            marker.addTo(this.departmentLayers)
            }
           }
         })
@@ -861,7 +835,7 @@ const marker = {
                       this.dialogInfo.msa = res.org
                     })
                   })
-                  marker.addTo(this.markerLayersGroup)
+                  marker.addTo(this.departmentLayers)
                  }
                 }
               })
@@ -893,7 +867,7 @@ const marker = {
                   this.dialogInfo.psb = res.org
                 })
               })
-              marker.addTo(this.markerLayersGroup)
+              marker.addTo(this.departmentLayers)
              }
             }
           })  
@@ -925,7 +899,7 @@ const marker = {
               this.dialogInfo.cmio = res.org
             })
           })
-          marker.addTo(this.markerLayersGroup)
+          marker.addTo(this.departmentLayers)
          }
         }
       })    
@@ -957,7 +931,7 @@ const marker = {
               this.dialogInfo.ofa = res.org
             })
           })
-          marker.addTo(this.markerLayersGroup)
+          marker.addTo(this.departmentLayers)
          }
         }
       }) 
@@ -989,7 +963,7 @@ const marker = {
                   this.dialogInfo.fi = res.org
                 })
               })
-              marker.addTo(this.markerLayersGroup)
+              marker.addTo(this.departmentLayers)
              }
             }
           }) 
@@ -1006,12 +980,19 @@ const marker = {
                       id:e.id
                     }
                   }).then(res => {
+                    var  latitude=res.org.lat
+                    var  longitude=res.org.lon
                     // console.log("组织机构选项",res)
                     let a = Object.entries(this.showInfo)
                     // console.log('组织机构',a)
                     a.forEach(e => {
                       this.showInfo[e[0]] = false
                     })
+                    this.map.setView([latitude,longitude], 12 , { 
+                      pan: { animate: true , duration: 0.5 }, 
+                      zoom: { animate: true }, 
+                      animate: true
+                  })
                     this.showInfo.customs = true
                     if (this.hasLayer(this.map, 'customs' + e.id).length > 0) {
                       res.org.showed = true
@@ -1021,7 +1002,7 @@ const marker = {
                     this.dialogInfo.customs = res.org
                   })
                 })
-                marker.addTo(this.markerLayersGroup)
+                marker.addTo(this.departmentLayers)
                }
               }
             }) 
@@ -1040,11 +1021,18 @@ const marker = {
                   id:e.id
                 }
               }).then(res => {
+                var  latitude=res.ais.lat
+                var  longitude=res.ais.lon
                 console.log("ais详细信息",res)
                 let a = Object.entries(this.showInfo)  //返回一个键值对数组
                 a.forEach(e => {
                   this.showInfo[e[0]] = false
                 })
+                this.map.setView([latitude,longitude], 12 , { 
+                  pan: { animate: true , duration: 0.5 }, 
+                  zoom: { animate: true }, 
+                  animate: true
+              })
                 this.showInfo.ais = true
                 if (this.hasLayer(this.map, 'ais' + e.id).length > 0) {
                   res.ais.showed = true
@@ -1087,11 +1075,18 @@ const marker = {
               id:e.id
             }
           }).then(res => {
+            var  latitude=res.radar.lat
+            var  longitude=res.radar.lon
             // console.log("雷达详细信息",res)
             let a = Object.entries(this.showInfo)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
+            this.map.setView([latitude,longitude], 12 , { 
+              pan: { animate: true , duration: 0.5 }, 
+              zoom: { animate: true }, 
+              animate: true
+          })
             this.showInfo.radar = true
             if (this.hasLayer(this.map, 'radar' + e.id).length > 0) {
               res.radar.showed = true
@@ -1124,11 +1119,18 @@ const marker = {
               id:e.id
             }
           }).then(res => {
+            var  latitude=res.anchorage.lat
+            var  longitude=res.anchorage.lon
             // console.log("锚地详细信息",res)
             let a = Object.entries(this.showInfo)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
+            this.map.setView([latitude,longitude], 12 , { 
+              pan: { animate: true , duration: 0.5 }, 
+              zoom: { animate: true }, 
+              animate: true
+          })
             this.showInfo.anchorage = true
             if (this.hasLayer(this.map, 'anchorage' + e.id).length > 0) {
               res.anchorage.showed = true
@@ -1162,12 +1164,19 @@ const marker = {
               id:e.id
             }
           }).then(res => {
-            // console.log("码头详细信息",res)
+            console.log("码头详细信息",res)
+            var  latitude=res.pier.lat
+            var  longitude=res.pier.lon
             let a = Object.entries(this.showInfo)
             // console.log('码头的',a)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
+            this.map.setView([latitude,longitude], 12 , { 
+              pan: { animate: true , duration: 0.5 }, 
+              zoom: { animate: true }, 
+              animate: true
+          })
             this.showInfo.berth = true
             if (this.hasLayer(this.map, 'berth' + e.id).length > 0) {
               res.pier.showed = true
@@ -1203,12 +1212,19 @@ const marker = {
               id:e.id
             }
           }).then(res => {
-            // console.log("摄像头详细信息",res)
+            console.log("摄像头详细信息",res)
+            var  latitude=res.camera.lat
+             var  longitude=res.camera.lon
             let a = Object.entries(this.showInfo)
             // console.log('摄像头的',a)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
+            this.map.setView([latitude,longitude], 12 , { 
+              pan: { animate: true , duration: 0.5 }, 
+              zoom: { animate: true }, 
+              animate: true
+          })
             this.showInfo.camera = true
             if (this.hasLayer(this.map, 'camera' + e.id).length > 0) {
               res.camera.showed = true
@@ -1223,6 +1239,16 @@ const marker = {
       }
     })
     // 铁塔
+    // this.service.get('/tower/findAll').then(res => {
+    //   // console.log(res.data,'tower')
+    //   for (let i of res.data) {
+    //     // console.log(i)
+    //     let bd09Arr = wgs84ToBD(i.longitude, i.latitude)
+    //     let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets/mapSigns/base4.svg'))('铁塔')(() => {})
+    //     this.MarkerClusterGroup.addLayer(marker);
+    //   }
+    
+    // })
     this.service.get('/tower/allList').then(res => {
       console.log("区域内铁塔信息",res)
       for (let e of res.list) {
@@ -1253,7 +1279,6 @@ const marker = {
         //     this.dialogInfo.tower = res.tower
         //     // console.log('this.dialogInfo.tower',this.dialogInfo.tower)
         //   })
-            
         // })
         // marker.addTo(this.markerLayersGroup)
       }
@@ -1264,24 +1289,31 @@ const marker = {
         name:1
       }
     }).then(res => {
-      console.log("区域内泊位信息",res)
+      // console.log("区域内泊位信息",res)
       for (let e of res.list) {
         let bd09Arr = wgs84ToBD(e.lon, e.lat)
         let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/port.png'))('泊位')
         ((event) => {
           //摄像头信息框
-          console.log("泊位信息",e)
+          // console.log("泊位信息",e)
           this.service.get('/berth/view', {
             params:{
               id:e.Id
             }
           }).then(res => {
-            console.log("泊位详细信息",res)
+            // console.log("泊位详细信息",res)
+            var  latitude=res.berth.lat
+            var  longitude=res.berth.lon
             let a = Object.entries(this.showInfo)
-            console.log('泊位的',a)
+            // console.log('泊位的',a)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
+            this.map.setView([latitude,longitude], 12 , { 
+              pan: { animate: true , duration: 0.5 }, 
+              zoom: { animate: true }, 
+              animate: true
+          })
             this.showInfo.berthage = true
             if (this.hasLayer(this.map, 'berth' + e.id).length > 0) {
               res.berth.showed = true
@@ -1344,7 +1376,7 @@ const marker = {
     }).then(res => {
       console.log("区域内海底光缆信息",res)
       for (let i of res.list) {
-        // console.log('海底光缆信息',i)
+        console.log('海底光缆信息',i)
         let p = [], r = []
         i.points.forEach(e => {
           let bd09Arr = wgs84ToBD(e.lon, e.lat)
@@ -1360,7 +1392,15 @@ const marker = {
 
         let arrow = L.polyline(p, {
           //颜色
-          color: 'rgba(195,49,169,0.9)'
+          color: 'rgba(195,49,169,0.9)',
+        }).addTo(this.seaLineLayer)
+
+        let fillbg = L.polygon(r, {
+          //颜色
+          // color: 'rgba(255,z55,255,0.9)'
+          color: 'rgba(255,137,135,0.5)'
+          // fillColor:'#ffffff',
+          // fillOpacity:0.5,
         }).addTo(this.seaLineLayer)
 
         arrow.signal=i
@@ -1375,26 +1415,31 @@ const marker = {
           this.dialogInfo.seaLine = i
         })
 
-
-        var pd = L.polylineDecorator(r, {
-              color:'#ffffff',
-              fillOpacity:.5,
-          //添加模式
+        // var polygon = L.polygon(r, {color: "#ff7800", weight: 1}).addTo(this.seaLineLayer);
+        var pd = L.polylineDecorator(r,{
+          // fillColor:'#ffffff',
+          // fillOpacity:.5,
+          //添加配置
           patterns: [{
             //模式符号的偏移位置
             offset: 0,
             //模式符号的重复间隔
             repeat: 10,
+            // fill:true,
+            // fillColor:'#ff7800',
             //符号实例
-            symbol: L.Symbol.dash({
-              // color:'#ffffff',
-              // opacity:.5,
+            symbol: L.Symbol.dash({  
               //符号大小
               pixelSize: 5,
               pathOptions: {
+                // fill:true,
+                // fillColor:'#ff7800',
+                // fillOpacity:0.5,
+                // stroke: true,
                 //颜色
                 // color: '#d42727',
-                color: '#585858',
+                // color: '#585858', 
+                color: '#ff7800', 
                 //线宽
                 weight: 1,
                 //透明度

@@ -151,7 +151,8 @@
       },
       loadSettingNode(node,resolve){
         if (node.level === 0) {      
-         return resolve([{ name: '雷达' },{ name: 'AIS' },{ name: '锚地' },{ name: '码头' },{ name: '摄像头' },{ name: '铁塔' },{ name: '泊位' },{ name: '海底光缆' }]);
+         return resolve([{ name: '雷达' },{ name: 'AIS' },{ name: '锚地' },{ name: '码头' },{ name: '摄像头' },
+         { name: '铁塔' },{ name: '泊位' },{ name: '海底光缆' },{ name: '海防单位' }]);
         }
         if(node.data.name=='雷达'&& node.level === 1) {
           // console.log(node.level)  
@@ -246,10 +247,23 @@
             })
               resolve(radarType)
           })
+        } else  if(node.data.name=='海防单位'&& node.level === 1) {
+          console.log(node.level)  
+         this.service.get('/org/group',{  
+          }).then(res=>{
+            // console.log('海防单位分组',res)
+            let radarType=[]
+             res.list.map(f => {
+               radarType.push({name:f.group,label:f.type})
+            })
+              resolve(radarType)
+          })
         }
          else if (node.level ===2) {
            // 先取当前节点的父节点
+          //  console.log('node.data',node.data)
            let parentData = node.parent;
+           var  coastData=node.data.label;
            var  nodeData=node.data.name;
            var  nodeBerthData=node.data.name;
           //  console.log('parentData',parentData)
@@ -359,6 +373,20 @@
                   }
               }).then(res=>{
                   // console.log('海底光缆区域分组',res)
+                let shipList=[]  
+                res.list.map(f => {
+                  shipList.push({name:f.name, leaf: true})
+                })
+                  resolve(shipList)
+              })
+           }
+            if(node.parent.data.name=='海防单位'){
+              this.service.get('/org/groupList',{
+                  params:{
+                  group:coastData,
+                  }
+              }).then(res=>{
+                  // console.log('海防单位区域分组',res)
                 let shipList=[]  
                 res.list.map(f => {
                   shipList.push({name:f.name, leaf: true})

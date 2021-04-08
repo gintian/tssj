@@ -190,6 +190,19 @@ export let formRules = {
         {required: true, message: '请输入前沿水深', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
+    // 海防单位
+    latitude: [
+        {required: true, message: '请输入纬度', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    longitude: [
+        {required: true, message: '请输入经度', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
+    parent_id: [
+        {required: true, message: '请输入上级单位id', trigger: 'blur'},
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    ],
     description: [
         {required: true, message: '请输入描述', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }

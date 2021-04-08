@@ -14,9 +14,20 @@
                       :action="uploadUrl"
                       :on-change="handleChange"
                       :file-list="fileList">
-                  <el-button size="small" type="primary" @click="submitUpload"  >导入</el-button>
+                  <el-button size="small" type="primary" @click="submitUpload"  >导入AIS目标</el-button>
                 </el-upload>
-            <el-button size="small" type="primary" @click="exportData"  style="margin-top: 20px;" >导出</el-button>
+                <el-upload
+                      class="upload-demo"
+                       ref="upload"
+                      :http-request="uploadRadarFile" 
+                      accept=".xls"
+                      multiple
+                      :action="uploadRadar"
+                      :on-change="handleChange"
+                      :file-list="fileRadarList">
+                  <el-button size="small" type="primary" @click="RadarUpload"  >导入雷达目标</el-button>
+                </el-upload>
+            <!-- <el-button size="small" type="primary" @click="exportData"  style="margin-top: 20px;" >导出</el-button> -->
         </div>
     </div>
 </template>
@@ -44,8 +55,9 @@
 				toastText: '',
          action:'aaa',
         uploadUrl:'ship/pushExcel',
-        fileList: [],
-        
+        uploadRadar:'radar/targetPushExcel',
+        fileList: [],  
+        fileRadarList:[]
       }
     },
     methods:{
@@ -79,7 +91,7 @@
           this.$refs.upload.submit();
           // this.importdialog=true
       },
-       // 导入数据
+       // 导入AIS数据
        uploadSectionFile(item){
         //  console.log("导入的数据",item,process.env.VUE_APP_BASE_API+this.uploadUrl)
            const fileObj = item.file;
@@ -90,7 +102,34 @@
          this.$axios({
             method: 'post',
             url: 'http://192.168.1.36:8093/'+this.uploadUrl,
-            // url: 'http://127.0.0.1:8093/'+this.uploadUrl,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              'my-session':store.getters.getJSESSIONID
+            },
+            data: form,
+          }).then((res) => {
+            // console.log("返回数据：",res);
+            //  console.log("返回数据状态码：",res.data.error);
+            if(res.data.error==0){
+              //  this.$message.success('成功导入船舶离线数据' + '!');
+              //  this.$alert('成功导入1条船舶离线数据!');
+              this.$message({
+                  type: 'success',
+                  message: res.data.message
+              })
+            }
+          });
+      } ,  
+      // 导入雷达数据
+       uploadRadarFile(item){
+           const fileObj = item.file;
+        // FormData 对象
+          const form = new FormData();
+          // 文件对象
+          form.append('file', fileObj);  
+         this.$axios({
+            method: 'post',
+            url: 'http://192.168.1.36:8093/'+this.uploadRadar,
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -107,17 +146,8 @@
               })
             }
           });
-      } ,  
-      selectClick(item,index) {
-        console.log('selectClick',item)
-				if(!item.isShow) {   // 判断是否有isShow属性
-					this.$set(item,'isShow',false)  // 没有则为当前对象设置该属性为false
-					item.isShow = !item.isShow
-				}else {
-					item.isShow = !item.isShow
-        }
-         this.$emit('layerSelect',item)
-			},  
+      } , 
+     
     }
   }
 </script>
@@ -157,9 +187,12 @@
         }
     }
    .content{
-       /*display: flex;*/
-       /*justify-content: space-around;*/
+       display: flex;
+       justify-content: space-around;
        margin: 50px;
+   }
+   .upload-demo{
+     margin-right: 15px;
    }
     .toast {
 			position: fixed;
