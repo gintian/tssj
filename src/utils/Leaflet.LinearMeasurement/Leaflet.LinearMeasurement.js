@@ -7,7 +7,7 @@
       unitSystem: 'imperial', // imperial | metric
       // color: '#4D90FE',
       color:'#FF0000',
-      contrastingColor: '#fff',
+      contrastingColor: '#ff0000',
       show_last_node: false,
       show_azimut: false,
       // display:'block'
@@ -68,6 +68,7 @@
       var originalColor = this.options.color.replace('#', '');
 
       this.options.contrastingColor = '#'+contrastingColor(originalColor);
+      // this.options.contrastingColor = '#FF0000';
 
       return container;
     },
@@ -334,11 +335,18 @@
 
       linesHTML = [];
 
+      // 绘制线的中间点空心圆样式
       var options = {
-        color: lineColor,
-        fillOpacity: 1,
-        opacity: 1,
-        fill: true,
+        // 实心圆
+        // color: lineColor,
+        // fillOpacity: 1,
+        // fill: true,
+         // opacity: 1,
+        //  空心圆
+        color: '#ff0000',
+        fillOpacity: 0.5,
+        opacity: 0.5,
+        fill: false,
         type: type
       };
 
@@ -576,7 +584,7 @@
         /* tooltip with total distance */
         var label = this.measure.scalar + ' ' + this.measure.unit,
           html = '<span class="total-popup-content" style="background-color:'+this.options.color+'; color: '+this.options.contrastingColor+'">' + label + azimut + '</span>';
-
+          // html = '<span class="total-popup-content" style="background-color:#ff0000; color: '+this.options.contrastingColor+'">' + label + azimut + '</span>';
         if(!this.total){
           this.totalIcon = L.divIcon({ className: 'total-popup', html: html });
 
@@ -649,9 +657,12 @@
         total_latlng = this.total.getLatLng(),
         total_label = this.total,
         html = [
+          // '<div class="total-popup-content" style="background-color:#00ff00; color: '+this.options.contrastingColor+'">' + label  + azimut,
           '<div class="total-popup-content" style="background-color:'+this.options.color+'; color: '+this.options.contrastingColor+'">' + label  + azimut,
           '  <svg class="close" viewbox="0 0 45 35">',
           '   <path style="stroke: '+this.options.contrastingColor+'" class="close" d="M 10,10 L 30,30 M 30,10 L 10,30" />',
+          // '   <path style="" class="close" d="M 10,10 L 30,30 M 30,10 L 10,30" />',
+          // ' <path style="stroke:#FF0000 '+'" class="close" d="M 10,10 L 30,30 M 30,10 L 10,30" />',
           '  </svg>',
           '</div>'
         ].join('');

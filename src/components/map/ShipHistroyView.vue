@@ -3,20 +3,6 @@
             <div class="top">
                 {{title}}：{{targetName}}
             </div>
-<!--            <el-date-picker-->
-<!--                v-model="shipDatePickerStart"-->
-<!--                type="datetime"-->
-<!--                placeholder="选择日期时间">-->
-<!--            </el-date-picker>-->
-<!--            <el-date-picker-->
-<!--                v-model="shipDatePickerEnd"-->
-<!--                type="datetime"-->
-<!--                placeholder="选择日期时间">-->
-<!--            </el-date-picker>-->
-<!--            <div style="text-align: right;">-->
-<!--                  <el-button size='mini' @click="no">取消</el-button>-->
-<!--                  <el-button size='mini' @click="yes" type="primary">确认</el-button>-->
-<!--            </div>-->
         <el-date-picker
                 v-model="timeVal"
                 type="datetimerange"
@@ -30,7 +16,6 @@
                 value-format="timestamp"
                 
         >
-        <!-- :default-time="['00:00:00', '23:59:59']" -->
         </el-date-picker>
                     <div style="text-align: right;">
                           <el-button size='mini' @click="no">取消</el-button>

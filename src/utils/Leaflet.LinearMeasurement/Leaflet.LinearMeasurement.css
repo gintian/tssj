@@ -94,3 +94,6 @@
     text-shadow: none;
     font-weight: bold;
 }
+.leaflet-marker-icon .total-popup-label .leaflet-zoom-animated .leaflet-interactive{
+    background:#f5dcee;
+}

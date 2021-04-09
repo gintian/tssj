@@ -56,51 +56,79 @@
         <el-dialog
           :visible.sync="searchdialog"
           custom-class="signdialog"
-          width="27%"
+          width="30%"
           top="18vh"
           :append-to-body="true"
         >
+          <div style="display:flex;justify-content:space-between;">
+              <div class="signChild">
+                <button >目标名称：</button>
+                <input placeholder="请输入目标名称" v-model="objectname" />
+              </div>
+              <div class="signChild">
+                <button >目标编号：</button>
+                <input placeholder="请输入目标编号" v-model="objectmmsi" />
+              </div>
+          </div>
           <div>
+           <div style="display:flex;justify-content:space-between;">    
+              <div class="signChild">
+                <button >目标类型：</button>
+                <el-select v-model="oshipType" :popper-append-to-body="false">
+                  <el-option
+                    v-for="item in shipflag"
+                    :key="item.id"
+                    :value="item.shipType"
+                  >{{item.shipType}}</el-option>
+                </el-select>
+              </div>
+                <div class="signChild">
+                <button  >出现区域：</button>
+                <el-select v-model="waterId" :popper-append-to-body="false">
+                  <el-option
+                    v-for="item in objectArea"
+                    :key="item.id"
+                    :value="item.name"
+                    :type="item.type"
+                  >{{item.name}}</el-option>
+                </el-select>
+              </div>
+            </div> 
             <div class="signChild">
-              <button @click="queryName">目标名称</button>
-              <input placeholder="请输入目标名称" v-model="objectname" />
-            </div>
-            <div class="signChild">
-              <button @click="queryNumber">目标编号</button>
-              <input placeholder="请输入目标编号" v-model="objectmmsi" />
-            </div>
-            <div class="signChild">
-              <button @click="queryData">目标类型</button>
-              <el-select v-model="oshipType" :popper-append-to-body="false">
-                <el-option
-                  v-for="item in shipflag"
-                  :key="item.id"
-                  :value="item.shipType"
-                >{{item.shipType}}</el-option>
-              </el-select>
-            </div>
-            <div class="signChild">
-              <button @click="queryTime">出现时间</button>
-              <span>开始</span>
+              <button >出现时间：</button>
+              <!-- <span>开始</span> -->
               <el-date-picker v-model="beginTime" type="date" placeholder="选择日期"></el-date-picker>
-              <span style="border-left:none;">结束</span>
+              <span style="border-left:none; line-height: 40px;margin: 0 10px;">至</span>
               <el-date-picker v-model="endTime" type="date" placeholder="选择日期"></el-date-picker>
             </div>
-            <div class="signChild">
-              <button @click="queryArea" :data="objectArea">出现区域</button>
-              <el-select v-model="type" :popper-append-to-body="false">
-                <el-option
-                  v-for="item in objectArea"
-                  :key="item.id"
-                  :value="item.name"
-                  :type="item.type"
-                >{{item.name}}</el-option>
-              </el-select>
+            <div style="margin-left:43%;">
+              <el-button type="primary" @click="query_mutli" :import="tableData" style="border-radius:12px;width: 92px;">
+                搜索
+              </el-button>
             </div>
-          </div>
+          </div> 
         </el-dialog>
+
+         <el-dialog
+          :visible.sync="querydialog"
+          custom-class="querydialog"
+          width="37%"
+           top="37vh"
+          title="搜索信息"
+          :append-to-body="true"
+        >
+          <el-table :data="tableData" style="width: 100%" :header-cell-style="tableHeaderColor">
+              <el-table-column
+                v-for="(item,index) in tableTop"
+                :key="index"
+                :prop="item.prop"
+                :label="item.name"
+              ></el-table-column>
+           </el-table>
+         </el-dialog>
       </div>
-      <el-dialog
+
+      <!-- <el-dialog
         :visible.sync="dialogVisible1"
         width="20%"
         custom-class="typedialog"
@@ -118,8 +146,8 @@
             {{item.name}}
           </li>
         </ul>
-      </el-dialog>
-      <el-dialog
+      </el-dialog> -->
+      <!-- <el-dialog
         :visible.sync="dialogVisible2"
         width="20%"
         custom-class="typedialog"
@@ -137,18 +165,18 @@
             {{item}}
           </li>
         </ul>
-      </el-dialog>
-      <el-dialog
+      </el-dialog> -->
+      <!-- <el-dialog
         :visible.sync="dialogVisible3"
         custom-class="typedialog"
         width="20%"
         :append-to-body="true"
-      >
+      > -->
         <!-- 当前所选的目标类型，所对应的船舶有{{typelist}} -->
         <!-- <p v-for="item in typelist"    :key="item"  >
                    {{value}}
         </p>-->
-        <h3>当前所选的目标类型，所对应的船舶有:</h3>
+        <!-- <h3>当前所选的目标类型，所对应的船舶有:</h3>
         <ul class="search-result-list">
           <li
             class="open-shipdialog"
@@ -160,14 +188,13 @@
             {{item}}
           </li>
         </ul>
-      </el-dialog>
-      <el-dialog
+      </el-dialog> -->
+      <!-- <el-dialog
         :visible.sync="dialogVisible4"
         width="20%"
         custom-class="typedialog"
         :append-to-body="true"
       >
-        <!-- <h3>当前时间段内，所对应的船舶:</h3> -->
         <ul class="search-result-list">
           <li
             class="open-shipdialog"
@@ -179,8 +206,8 @@
             {{item}}
           </li>
         </ul>
-      </el-dialog>
-      <el-dialog
+      </el-dialog> -->
+      <!-- <el-dialog
         :visible.sync="dialogVisible5"
         width="20%"
         custom-class="typedialog"
@@ -198,7 +225,8 @@
             {{item}}
           </li>
         </ul>
-      </el-dialog>
+      </el-dialog> -->
+    
     </div>
 
     <!--     海量点-->
@@ -929,7 +957,24 @@ export default {
       item: "",
       objectArea: "",
       MapLanglat:'',
-      MapLanglon:''
+      MapLanglon:'',
+      tableData: [],
+      querydialog: false,
+      tableTop: [
+        { id: 0, prop: "MMSI", name: "MMSI", width: "" },
+        { id: 1, prop: "imo", name: "IMO", width: "" },
+        { id: 2, prop: "length", name: "船长(m)", width: "" },
+        { id: 3, prop: "width", name: "船宽(m)", width: "" },
+        { id: 4, prop: "shipType", name: "类型", width: "" },
+        { id: 5, prop: "callsign", name: "呼号", width: "" },
+        { id: 6, prop: 'name', name: '名称',width: ''},
+        // { id: 7, prop: "lon", name: "经度", width: "" },
+        // { id: 8, prop: "lat", name: "纬度", width: "" },
+        // { id: 9, prop: 'speed', name: '速度',width: ''},
+        { id: 10, prop: "draugh", name: "最大吃水", width: "" },
+        // { id: 11, prop: "", name: "更新时间", width: "" },
+        { id: 12, prop: 'flag', name: '国家',width: ''},
+      ],
     };
   },
   computed: {
@@ -999,6 +1044,7 @@ export default {
        this.MapLang()
   },
   methods: {
+    //  var waterId='',
     MapLang(){
             this.map.on('mousemove', (e) => {
                 // console.log('监听mousemove',e)
@@ -1024,14 +1070,13 @@ export default {
         });
     },
     objectareaData() {
-      this.service
-        .get("/water/allList", {
+      this.service.get("/water/allList", {
           params: {
             name: this.objectArea
           }
         })
         .then(res => {
-          // console.log('所有区域目标', res)
+          console.log('所有区域目标', res)
           this.objectArea = res.list;
           if (!this.objectArea) {
             return "暂无数据";
@@ -1039,9 +1084,36 @@ export default {
             //  console.log("objectArea",this.objectArea)
             this.objectArea.forEach(function(item, index) {
               var otype = item.type;
-              // console.log('item', otype);
+              this.waterId = item.id;
+              console.log('item', waterId);
             });
           }
+        });
+    },
+    query_mutli(){
+      let waterId=[]
+          // this.objectArea.map(f => {
+          //      waterId.push({waterId:f.id})
+          // })
+          for(var i  in this.objectArea){
+            waterId=this.objectArea[i].id
+            console.log('waterId',waterId)
+          }
+      // this.objectareaData()
+        this.service.get("/ship/screeningAll", {
+          params: {
+          beginTime: this.beginTime,
+          endTime: this.endTime,
+          mmsi: this.objectmmsi,
+          name:this.objectname,
+          type:this.oshipType,
+          waterId:waterId,
+          }
+        })
+        .then(res => {
+          console.log("高级筛选", res)   
+          this.querydialog=true;
+          this.tableData = res.data.list;
         });
     },
     queryName() {
@@ -1050,7 +1122,7 @@ export default {
           params: { name: this.objectname }
         })
         .then(res => {
-          console.log("目标名称筛选", res)
+          // console.log("目标名称筛选", res)
           this.dialogVisible1 = true;
           this.objectnamelist = res.result;
         });
@@ -1325,60 +1397,111 @@ export default {
   background: #e3efff;
   outline: 2px solid #c8ffff;
 
-  .el-icon-close:before {
-    //关闭弹框图标
-    content: "";
-  }
+  // .el-icon-close:before {
+  //   //关闭弹框图标
+  //   content: "";
+  // }
 
   .el-dialog__header {
-    padding: 0;
+    background: #0175ee;
+    padding: 29px 20px 10px;
+        .el-dialog__headerbtn {
+        position: absolute;
+        top: 5px;
+        right: 14px;
+        padding: 0;
+        background: 0 0;
+        border: none;
+        outline: 0;
+        cursor: pointer;
+        font-size: 25px;
+      }
+      .el-dialog__headerbtn .el-dialog__close {
+          color: white;
+      }
   }
-
+.el-select-dropdown__list{
+      list-style: none;
+    padding: 6px 0;
+    margin: 0;
+    box-sizing: border-box;
+    height: 150px;
+}
   .el-select > .el-input {
-    //  width: 273px;
-    width: 360px;
+    // height: 32px;
+     width: 171px;
+    // width: 360px;
   }
 
   .el-date-editor.el-input {
-    width: 120px;
+    width: 217px;
   }
 }
 
+// 搜索显示页面
+/deep/.querydialog {
+  right: 3%;
+  position: absolute;
+  top: 5%;
+  .el-dialog__header {
+    height: 40px;
+    line-height: 8px;
+    background: #2770d4;
+    color: white;
+    .el-dialog__title {
+      color: white;
+      line-height: 1px;
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+    .el-dialog__headerbtn .el-dialog__close {
+      color: white;
+      font-size: 22px;
+      line-height: 16px;
+    }
+      .el-dialog__headerbtn {
+        position: absolute;
+        top: 13px;
+        right: 20px;
+        padding: 0;
+        background: 0 0;
+        border: none;
+        outline: 0;
+        cursor: pointer;
+        font-size: 16px;
+    }
+  }
+}
 .signChild {
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   font-weight: 900;
+  display:flex;
+  justify-content:space-between;
 }
 
 .signChild button {
-  background: #0175ee;
-  width: 110px;
-  height: 40px;
-  border-color: #306ba3;
-  outline: 2px solid #c8ffff;
-  color: #97dbff;
+  border: none;
+  background: #e3efff;
 }
 
 .signChild input {
-  // width: 273px;
-  width: 360px;
-  height: 40px;
-  border-color: #306ba3;
-  padding: 0 15px;
-  color: #606266;
-  //   box-shadow: 0 0 10px #c8ffff inset;
-  outline: 2px solid #c8ffff;
+  width: 171px;
+  height: 32px;
+  // color: #d6d6d6;
+    border: none;
+    padding-left: 12px;
 }
 
-.signChild span {
-  width: 40px;
-  height: 40px;
-  border: 2px solid #306ba3;
-  padding: 10px 15px;
-  color: #606266;
-  // box-shadow: 0 0 15px #c8ffff inset;
-  outline: 2px solid #c8ffff;
-  // border-right: none;
-}
+// .signChild span {
+//   width: 40px;
+//   height: 40px;
+//   border: 2px solid #306ba3;
+//   padding: 10px 15px;
+//   color: #606266;
+//   // box-shadow: 0 0 15px #c8ffff inset;
+//   outline: 2px solid #c8ffff;
+//   // border-right: none;
+// }
 
 .search-result-list {
   margin: 5px;
@@ -1409,9 +1532,9 @@ export default {
 }
 .signChild {
   /deep/ .el-input__inner {
-    border: 2px solid #316ca4;
+    // border: 2px solid #316ca4;
     //  box-shadow: 0 0 10px #c8ffff inset;
-    outline: 2px solid #c8ffff;
+    // outline: 2px solid #c8ffff;
   }
 
   /* 图标 */
@@ -1421,9 +1544,9 @@ export default {
     cursor: pointer;
     width: 0;
     height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 8px solid #0071eb;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 6px solid #0071eb;
     font-size: 0;
     line-height: 0;
   }

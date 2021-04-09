@@ -302,9 +302,6 @@ export default {
      handleClickView(row) {
         console.log('查看地图')
         this.dialog.showMap = true
-        // if (row.waters) {
-        //   row = { ...row, ...row.waters }
-        // }
           this.mapData = row;
       },
     // 数据写入excel

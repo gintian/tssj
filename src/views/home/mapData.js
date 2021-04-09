@@ -54,7 +54,7 @@ const button={
   objectname:'',//目标名称
   objectmmsi:'',//目标编号
   shipflag:''  , oshipType:'',//目标类型
-  objectArea:'', type:'', //目标区域
+  objectArea:'', type:'', waterId:'',//目标区域
 
   // 高级搜索的5个筛选类型弹窗
   dialogVisible1:false, objectnamelist:'', //目标名称
