@@ -111,9 +111,8 @@ export default {
         this.map.setView([val.lat, val.lon], 13);
          }
         else if(this.markerType === "coast"){
-        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/aim03.png"))(5)(() => {}).addTo(this.map);
-        this.handleMapMarerClick(val)
-        this.map.setView([val.lat, val.lon], 13);
+        this.createMarker(val.latitude,val.longitude,15,30,require("../assets/mapSigns/11.png"))(5)(() => {}).addTo(this.map);
+        this.map.setView([val.latitude, val.longitude], 13);
         // let points = [],duration=[]
         // // res.data.forEach(val => {
         //   let bd09Arr = wgs84ToBD(parseFloat(val.lon), parseFloat(val.lat))

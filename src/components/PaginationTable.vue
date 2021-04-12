@@ -80,13 +80,14 @@
             <el-button v-if="isMore" @click="handleClickMore(scope.row)" type="text" size="small" class="btn-upt">详情</el-button>
             <el-button v-if="isPlay" @click="handleClickPlay(scope.row)" type="text" size="small" class="btn-upt">播放</el-button>
             <el-button v-if="isUpdata" @click="handleClickUpdata(scope.row)" type="text" size="small" class="btn-upt" >编辑</el-button>
-
-            <el-popconfirm
+            <el-button v-if="isDelete"  @click="handleClickDelete(scope.row)" type="text" size="small"  slot="reference" class="btn-upt">删除</el-button>
+            
+            <!-- <el-popconfirm
                     title="确定删除吗？"
                     @onConfirm="handleClickDelete(scope.row)"
             >
               <el-button v-if="isDelete" type="text" size="small"  slot="reference" class="btn-upt">删除</el-button>
-            </el-popconfirm>
+            </el-popconfirm> -->
           </template>
         </el-table-column>
 
@@ -222,7 +223,23 @@ export default {
     },
     handleClickDelete(row){
      console.log(`删除: ${row}`);
-       this.$emit('handleClickDelete',row)
+       this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$emit('handleClickDelete',row)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      
     },
     handleClickTravel(row){
       this.$emit('handleClickTravel',row)

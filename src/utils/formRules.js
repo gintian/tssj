@@ -165,10 +165,10 @@ export let formRules = {
         {required: true, message: '请输入控制距离', trigger: 'blur'},
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
-    points: [
-        {required: true, message: '请输入点位信息', trigger: 'blur'},
-        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-    ],
+    // points: [
+    //     {required: true, message: '请输入点位信息', trigger: 'blur'},
+    //     // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+    // ],
     // 泊位
     name: [
         {required: true, message: '请输入名称', trigger: 'blur'},

@@ -65,6 +65,7 @@
                         :total='total'
                         :isUpdata=true
                         :isView=true
+                        :isDelete=true
                         markerType='point'
                         :isMore=true
                         @handleClickMore='handleClickMore'
@@ -289,15 +290,16 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
       },
       handleClickDelete(row)/* 删除 */ {
         console.log(row)
-        this.service.get(this.secondaryUrl + '/delete', {
-          id: row.id
-        }).then(req => {
-          // this.tableData = req.data.list;
+        // console.log(row.id)
+        this.service.get(this.secondaryUrl + '/delete?id='+row.Id, 
+          // params:{
+          // id: row.id}
+        ).then(res => {
+        console.log('删除',res)
           this.queryData()
           console.log('success')
         }).catch(err => {
           this.queryData()
-          //  return false;
         })
       },
       handleClose(done)/* 点击遮罩触发 */ {

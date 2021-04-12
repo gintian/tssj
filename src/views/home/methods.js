@@ -1893,6 +1893,7 @@ const ship={
       return
     }
     this.animateLayer.clearLayers()
+    
     // datetoString(new Date(e), 'yyyy-MM-dd h:m:s');
       // var d = new Date(e);    
       // var date = (d.getFullYear()) + "-" + 

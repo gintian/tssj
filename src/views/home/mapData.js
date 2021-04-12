@@ -47,7 +47,7 @@ const button={
   areaCountOverlay:undefined,
   showShipStatistics:false,   //控制左侧国家列表功能显隐
   showMapSign:false,    //控制图例功能显隐
-  shipStatistics:[],
+  shipStatistics:[],  //区域内统计数据
 
   // 高级搜索的5个筛选类型
   searchdialog:false,    // 高级搜索按钮弹窗

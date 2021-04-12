@@ -1085,7 +1085,7 @@ export default {
             this.objectArea.forEach(function(item, index) {
               var otype = item.type;
               this.waterId = item.id;
-              console.log('item', waterId);
+              // console.log('item', waterId);
             });
           }
         });
@@ -1099,6 +1099,14 @@ export default {
             waterId=this.objectArea[i].id
             console.log('waterId',waterId)
           }
+        this.beginTime=Math.round(new Date(this.beginTime).getTime()/1000).toString();
+        this.endTime=Math.round(new Date(this.endTime).getTime()/1000).toString();
+          // this.beginTime=Date.parse(new Date(this.beginTime))  //得到13位时间戳
+          //  this.endTime=Date.parse(new Date(this.endTime))
+    //   this.beginTime=new Date(this.beginTime).toLocaleDateString().replace(/\//g,'-')
+    //  this.endTime=new Date(this.endTime).toLocaleDateString().replace(/\//g,'-')
+    //    console.log(new Date(this.beginTime).toLocaleDateString().replace(/\//g,'-'),'beginTime')//时间戳转为日期
+    //     console.log(new Date(this.endTime).toLocaleDateString().replace(/\//g,'-'),'endTime')
       // this.objectareaData()
         this.service.get("/ship/screeningAll", {
           params: {
@@ -1232,7 +1240,7 @@ export default {
           ...d
         })
         .then(res => {
-          console.log("船舶统计", res);
+          // console.log("船舶统计", res);
           this.shipStatistics = res.list;
         });
     },

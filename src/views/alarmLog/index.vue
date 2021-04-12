@@ -8,7 +8,7 @@
             <div class="event_nav_msg">
                   <h4 >开始时间：</h4>
                         <el-date-picker
-                          :beginTime="list.time" 
+                          v-model="listQuery.beginTime" 
                           type="datetime"
                           placeholder="请选择要查询的开始时间">
                         </el-date-picker>
@@ -17,7 +17,7 @@
             <div  class="event_nav_msg">
                   <h4 >结束时间：</h4>
                         <el-date-picker
-                          :endTime="list.time" 
+                          v-model="listQuery.endTime" 
                           type="datetime"
                           placeholder="请选择要查询的结束时间">
                         </el-date-picker>
@@ -78,10 +78,12 @@ export default {
         pageNumber:1, //当前页面
         pageSize:10, //条数
         level:'' , //查询条件
-        beginTime:'',
-        endTime:'',
         content:"",
+          beginTime:'',
+        endTime:'',
       },
+        // beginTime:'',
+        // endTime:'',
       value1: '',
       value2: '',
     }
@@ -101,12 +103,12 @@ export default {
        this.service.get( '/alarmlog/page?pageNumber='
        +this.listQuery.pageNumber+'&&pageSize='
        +this.listQuery.pageSize
-      //  +'&&level='
-      //  +this.listQuery.level
-      //  +'&&beginTime='
-      //  +this.listQuery.beginTime+'&&endTime='
-      //  +this.listQuery.endTime+'&&content='
-      //   +this.listQuery.content
+       +'&&level='
+       +this.listQuery.level
+       +'&&beginTime='
+       +this.listQuery.beginTime+'&&endTime='
+       +this.listQuery.endTime+'&&content='
+        +this.listQuery.content
        ).then(req => {
           console.log("业务告警日志数据",req)
           this.list = req.page.list

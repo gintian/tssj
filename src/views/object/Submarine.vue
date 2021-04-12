@@ -6,77 +6,77 @@
                   <div class="container-title" >
                     <h3>海底光缆</h3>
                     <div  style="display: flex;justify-content: space-between;">
-                <el-upload
-                      class="upload-demo"
-                       ref="upload"
-                      :http-request="uploadSectionFile" 
-                      accept=".xls"
-                      multiple
-                      :action="uploadUrl"
-                      :file-list="fileList">
-                      <el-button class="filter-item" type="primary"  style=" margin-right: 40px;" @click="submitUpload"  >
-                          导入
-                      </el-button>
-                 </el-upload>
-                <el-button class="filter-item" type="primary"  @click="download()" >
-                    导出
-                </el-button>
-         </div>
-                </div>
+                        <el-upload
+                              class="upload-demo"
+                              ref="upload"
+                              :http-request="uploadSectionFile" 
+                              accept=".xls"
+                              multiple
+                              :action="uploadUrl"
+                              :file-list="fileList">
+                              <el-button class="filter-item" type="primary"  style=" margin-right: 40px;" @click="submitUpload"  >
+                                  导入
+                              </el-button>
+                        </el-upload>
+                        <el-button class="filter-item" type="primary"  @click="download()" >
+                            导出
+                        </el-button>
+                    </div>
+                 </div>
                 <div  class="container-middle">
-                <el-button type="primary" size="small" @click="add" icon="el-icon-plus" style="margin-left: 1rem">添加
-                </el-button>
-                <el-dialog
-                        :title=dialog.title
-                        :visible.sync=dialog.visible
-                        custom-class="videoDialog"
-                        width="30%"
-                        :before-close="handleClose">
-                    <el-form label-position="left" label-width="80px" :model="formLabelAlign" ref="ruleForm" :rules="formRules">
-                        <el-form-item v-for="item in addData" :key="item.id" :label="item.name" :prop="item.prop">
-                            <el-input v-model="formLabelAlign[item.prop]" v-if="item.id<4" :disabled="dialog.disabled" ></el-input>  
-                        </el-form-item>
-                    </el-form>
-                    <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="55px" width="40%" label-position="right"
-                             class="demo-dynamic">
-                        <el-form-item
-                                v-for="(domain, index) in dynamicValidateForm.domains" :key="index">
-                            <el-row>
-                                <el-col :span="3">第{{index+1}}个点</el-col>
-                                <el-col :span="9">
-                                    <el-form-item label="经度"
-                                                  :rules="[{required: true, message: '请输入经度', trigger: 'blur'}]"
-                                                  :prop="'domains.' + index + '.lon'">
-                                        <el-input v-model="domain.lon" :disabled="dialog.disabled"></el-input >
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="9">
-                                    <el-form-item label="纬度"
-                                                  :rules="[{required: true, message: '请输入纬度', trigger: 'blur'}]"
-                                                  :prop="'domains.' + index + '.lat'">
-                                        <el-input v-model="domain.lat" :disabled="dialog.disabled"></el-input>
-                                    </el-form-item>
-                                </el-col>
+                  <el-button type="primary" size="small" @click="add" icon="el-icon-plus" style="margin-left: 1rem">添加
+                  </el-button>
+                    <el-dialog
+                            :title=dialog.title
+                            :visible.sync=dialog.visible
+                            custom-class="videoDialog"
+                            width="30%"
+                            :before-close="handleClose">
+                        <el-form label-position="left" label-width="80px" :model="formLabelAlign" ref="ruleForm" :rules="formRules">
+                            <el-form-item v-for="item in addData" :key="item.id" :label="item.name" :prop="item.prop">
+                                <el-input v-model="formLabelAlign[item.prop]" v-if="item.id<4" :disabled="dialog.disabled" ></el-input>  
+                            </el-form-item>
+                        </el-form>
+                        <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="55px" width="40%" label-position="right"
+                                class="demo-dynamic">
+                            <el-form-item
+                                    v-for="(domain, index) in dynamicValidateForm.domains" :key="index">
+                                <el-row>
+                                    <el-col :span="3">第{{index+1}}个点</el-col>
+                                    <el-col :span="9">
+                                        <el-form-item label="经度"
+                                                      :rules="[{required: true, message: '请输入经度', trigger: 'blur'}]"
+                                                      :prop="'domains.' + index + '.lon'">
+                                            <el-input v-model="domain.lon" :disabled="dialog.disabled"></el-input >
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="9">
+                                        <el-form-item label="纬度"
+                                                      :rules="[{required: true, message: '请输入纬度', trigger: 'blur'}]"
+                                                      :prop="'domains.' + index + '.lat'">
+                                            <el-input v-model="domain.lat" :disabled="dialog.disabled"></el-input>
+                                        </el-form-item>
+                                    </el-col>
 
-                                <el-col :span="1"><i class="el-icon-circle-plus-outline" @click="addDomain"
-                                                     style="cursor: pointer;font-size:20px;color: #409eff;margin-left: .5rem" v-show="interfaceType==='save'"> </i>
-                                </el-col>
-                                <el-col :span="1" style="margin-left: 10px  "><i class="el-icon-remove-outline" @click="reduceDomain(domain)"
-                                                     style="cursor: pointer;font-size:20px;color: #409eff;margin-left: .5rem" v-show="interfaceType==='save'"> </i>
-                                </el-col>
-                            </el-row>
-                        </el-form-item>
-                    </el-form>
-                    <span slot="footer" class="dialog-footer" v-show="dialog.showBtn">
-                      <el-button @click="dialog.visible = false">取 消</el-button>
-                      <el-button type="primary" @click="handleRules('ruleForm','dynamicValidateForm')">确 定</el-button>
-                    </span>
-                </el-dialog>
-                <div  class="select_query">
-                                <el-input  placeholder="请输入名称" class="filter-item" v-model="listQuery.name"  style="width: 200px;" />
-                                    <el-button  class="filter-item" type="primary" icon="el-icon-search" @click="queryData">搜索 </el-button>
-                            </div>
-  </div>
+                                    <el-col :span="1"><i class="el-icon-circle-plus-outline" @click="addDomain"
+                                                        style="cursor: pointer;font-size:20px;color: #409eff;margin-left: .5rem" v-show="interfaceType==='save'"> </i>
+                                    </el-col>
+                                    <el-col :span="1" style="margin-left: 10px  "><i class="el-icon-remove-outline" @click="reduceDomain(domain)"
+                                                        style="cursor: pointer;font-size:20px;color: #409eff;margin-left: .5rem" v-show="interfaceType==='save'"> </i>
+                                    </el-col>
+                                </el-row>
+                            </el-form-item>
+                        </el-form>
+                        <span slot="footer" class="dialog-footer" v-show="dialog.showBtn">
+                          <el-button @click="dialog.visible = false">取 消</el-button>
+                          <el-button type="primary" @click="handleRules('ruleForm','dynamicValidateForm')">确 定</el-button>
+                        </span>
+                    </el-dialog>
+                  <div  class="select_query">
+                      <el-input  placeholder="请输入名称" class="filter-item" v-model="listQuery.name"  style="width: 200px;" />
+                      <el-button  class="filter-item" type="primary" icon="el-icon-search" @click="queryData">搜索 </el-button>
+                  </div>
+               </div>
                 <PaginationTab
                         :tableData='tableData'
                         :tabTop='tabTop'
@@ -98,8 +98,8 @@
                       <leaflet-tablemap :mapData="mapData"  markerType="Submarine" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
                 </el-dialog>
             </div>
-        </div>
-</div>
+          </div>
+       </div>
     </div>
 </template>
 
@@ -302,7 +302,8 @@
         this.service.get(this.secondaryUrl + '/delete', {
             params:{
           id: row.id}
-        }).then(req => {
+        }).then(res => {
+          console.log('删除',res)
           this.queryData()
           console.log('success')
         }).catch(err => {

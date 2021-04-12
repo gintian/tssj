@@ -1,19 +1,20 @@
 <template>
-  <div>
+  <div style=" height: 404px; background: white;">
     <div id="Statistics">
       <div class="signChildContent" v-for="(item,index) in shipList" :key="index"  v-show='index<3'>
         <h3>{{Object.keys(item)[0]}}</h3>:
         <span>{{Object.values(item)[0]}}</span>  
-      </div>
-       <div id="piechart">
-      </div>
+      </div>   
     </div>
+      <div id="piechart"> </div>
   </div>
 </template>
 
 <script>
 import echarts from 'echarts'
 import 'echarts/theme/macarons.js'
+// import * as echarts from 'echarts';
+
 
 export default {
   name: "shipStatistics",
@@ -45,29 +46,40 @@ export default {
   methods: {
     pieChartInit(data) {
         let x=[],y=[]
-        for(let i of data){
+        for(let i in data){
+          // data[i].name=i
+          // data[i].value=i
+          // Object.keys(i)[0].name=i
+          // Object.values(i)[0].value=i
+          console.log('data[i]',i)
           x.push(i.name)
+          console.log('x',x)
+          // console.log('y',y)
           y.push(i.num)
         }
          data=JSON.parse(JSON.stringify(data).replace(/num/g, 'value'))
         console.log('data',data)
+        // var echarts = require('echarts');
         let myChart = echarts.init(document.getElementById('piechart'), 'macarons')
         // 绘制图表
         let option = {
           tooltip: {
             trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
+            // formatter: '{a} <br/>{b}: {c} ({d}%)'
+            formatter: '{b}: {d}%'
           },
           legend: {
-                  textStyle:{
-                          color:'#d0d6ed'
-                  },
-            orient: 'horizontal',
-            type: 'scroll',
-            right: 10,
-            top: '90%',
-            bottom: 20,
-            data: x
+                  // textStyle:{
+                  //         color:'#d0d6ed'
+                  // },
+            // orient: 'horizontal',
+            // type: 'scroll',
+            // right: 10,
+            top: '85%',
+            left: 'center',
+            // bottom: 20,
+            // data: x
+            // data:data
           },
           series: [
             {
@@ -79,19 +91,38 @@ export default {
               avoidLabelOverlap: false,//防止标签重叠策略  true 不重叠 
               label: { 
                 show: false,
+                //  show: true,
                 position: 'center'
               },
-              emphasis: {
+              emphasis: {   //鼠标经过时的显示
                 label: {
                   show: true,
+                  //  show: false,
+                  // position: 'center',
                   fontSize: '30',
                   fontWeight: 'bold'
                 }
               },
               labelLine: {
-                show: false
+                // show: false
+                // show: true,
+                normal: {
+									lineStyle: {
+										color: 'rgba(255, 255, 255, 0.3)'
+									},
+									smooth: 0.2,
+									// length: this.standSize / 50,
+									// length2: this.standSize / 100,
+								}
               },
-              data: data
+              // data: data
+               data: [
+                {value: 1048, name: '搜索引擎'},
+                {value: 735, name: '直接访问'},
+                {value: 580, name: '邮件营销'},
+                {value: 484, name: '联盟广告'},
+                {value: 300, name: '视频广告'}
+              ]
             }
           ]
         }
@@ -106,9 +137,10 @@ export default {
 <style scoped lang="less">
 #Statistics {
   width: 512px;
-  height: 271px;
-  background: white;
+  // height: 271px;
+  // background: white;
   padding: 20px 15px 0 15px;
+  // display: flex;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
