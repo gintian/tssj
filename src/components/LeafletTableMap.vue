@@ -129,41 +129,36 @@ export default {
         this.map.setView([val.lat, val.lon], 13);
          }
         else if(this.markerType === "coast"){
-        this.createMarker(val.latitude,val.longitude,15,30,require("../assets/mapSigns/11.png"))(5)(() => {}).addTo(this.map);
-        this.map.setView([val.latitude, val.longitude], 13);
-        // let points = [],duration=[]
-        // // res.data.forEach(val => {
-        //   let bd09Arr = wgs84ToBD(parseFloat(val.lon), parseFloat(val.lat))
-        //   points.push([bd09Arr[1], bd09Arr[0]])
-        //   duration.push(800*i)
-        // // })
-        // // console.log("duration",duration)
-        // L.marker(points[0], {
-        //   icon:L.icon({
-        //     iconUrl: require('../assets/history/start.png'),
-        //     iconSize: [30,44],
-        //     iconAnchor: [15,22]
-        //   })
-        // }).addTo(this.animateLayer);
-        // L.marker(points[points.length-1], {
-        //   icon:L.icon({
-        //     iconUrl: require('../assets/history/end.png'),
-        //     iconSize: [30,44],
-        //     iconAnchor: [15,22]
-        //   })
-        // }).addTo(this.animateLayer);
         
-        // var polyline = L.polyline(points, { color: 'red' }).addTo(this.animateLayer);
-        // var myMovingMarker = L.Marker.movingMarker(points,
-        //   duration,{
-        //     icon:L.icon({
-        //       iconUrl: require('../assets/history/ship.png'),
-        //       iconSize: [40,44],
-        //       iconAnchor: [20,22]
-        //     })
-        //   }).addTo(this.animateLayer);
-        // myMovingMarker.start();
-
+          if(val.type==1){
+             this.createMarker(val.latitude,val.longitude,15,18,require("../assets/mapSigns/11.png"))(5)(() => {}).addTo(this.map);
+              this.map.setView([val.latitude, val.longitude], 13);
+          }else if(val.type==2){
+              this.createMarker(val.latitude,val.longitude,15,18,require("../assets/mapSigns/14.png"))(5)(() => {}).addTo(this.map);
+              this.map.setView([val.latitude, val.longitude], 13);
+          }else if(val.type==3){
+              this.createMarker(val.latitude,val.longitude,15,18,require("../assets/mapSigns/13.png"))(5)(() => {}).addTo(this.map);
+              this.map.setView([val.latitude, val.longitude], 13);
+          }else if(val.type==4){
+              this.createMarker(val.latitude,val.longitude,15,18,require("../assets/mapSigns/16.png"))(5)(() => {}).addTo(this.map);
+              this.map.setView([val.latitude, val.longitude], 13);
+          }else if(val.type==5){
+              this.createMarker(val.latitude,val.longitude,15,18,require("../assets/mapSigns/15.png"))(5)(() => {}).addTo(this.map);
+              this.map.setView([val.latitude, val.longitude], 13);
+          }else if(val.type==6){
+              this.createMarker(val.latitude,val.longitude,15,18,require("../assets/mapSigns/18.png"))(5)(() => {}).addTo(this.map);
+              this.map.setView([val.latitude, val.longitude], 13);
+          }else if(val.type==7){
+              this.createMarker(val.latitude,val.longitude,15,18,require("../assets/mapSigns/17.png"))(5)(() => {}).addTo(this.map);
+              this.map.setView([val.latitude, val.longitude], 13);
+          }else if(val.type==8){
+              this.createMarker(val.latitude,val.longitude,15,18,require("../assets/mapSigns/10.png"))(5)(() => {}).addTo(this.map);
+              this.map.setView([val.latitude, val.longitude], 13);
+          }else if(val.type==9){
+              this.createMarker(val.latitude,val.longitude,15,18,require("../assets/mapSigns/19.png"))(5)(() => {}).addTo(this.map);
+              this.map.setView([val.latitude, val.longitude], 13);
+          }
+       
         }
 
     }

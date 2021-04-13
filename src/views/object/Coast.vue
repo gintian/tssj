@@ -402,7 +402,7 @@ export default {
     delData(){
          this.service.get( '/org/delete?id='+this.delid,{     
          }).then(req => {
-          console.log("删除组织机构数据",req)
+          // console.log("删除组织机构数据",req)
           this.getList();
           this.dialogDelVisible = false;
         }) 
@@ -465,7 +465,7 @@ export default {
         let userList=this.addsForm;  
         let {parent_id,name,latitude,longitude,type,description} = userList;
           this.service.post('/org/save',this.addsForm).then(res => {
-            console.log("新增的海防单位数据",res)
+            // console.log("新增的海防单位数据",res)
           this.getList(); 
           this.dialogFormVisible1 = false;}
           );
@@ -481,7 +481,7 @@ export default {
         description:this.temp.description,
         type:this.temp.type,
        }).then(req => {
-          console.log("编辑海防单位信息",req)
+          // console.log("编辑海防单位信息",req)
           this.getList();
           this.dialogFormVisible = false;
       })

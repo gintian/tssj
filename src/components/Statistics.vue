@@ -1,12 +1,12 @@
 <template>
-  <div style=" height: 404px; background: white;">
+  <div style=" width:512px;height: 455px; background: white;">
     <div id="Statistics">
       <div class="signChildContent" v-for="(item,index) in shipList" :key="index"  v-show='index<3'>
         <h3>{{item.name}}</h3>:
         <span>{{item.value}}</span>  
       </div>   
     </div>
-      <div id="piechart"> </div>
+      <div style=" width:453px;height: 394px;background: white;" id="piechart"> </div>
   </div>
 </template>
 
@@ -61,12 +61,21 @@ export default {
         console.log('data',data)
         // var echarts = require('echarts');
         let myChart = echarts.init(document.getElementById('piechart'), 'macarons')
+     
         // 绘制图表
+        let data0=[]
+        for(let i in data){
+          if(i>2){
+            data0.push(data[i])
+            console.log('data0.',data0)
+          }
+        }
         let option = {
           tooltip: {
             trigger: 'item',
             // formatter: '{a} <br/>{b}: {c} ({d}%)'
             formatter: '{b}: {d}%'
+            
           },
            grid: {
                 left: "3%",
@@ -83,21 +92,37 @@ export default {
             // orient: 'horizontal',
             // type: 'scroll',
             // right: 10,
+            width:'100%',
             top: '85%',
             left: 'center',
             bottom: 1,
-            itemGap: 15,
-            // itemWidth: 9,
+            // itemGap: 10,  //每项之间的间隔
+            itemWidth: 18,  //图例标记的宽度
             itemHeight: 10,
             textStyle: {
-                    padding: [0, 0, 0, 8],
+                    padding: [0, 2, 0, 10],
+                    // fontStyle:'oblique',
+                    fontWeight:'bolder',
+                    color:'#333',
+                    // fontSize:13
                 },
             formatter: function (name) {
-                    return (name.length > 3 ? (name.slice(0, 3) + "...") : name);
+                    // return (name.length > 8? (name.slice(0, 6) + "...") : name +option.series[0].data[i].value);
+                       var data = option.series[0].data;
+                        var total = 0;
+                        var tarValue;
+                        for (var i = 0; i < data.length; i++) {
+                          total += data[i].value;
+                          if (data[i].name == name) {
+                            tarValue = data[i].value;
+                          }
+                        }
+                        console.log("percent",name)
+                        var v = tarValue;
+                        // var p = Math.round(((tarValue / total) * 100));
+                        return `${name}  ${v}`;
+                       
               },
-            // bottom: 20,
-            // data: x
-            // data:data
           },
           series: [
             {
@@ -105,13 +130,8 @@ export default {
               top: '-10%',
               // name: '船舶类型',
               type: 'pie',
-              radius: ['50%', '70%'],
-              avoidLabelOverlap: false,//防止标签重叠策略  true 不重叠 
-              label: { 
-                show: false,
-                //  show: true,
-                position: 'center'
-              },
+              radius: ['30%', '50%'],
+              avoidLabelOverlap: true,//防止标签重叠策略  true 不重叠 
               emphasis: {   //鼠标经过时的显示
                 label: {
                   show: true,
@@ -121,32 +141,31 @@ export default {
                   fontWeight: 'bold'
                 }
               },
-              labelLine: {
-                // show: false
-                // show: true,
-                normal: {
-									lineStyle: {
-										color: 'rgba(255, 255, 255, 0.3)'
-									},
-									smooth: 0.2,
-									// length: this.standSize / 50,
-									// length2: this.standSize / 100,
-								}
+              label:{
+                //show:false,
+                // alignTo:'labelLine',
+                fontSize:14,
+                edgeDistance: 0,
+                bleedMargin: 0,
               },
-              data: data
-              //  data: [
-              //   {value: 1048, name: '搜索引擎'},
-              //   {value: 735, name: '直接访问'},
-              //   {value: 580, name: '邮件营销'},
-              //   {value: 484, name: '联盟广告'},
-              //   {value: 300, name: '视频广告'}
-              // ]
+              labelLine:{
+                // show:false,
+                length: 16,
+                length2: 26,
+              },
+              data: data0
             }
           ]
         }
 
         myChart.setOption(option)
-
+        // myChart.resize();  // 自动调整canvas
+        const resizeObserver = new ResizeObserver(entries => {
+          for (let entry of entries) {
+            // console.log(entry.target.style.width)
+          }
+        });
+        resizeObserver.observe(document.querySelector('#piechart'));
       }
   }
 };

@@ -117,6 +117,7 @@
           title="搜索信息"
           :append-to-body="true"
         >
+        <button  style=" position: absolute;top: 3%;right: 15%; padding: 1px 7px; background: #375d84;color: white;" @click="download()">导出</button>
           <el-table :data="tableData" style="width: 100%" :header-cell-style="tableHeaderColor">
               <el-table-column
                 v-for="(item,index) in tableTop"
@@ -248,7 +249,7 @@
     <!--       统计-->
     <div
       id="Statistics"
-      style=" position: absolute;left:4%; top:8%;z-index: 400;"
+      style="width:500px; position: absolute;left:4%; top:8%;z-index: 400;"
       v-drag
       v-show="showShipStatistics"
     >
@@ -1044,6 +1045,24 @@ export default {
        this.MapLang()
   },
   methods: {
+       // 数据写入excel
+    download() {
+      // var that = this;
+      require.ensure([], () => {
+        // eslint-disable-next-line camelcase,global-require
+        const { export_json_to_excel } = require('@/vandor/export2Excel.js');
+        const tHeader = ['序号', '名称','MMSI','IMO','船长(m)','船宽(m)','类型','呼号','最大吃水','国家']; // 表头
+        const filterVal = ['id', 'name','MMSI','imo','length','width','shipType','callsign','draugh','flag']; // 值
+        const list = this.tableData;
+        // console.log('后端返回的数据', list);
+        const data = this.formatJson(filterVal, list);
+        export_json_to_excel(tHeader, data, '高级搜索导出数据表');
+      });
+    },
+    // 格式转换
+    formatJson(filterVal, jsonData) {
+      return jsonData.map((v) => filterVal.map((j) => v[j]));
+    },
     //  var waterId='',
     MapLang(){
             this.map.on('mousemove', (e) => {
@@ -1052,6 +1071,12 @@ export default {
                 this.MapLanglon=(e.latlng.lng).toFixed(6)
             });
         },
+         // 修改table header的背景色
+        tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
+          if (rowIndex === 0) {
+            return 'background-color: #DEE8FE;color: #000;font-weight: 500;'
+          }
+        }, 
     choosed() {
       // console.log(item)
       this.searchdialog = true;
