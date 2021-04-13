@@ -156,8 +156,9 @@
         tabTop: [
           { id: 1, prop: 'name', name: '名称' },
           { id: 2, prop: 'total_length', name: '总长度' },
-          {id: 3, prop: 'area', name: '区域'},
-          {id: 4, prop: 'controller_distance', name: '控制距离'}     
+          // {id: 3, prop: 'area', name: '区域'},
+          {id: 4, prop: 'controller_distance', name: '控制距离'},     
+           {id: 5, prop: 'points', name: '海底光缆节点集'}
         ]
       }
     },
@@ -182,28 +183,39 @@
             url: 'http://192.168.1.36:8093/'+this.uploadUrl,
             headers: {
               'Content-Type': 'multipart/form-data',
+              'my-session':this.$store.getters.getJSESSIONID
             },
             data: form,
           }).then((res) => {
             // console.log("返回数据：",res);
             //  console.log("返回数据状态码：",res.data.error);
             if(res.data.error==0){
-              //  this.$message.success('成功导入船舶离线数据' + '!');
-               this.$alert('成功导入1条船舶离线数据!');
-              //  this.$message({
-              //   type: 'success',
-              //   message: '成功导入船舶离线数据!',
-              //   offset:500
-              // });
-              // this.$notify({
-              //   type: 'success',
-              //   message: '成功导入1条船舶离线数据!'
-              //   //  duration: 0
-              //   //  position: 'bottom-left' 默认右上角
-              // });
+             this.$message({
+                type: 'success',
+                message: res.data.message,
+                offset:500
+              });
+               this.queryData();
             }
           });
       } ,  
+      // 数据写入excel
+    download() {
+      // var that = this;
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('@/vandor/export2Excel.js');
+        const tHeader = ['序号', '名称','总长度','控制距离']; // 表头
+        const filterVal = ['id', 'name','total_length','controller_distance']; // 值
+        const list = this.tableData;
+        // console.log('后端返回的数据', list);
+        const data = this.formatJson(filterVal, list);
+        export_json_to_excel(tHeader, data, '海底光缆数据excel');
+      });
+    },
+    // 格式转换
+    formatJson(filterVal, jsonData) {
+      return jsonData.map((v) => filterVal.map((j) => v[j]));
+    },
       addDomain() {
         this.dynamicValidateForm.domains.push({lon: '', lat: ''});
       },
@@ -314,11 +326,12 @@
         done() //取消弹框
       },
       handleClickView(row) {
-        console.log('查看地图')
+        console.log('查看地图',row)
         this.dialog.showMap = true
-        if (row.points) {
-          this.mapData = [...row.points]
-        }
+        // if (row.points) {
+        //   this.mapData = [...row.points]
+        // }
+        this.mapData = row;
         // this.mapData = [row]
         console.log(this.mapData)
       },

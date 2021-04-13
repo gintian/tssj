@@ -88,9 +88,27 @@ export default {
         }else if(this.markerType === "radar"){
         this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/01.png"))(4)(() => {}).addTo(this.map);
         this.map.setView([val.lat, val.lon], 13);
-        }else if(this.markerType === "Submarine"){
-        this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/Submarine.png"))(4)(() => {}).addTo(this.map);
-        this.map.setView([val.lat, val.lon], 13);
+        }
+        // }else if(this.markerType === "Submarine"){
+
+        // this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/Submarine.png"))(4)(() => {}).addTo(this.map);
+        // this.map.setView([val.lat, val.lon], 13);
+        else if (this.markerType === 'Submarine') {
+
+          let pos = []
+          val.forEach(e => {
+            pos.push([e.lat, e.lon])
+            L.circle([e.lat, e.lon], {
+              radius: 50,
+              color: '#28ea37',//边框颜色
+              opacity: 0.8,
+              fillColor: '#28ea37', //填充颜色
+              fillOpacity: 0.4,
+            }).addTo(this.map);
+          })
+          var polyline = L.polyline(pos, { color: 'red' }).addTo(this.map)
+          this.map.fitBounds(polyline.getBounds());
+        // } 
         }else if(this.markerType === "tower"){
         this.createMarker(val.lat,val.lon,15,30,require("../assets/mapSigns/tower.png"))(4)(() => {}).addTo(this.map);
         this.map.setView([val.lat, val.lon], 13);

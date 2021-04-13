@@ -483,13 +483,19 @@ handleVodRemove(file, fileList) {
             url: 'http://192.168.1.36:8093/'+this.uploadUrl,
             headers: {
               'Content-Type': 'multipart/form-data',
+              'my-session':this.$store.getters.getJSESSIONID
             },
             data: form,
           }).then((res) => {
             // console.log("返回数据：",res);
             //  console.log("返回数据状态码：",res.data.error);
             if(res.data.error==0){
-               this.$alert('成功导入1条船舶离线数据!');
+                this.$message({
+                type: 'success',
+                message: res.data.message,
+                offset:500
+              });
+               this.getList();
             }
           });
       },  

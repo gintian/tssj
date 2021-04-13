@@ -241,25 +241,19 @@ export default {
             url: 'http://192.168.1.36:8093/'+this.uploadUrl,
             headers: {
               'Content-Type': 'multipart/form-data',
+              'my-session':this.$store.getters.getJSESSIONID
             },
             data: form,
           }).then((res) => {
             // console.log("返回数据：",res);
             //  console.log("返回数据状态码：",res.data.error);
             if(res.data.error==0){
-              //  this.$message.success('成功导入船舶离线数据' + '!');
-               this.$alert('成功导入1条船舶离线数据!');
-              //  this.$message({
-              //   type: 'success',
-              //   message: '成功导入船舶离线数据!',
-              //   offset:500
-              // });
-              // this.$notify({
-              //   type: 'success',
-              //   message: '成功导入1条船舶离线数据!'
-              //   //  duration: 0
-              //   //  position: 'bottom-left' 默认右上角
-              // });
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+                offset:500
+              });
+               this.getList();
             }
           });
       } , 

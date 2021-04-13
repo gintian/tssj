@@ -264,11 +264,17 @@ export default {
             url: 'http://192.168.1.36:8093/'+this.uploadUrl,
             headers: {
               'Content-Type': 'multipart/form-data',
+              'my-session':this.$store.getters.getJSESSIONID
             },
             data: form,
           }).then((res) => {
             if(res.data.error==0){
-               this.$alert('成功导入1条船舶离线数据!');
+               this.$message({
+                type: 'success',
+                message: res.data.message,
+                offset:500
+              });
+               this.getList();
             }
           });
       } ,  
@@ -315,7 +321,7 @@ export default {
         const list = this.tableData;
         // console.log('后端返回的数据', list);
         const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, 'ais数据表');
+        export_json_to_excel(tHeader, data, 'AIS数据表');
       });
     },
     // 格式转换

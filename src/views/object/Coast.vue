@@ -296,11 +296,17 @@ export default {
             url: 'http://192.168.1.36:8093/'+this.uploadUrl,
             headers: {
               'Content-Type': 'multipart/form-data',
+              'my-session':this.$store.getters.getJSESSIONID
             },
             data: form,
           }).then((res) => {
             if(res.data.error==0){
-               this.$alert('成功导入1条船舶离线数据!');
+               this.$message({
+                type: 'success',
+                message: res.data.message,
+                offset:500
+              });
+               this.getList();
             }
           });
       } ,  
@@ -351,7 +357,7 @@ export default {
         this.dialog.showMap = true
           this.mapData = row;
       },
-    // 数据写入excel
+    // 数据写入excel _this2.formatJson is not a function
     download() {
       // var that = this;
       require.ensure([], () => {

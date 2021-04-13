@@ -1240,7 +1240,7 @@ export default {
           ...d
         })
         .then(res => {
-          // console.log("船舶统计", res);
+          console.log("船舶统计", res);
           this.shipStatistics = res.list;
         });
     },

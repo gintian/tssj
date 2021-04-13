@@ -274,10 +274,10 @@ export default {
   methods: {
      submitUpload(){
           this.$refs.upload.submit();
-          // this.importdialog=true
       },
        // 导入数据
        uploadSectionFile(item){
+         console.log(this.$store.getters.getJSESSIONID)
         //  console.log("导入的数据",item,process.env.VUE_APP_BASE_API+this.uploadUrl)
            const fileObj = item.file;
         // FormData 对象
@@ -289,6 +289,7 @@ export default {
             url: 'http://192.168.1.36:8093/'+this.uploadUrl,
             headers: {
               'Content-Type': 'multipart/form-data',
+              'my-session':this.$store.getters.getJSESSIONID
             },
             data: form,
           }).then((res) => {
@@ -296,12 +297,14 @@ export default {
             //  console.log("返回数据状态码：",res.data.error);
             if(res.data.error==0){
               //  this.$message.success('成功导入船舶离线数据' + '!');
-               this.$alert('成功导入1条船舶离线数据!');
-              //  this.$message({
-              //   type: 'success',
-              //   message: '成功导入船舶离线数据!',
-              //   offset:500
-              // });
+              //  this.$alert('成功导入1条船舶离线数据!');
+               this.$message({
+                type: 'success',
+                message: res.data.message,
+                offset:500
+              });
+               this.getList();
+
               // this.$notify({
               //   type: 'success',
               //   message: '成功导入1条船舶离线数据!'

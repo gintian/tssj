@@ -104,7 +104,7 @@
             url: 'http://192.168.1.36:8093/'+this.uploadUrl,
             headers: {
               'Content-Type': 'multipart/form-data',
-              'my-session':store.getters.getJSESSIONID
+              'my-session':this.$store.getters.getJSESSIONID
             },
             data: form,
           }).then((res) => {
@@ -132,6 +132,7 @@
             url: 'http://192.168.1.36:8093/'+this.uploadRadar,
             headers: {
               'Content-Type': 'multipart/form-data',
+              'my-session':this.$store.getters.getJSESSIONID
             },
             data: form,
           }).then((res) => {

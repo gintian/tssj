@@ -196,6 +196,7 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
             url: 'http://192.168.1.36:8093/'+this.uploadUrl,
             headers: {
               'Content-Type': 'multipart/form-data',
+              'my-session':this.$store.getters.getJSESSIONID
             },
             data: form,
           }).then((res) => {
@@ -218,6 +219,24 @@ import LeafletTableMap from '../../../src/components/LeafletTableMap'
             }
           });
       } ,  
+      // 数据写入excel
+    download() {
+      // var that = this;
+      require.ensure([], () => {
+        // eslint-disable-next-line camelcase,global-require
+        const { export_json_to_excel } = require('@/vandor/export2Excel.js');
+        const tHeader = ['序号', '名称','经度','纬度','运行状态']; // 表头
+        const filterVal = ['id', 'name','lon','lat','status2']; // 值
+        const list = this.tableData;
+        // console.log('后端返回的数据', list);
+        const data = this.formatJson(filterVal, list);
+        export_json_to_excel(tHeader, data, '泊位数据表');
+      });
+    },
+    // 格式转换
+    formatJson(filterVal, jsonData) {
+      return jsonData.map((v) => filterVal.map((j) => v[j]));
+    },
       loadportData(){
         this.service.get('/berth/page',{ params:{
             pageNumber: this.pageNo,

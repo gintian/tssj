@@ -195,6 +195,48 @@ export default {
     this.getList();
   },
   methods: {
+     submitUpload(){
+          this.$refs.upload.submit();
+      },
+      // 导入数据
+       uploadSectionFile(item){
+         console.log(this.$store.getters.getJSESSIONID)
+        //  console.log("导入的数据",item,process.env.VUE_APP_BASE_API+this.uploadUrl)
+           const fileObj = item.file;
+        // FormData 对象
+          const form = new FormData();
+          // 文件对象
+          form.append('file', fileObj);  
+         this.$axios({
+            method: 'post',
+            url: 'http://192.168.1.36:8093/'+this.uploadUrl,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              'my-session':this.$store.getters.getJSESSIONID
+            },
+            data: form,
+          }).then((res) => {
+            // console.log("返回数据：",res);
+            //  console.log("返回数据状态码：",res.data.error);
+            if(res.data.error==0){
+              //  this.$message.success('成功导入船舶离线数据' + '!');
+              //  this.$alert('成功导入1条船舶离线数据!');
+               this.$message({
+                type: 'success',
+                message: res.data.message,
+                offset:500
+              });
+               this.getList();
+
+              // this.$notify({
+              //   type: 'success',
+              //   message: '成功导入1条船舶离线数据!'
+              //   //  duration: 0
+              //   //  position: 'bottom-left' 默认右上角
+              // });
+            }
+          });
+      } ,
      // 修改table header的背景色
         tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
           if (rowIndex === 0) {

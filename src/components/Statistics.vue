@@ -2,8 +2,8 @@
   <div style=" height: 404px; background: white;">
     <div id="Statistics">
       <div class="signChildContent" v-for="(item,index) in shipList" :key="index"  v-show='index<3'>
-        <h3>{{Object.keys(item)[0]}}</h3>:
-        <span>{{Object.values(item)[0]}}</span>  
+        <h3>{{item.name}}</h3>:
+        <span>{{item.value}}</span>  
       </div>   
     </div>
       <div id="piechart"> </div>
@@ -51,9 +51,9 @@ export default {
           // data[i].value=i
           // Object.keys(i)[0].name=i
           // Object.values(i)[0].value=i
-          console.log('data[i]',i)
+          // console.log('data[i]',i)
           x.push(i.name)
-          console.log('x',x)
+          // console.log('x',x)
           // console.log('y',y)
           y.push(i.num)
         }
@@ -68,6 +68,14 @@ export default {
             // formatter: '{a} <br/>{b}: {c} ({d}%)'
             formatter: '{b}: {d}%'
           },
+           grid: {
+                left: "3%",
+                right: "4%",
+                bottom: "3%",
+                width: "820px",
+                height: "280px",
+                containLabel: true
+            },
           legend: {
                   // textStyle:{
                   //         color:'#d0d6ed'
@@ -77,6 +85,16 @@ export default {
             // right: 10,
             top: '85%',
             left: 'center',
+            bottom: 1,
+            itemGap: 15,
+            // itemWidth: 9,
+            itemHeight: 10,
+            textStyle: {
+                    padding: [0, 0, 0, 8],
+                },
+            formatter: function (name) {
+                    return (name.length > 3 ? (name.slice(0, 3) + "...") : name);
+              },
             // bottom: 20,
             // data: x
             // data:data
@@ -115,14 +133,14 @@ export default {
 									// length2: this.standSize / 100,
 								}
               },
-              // data: data
-               data: [
-                {value: 1048, name: '搜索引擎'},
-                {value: 735, name: '直接访问'},
-                {value: 580, name: '邮件营销'},
-                {value: 484, name: '联盟广告'},
-                {value: 300, name: '视频广告'}
-              ]
+              data: data
+              //  data: [
+              //   {value: 1048, name: '搜索引擎'},
+              //   {value: 735, name: '直接访问'},
+              //   {value: 580, name: '邮件营销'},
+              //   {value: 484, name: '联盟广告'},
+              //   {value: 300, name: '视频广告'}
+              // ]
             }
           ]
         }
@@ -156,7 +174,8 @@ export default {
 }
 #piechart {
         width: 100%;
-        height: 100%;
+        // height: 100%;
+        height: 397px;
         /*width: 200px;*/
     }
 </style>
