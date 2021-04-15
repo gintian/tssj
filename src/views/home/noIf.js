@@ -33,18 +33,18 @@ import { bd09towgs84, wgs84ToBD } from '../../utils/coordinateConvert'
 
 export let actions
 actions = () => {
-  // const groupMap={
-  //   '海军':1,
-  //   '陆军海防部队':2,
-  //   '军分区':3,
-  //   '海警局':4,
-  //   '公安局':5,
-  //   '海事局':6,
-  //   '海洋与渔业局':7,
-  //   '军民融合办':8,
-  //   '海关':9,
-  //   '边检':10,
-  // }
+  const groupMap={
+    '海军':1,
+    '陆军海防部队':2,
+    '军分区':3,
+    '海警局':4,
+    '公安局':5,
+    '海事局':6,
+    '海洋与渔业局':7,
+    '军民融合办':8,
+    '海关':9,
+    '边检':10,
+  }
  
   const actionFunAmyMarker = function(obj) {
 
@@ -88,12 +88,7 @@ actions = () => {
     }
   }
 
-  const actionFunCmyPolyline = function(obj) {
-
-    return (e) => {
-    }
-
-  }
+ 
   return new Map([
    
     [/^false_船舶类型$/, function() {
@@ -392,7 +387,28 @@ actions = () => {
       return {}
     }],
 
-    [/^true_(锚地|码头|ais|海底光缆|铁塔|摄像头|泊位)$/, function() {
+    [/^true_铁塔$/, function() {
+      console.log("MarkerClusterGroup",this.MarkerClusterGroup)
+      // this.MarkerClusterGroup.addLayer(marker);
+      this.MarkerClusterGroup.eachLayer(item=>{
+        if(item.signal===this.clickedMarker.name){
+          item.setOpacity(1)
+        }
+      })
+      return {}
+    }],
+   
+    [/^false_铁塔$/, function() {
+      // this.MarkerClusterGroup.removeLayer(marker);
+      this.MarkerClusterGroup.eachLayer(item=>{
+        if(item.signal===this.clickedMarker.name){
+          item.setOpacity(0)
+        }
+      })
+      return {}
+    }],
+
+    [/^true_(锚地|码头|ais|海底光缆|摄像头|泊位)$/, function() {
       console.log("markerLayersGroup",this.markerLayersGroup)
       this.markerLayersGroup.eachLayer(item=>{
         if(item.signal===this.clickedMarker.name){
@@ -403,7 +419,7 @@ actions = () => {
     }],
   
  
-    [/^false_(锚地|码头|ais|海底光缆|铁塔|摄像头|泊位)$/, function() {
+    [/^false_(锚地|码头|ais|海底光缆|摄像头|泊位)$/, function() {
       this.markerLayersGroup.eachLayer(item=>{
         if(item.signal===this.clickedMarker.name){
           item.setOpacity(0)

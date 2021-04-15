@@ -45,7 +45,7 @@
       id="countrySigns"
       style="position: absolute;top: 8%;z-index: 400;left: 2%;background: #0075EE;width:37px;height:30px;"
     >
-      <country-signs @ship_detail="ship_detail"></country-signs>
+      <country-signs @SettingNode="SettingNode"></country-signs>
     </div>
     <!-- 高级搜索框 -->
     <div class="query-input" style="position: absolute;top: 8%;z-index: 400; right: 2%;">
@@ -991,7 +991,7 @@ export default {
     this.mapInit();
     this.initWebSocket();
     this.map.setView([30.37892927824675, 122.19491755725795], 10);
-    console.log("user", this.$store.getters.user.data);
+    // console.log("user", this.$store.getters.user.data);
     this.loadGroupData(); //重点目标
     this.stationLayerGroup = new L.FeatureGroup().addTo(this.map);
     this.leftDrawerShipTypeLayer = new L.FeatureGroup().addTo(this.map);
@@ -1109,7 +1109,7 @@ export default {
             //  console.log("objectArea",this.objectArea)
             this.objectArea.forEach(function(item, index) {
               var otype = item.type;
-              this.waterId = item.id;
+              // this.waterId = item.id;
               // console.log('item', waterId);
             });
           }

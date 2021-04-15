@@ -35,9 +35,13 @@
       ShipTab
     },
     props: {
-      tabObj: {
-        type: Object,
-        default: ()=>{ return {} }
+      // tabObj: {
+      //   type: Object,
+      //   default: ()=>{ return {} }
+      // },
+       tabObj: {
+        type: Array,
+        default: []
       },
       titleName: {
         type: String,

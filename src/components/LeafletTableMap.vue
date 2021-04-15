@@ -320,11 +320,6 @@ export default {
 //  handleMapMarerClick(lat, lng, name, type, creat_time=0, end_time = 0,status){
    handleMapMarerClick(val){
         console.log('item',val)
-              //  if(val.status==0){
-              //     return  "异常"
-              //   }else if(val.status==1){
-              //     return  val.status='正常'
-              //   }
              let c=L.circle(val, {radius: 10,color:'green',fillColor:'greeb'}).addTo(this.map);
               var p1 = L.popup("<l-popup :content='profile1-1+'</l-popup>")
               .setContent(()=>{
@@ -339,22 +334,6 @@ export default {
                       +`</ul>`
               })
               c.bindPopup(p1,{minWidth:100,maxHeight:200}).openPopup() 
-      // let content = `<div class="boundaryMask-popup" >`
-      // // + `<p class="title">${name}</p>`
-      //   + `<ul class="info">`
-      //     + `<li><span>经度：</span>${val.lon}</li>`
-      //     + `<li><span>纬度：</span>${val.lat}</li>`
-      //     + `<li><span>船舶名称：</span>${val.ship_name}</li>`
-      //     + `<li><span>船舶类型：</span>${val.ship_type}</li>`
-      //     + `<li><span>开始时间：</span>${val.creat_time}</li>`
-      //     + `<li><span>结束时间：</span>${val.end_time}</li>`
-      //     + `<li><span>运行状态：</span>${val.status}</li>`
-      //   +`</ul>`
-      // +` </div>`;
-      // L.popup({minWidth : 150})
-      // // .setLatLng([val.lon, val.lat])
-      // .setContent(content)
-      // .openOn(this.map);
   },
 
     mapInit() {

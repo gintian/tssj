@@ -91,6 +91,10 @@
           this.$refs.upload.submit();
           // this.importdialog=true
       },
+      RadarUpload(){
+          this.$refs.upload.submit();
+          // this.importdialog=true
+      },
        // 导入AIS数据
        uploadSectionFile(item){
         //  console.log("导入的数据",item,process.env.VUE_APP_BASE_API+this.uploadUrl)

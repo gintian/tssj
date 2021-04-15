@@ -58,7 +58,7 @@
       }
     },
     mounted() {
-      console.log('铁塔TabObj',this.tabObj)
+      // console.log('铁塔TabObj',this.tabObj)
     },
     updated() {
       // console.log('shipTabObj',this.tabObj)

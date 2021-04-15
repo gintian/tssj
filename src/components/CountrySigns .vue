@@ -46,8 +46,9 @@
 </template>
 
 <script>
+// import homeMethods from "../views/home/methods";
   export default {
-    name: 'MapSigns',
+    name: 'CountrySigns',
     data() {
       return {
         dialogVisible:false,
@@ -117,9 +118,26 @@
       this.loadData()
     },
     methods: {
+      // ...homeMethods,&&node.childNodes.length>1
        handleNodeClick(data, node, elem) {
-        // console.log(data,node,elem) 
-      },
+        // console.log(node) 
+        // this.loadSettingNode()
+        //   if(node.level ==2){
+        //       if(node.data.name==areaName){
+        //         this.$emit('SettingNode',latitude,longitude);
+        //       }
+        //   }
+        // if(node.level ==2){
+        //   // console.log(node.parent.childNodes) 
+        //    for(var i  in  node.childNodes){
+        //       console.log(i,node.childNodes[i])
+        //   }
+        // }
+      
+          // Object.keys(node.childNodes).forEach(function(key){
+          //   console.log(key,obj[key])
+          // }
+       },
      change(index) {
          this.number = index; 
      },
@@ -275,11 +293,24 @@
                   }
               }).then(res=>{
                   // console.log('雷达区域分组',res)
+                  // console.log('this.map',res.list)
                   let shipList=[]  
                   res.list.map(f => {
                     shipList.push({name:f.name, leaf: true})
                   })
+                  //  console.log('雷达 asad',shipList)
+                  // let  areaLangh=[]
+                  //  res.list.map(f => {
+                  //   areaLangh.push({lat:f.lat,lon:f.lon})
+                  // })
+                  var latitude,longitude
+                  for(var i  in  res.list){
+                     latitude=res.list[i].lat
+                     longitude=res.list[i].lon
+                      // console.log('雷达 asad',res.list[i].lat,res.list[i].lon)
+                  }
                     resolve(shipList)
+                   this.$emit('SettingNode',latitude,longitude);
               })
            }
            if(node.parent.data.name=='AIS'){
@@ -288,12 +319,21 @@
                   group:nodeData,
                   }
               }).then(res=>{
-                  // console.log('AIS区域分组',res)
+                  console.log('AIS区域分组',res)
+                  
                 let shipList=[]  
                 res.list.map(f => {
                   shipList.push({name:f.name, leaf: true})
                 })
-                  resolve(shipList)
+                // console.log('this.map',res.list)
+                var latitude,longitude
+                  for(var i  in  res.list){
+                     latitude=res.list[i].lat
+                     longitude=res.list[i].lon
+                      // console.log('雷达 asad',res.list[i].lat,res.list[i].lon)
+                  }
+                    resolve(shipList)
+                   this.$emit('SettingNode',latitude,longitude);
               }) 
            }
            if(node.parent.data.name=='锚地'){
@@ -307,7 +347,25 @@
                 res.list.map(f => {
                   shipList.push({name:f.name, leaf: true})
                 })
-                  resolve(shipList)
+                   console.log('shipList',shipList)
+                   for(var j in shipList){
+                    //  console.log('锚地asad',shipList[j].name)
+                     if(shipList[j].name==areaName){
+                         this.$emit('SettingNode',latitude,longitude);
+                     }
+                   }
+                  console.log('res.list',res.list)
+                  var latitude,longitude,areaName
+                  for(var i  in  res.list){
+                    // console.log(res.list[i])
+                     latitude=res.list[i].lat
+                     longitude=res.list[i].lon
+                     areaName=res.list[i].name
+                      // console.log('锚地asad',res.list[i].lat,res.list[i].lon)
+                       this.$emit('SettingNode',latitude,longitude);
+                  }
+                    resolve(shipList)
+                    this.$emit('SettingNode',latitude,longitude);
               })
            }
           if(node.parent.data.name=='码头'){
@@ -317,11 +375,20 @@
                   }
               }).then(res=>{
                   // console.log('码头区域分组',res)
+                   
                 let shipList=[]  
                 res.list.map(f => {
                   shipList.push({name:f.name, leaf: true})
                 })
-                  resolve(shipList)
+                 
+                var latitude,longitude
+                  for(var i  in  res.list){
+                     latitude=res.list[i].lat
+                     longitude=res.list[i].lon
+                      // console.log('雷达 asad',res.list[i].lat,res.list[i].lon)
+                  }
+                    resolve(shipList)
+                   this.$emit('SettingNode',latitude,longitude);
               })
            }
           if(node.parent.data.name=='摄像头'){
@@ -330,12 +397,19 @@
                   group:nodeData,
                   }
               }).then(res=>{
-                  // console.log('摄像头区域分组',res)
+                  // console.log('摄像头区域分组',res)    
                 let shipList=[]  
                 res.list.map(f => {
                   shipList.push({name:f.name, leaf: true})
                 })
-                  resolve(shipList)
+                  var latitude,longitude
+                  for(var i  in  res.list){
+                     latitude=res.list[i].lat
+                     longitude=res.list[i].lon
+                      // console.log('雷达 asad',res.list[i].lat,res.list[i].lon)
+                  }
+                    resolve(shipList)
+                   this.$emit('SettingNode',latitude,longitude);
               })
            }
           if(node.parent.data.name=='铁塔'){
@@ -347,9 +421,16 @@
                   // console.log('铁塔区域分组',res)
                 let shipList=[]  
                 res.list.map(f => {
-                  shipList.push({name:f.name, leaf: true})
+                  shipList.push({name:f.station_name, leaf: true})
                 })
-                  resolve(shipList)
+                  var latitude,longitude
+                  for(var i  in  res.list){
+                     latitude=res.list[i].lat
+                     longitude=res.list[i].lon
+                      // console.log('雷达 asad',res.list[i].lat,res.list[i].lon)
+                  }
+                    resolve(shipList)
+                   this.$emit('SettingNode',latitude,longitude);
               })
            }
           if(node.parent.data.name=='泊位'){
@@ -363,7 +444,14 @@
                 res.list.map(f => {
                   shipList.push({name:f.name, leaf: true})
                 })
-                  resolve(shipList)
+                  var latitude,longitude
+                  for(var i  in  res.list){
+                     latitude=res.list[i].lat
+                     longitude=res.list[i].lon
+                      // console.log('雷达 asad',res.list[i].lat,res.list[i].lon)
+                  }
+                    resolve(shipList)
+                   this.$emit('SettingNode',latitude,longitude);
               })
            }
            if(node.parent.data.name=='海底光缆'){
@@ -373,11 +461,19 @@
                   }
               }).then(res=>{
                   // console.log('海底光缆区域分组',res)
+                  
                 let shipList=[]  
                 res.list.map(f => {
                   shipList.push({name:f.name, leaf: true})
                 })
-                  resolve(shipList)
+                  var latitude,longitude
+                  for(var i  in  res.list){
+                     latitude=res.list[i].lat
+                     longitude=res.list[i].lon
+                      // console.log('雷达 asad',res.list[i].lat,res.list[i].lon)
+                  }
+                    resolve(shipList)
+                   this.$emit('SettingNode',latitude,longitude);
               })
            }
             if(node.parent.data.name=='海防单位'){
@@ -387,11 +483,19 @@
                   }
               }).then(res=>{
                   // console.log('海防单位区域分组',res)
+                   
                 let shipList=[]  
                 res.list.map(f => {
                   shipList.push({name:f.name, leaf: true})
                 })
-                  resolve(shipList)
+                   var latitude,longitude
+                  for(var i  in  res.list){
+                     latitude=res.list[i].latitude
+                     longitude=res.list[i].longitude
+                      // console.log('雷达 asad',res.list[i].lat,res.list[i].lon)
+                  }
+                    resolve(shipList)
+                   this.$emit('SettingNode',latitude,longitude);
               })
            }
         }

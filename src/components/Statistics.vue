@@ -58,16 +58,14 @@ export default {
           y.push(i.num)
         }
          data=JSON.parse(JSON.stringify(data).replace(/num/g, 'value'))
-        console.log('data',data)
-        // var echarts = require('echarts');
+        // console.log('data',data)
         let myChart = echarts.init(document.getElementById('piechart'), 'macarons')
-     
         // 绘制图表
         let data0=[]
         for(let i in data){
           if(i>2){
             data0.push(data[i])
-            console.log('data0.',data0)
+            // console.log('data0.',data0)
           }
         }
         let option = {
@@ -117,7 +115,7 @@ export default {
                             tarValue = data[i].value;
                           }
                         }
-                        console.log("percent",name)
+                        // console.log("percent",name)
                         var v = tarValue;
                         // var p = Math.round(((tarValue / total) * 100));
                         return `${name}  ${v}`;

@@ -439,7 +439,7 @@ const menu = {
   selecarea(){
     this.service.get('/water/allList',{parmas:{
       }}).then(res=>{
-      console.log("allList",res)
+      // console.log("allList",res)
      this.selectAreaData=res.list
       for( var i of this.selectAreaData){
         this.areaselect.push(i.id)
@@ -1164,7 +1164,7 @@ const marker = {
               id:e.id
             }
           }).then(res => {
-            console.log("码头详细信息",res)
+            // console.log("码头详细信息",res)
             var  latitude=res.pier.lat
             var  longitude=res.pier.lon
             let a = Object.entries(this.showInfo)
@@ -1212,7 +1212,7 @@ const marker = {
               id:e.id
             }
           }).then(res => {
-            console.log("摄像头详细信息",res)
+            // console.log("摄像头详细信息",res)
             var  latitude=res.camera.lat
              var  longitude=res.camera.lon
             let a = Object.entries(this.showInfo)
@@ -1250,37 +1250,34 @@ const marker = {
     
     // })
     this.service.get('/tower/allList').then(res => {
-      console.log("区域内铁塔信息",res)
+      // console.log("区域内铁塔信息",res)
       for (let e of res.list) {
         let bd09Arr = wgs84ToBD(e.lon, e.lat)
-        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/tower.png'))('铁塔')(() => {})
+        let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/tower.png'))('铁塔')(() => {})   
         this.MarkerClusterGroup.addLayer(marker);
 
-        // ((event) => {
-        //   //摄像头信息框
-        //   // console.log("铁塔信息",e)
-        //   this.service.get('/tower/view', {
-        //     params:{
-        //       station_id:e.station_id
-        //     }
-        //   }).then(res => {
-        //     // console.log("铁塔详细信息",res)
-        //     let a = Object.entries(this.showInfo)
-        //     // console.log('铁塔的',a)
-        //     a.forEach(e => {
-        //       this.showInfo[e[0]] = false
-        //     })
-        //     this.showInfo.tower = true
-        //     if (this.hasLayer(this.map, 'tower' + e.id).length > 0) {
-        //       res.tower.showed = true
-        //     } else {
-        //       res.tower.showed = false
-        //     }
-        //     this.dialogInfo.tower = res.tower
-        //     // console.log('this.dialogInfo.tower',this.dialogInfo.tower)
-        //   })
-        // })
-        // marker.addTo(this.markerLayersGroup)
+        marker.on('click',(event) => {
+          // console.log("铁塔信息",e)
+          this.service.get('/tower/view', {
+            params:{
+              station_id:e.station_id
+            }
+          }).then(res => {
+            // console.log("铁塔详细信息",res)
+            let a = Object.entries(this.showInfo)
+            // console.log('铁塔的',a)
+            a.forEach(e => {
+              this.showInfo[e[0]] = false
+            })
+            this.showInfo.tower = true
+            if (this.hasLayer(this.map, 'tower' + e.id).length > 0) {
+              res.tower.showed = true
+            } else {
+              res.tower.showed = false
+            }
+            this.dialogInfo.tower = res.tower
+          })
+        })
       }
     })
      // 泊位
@@ -1309,6 +1306,8 @@ const marker = {
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
+            // console.log('mapset',this.map)
+          
             this.map.setView([latitude,longitude], 12 , { 
               pan: { animate: true , duration: 0.5 }, 
               zoom: { animate: true }, 
@@ -1852,7 +1851,6 @@ const ship={
        var  latitude=res.ais.lat
        var  longitude=res.ais.lon
        if (res.error === 0) {
-
         let bd09Arr = wgs84ToBD(parseFloat(longitude), parseFloat(latitude))
         L.marker([bd09Arr[1],bd09Arr[0]], {
           icon:L.icon({
@@ -1861,7 +1859,6 @@ const ship={
             iconAnchor: [16,16]
           })
         }).addTo(this.animateLayer);
-
          this.map.setView([latitude,longitude], 12 , { 
              pan: { animate: true , duration: 0.5 }, 
              zoom: { animate: true }, 
@@ -1871,6 +1868,23 @@ const ship={
        }
   
      })
+  },
+
+  SettingNode(lat, lon){
+    let bd09Arr = wgs84ToBD(parseFloat(lon), parseFloat(lat))
+        L.marker([bd09Arr[1],bd09Arr[0]], {
+          icon:L.icon({
+            iconUrl: require('../../assets/mapicon/aim.png'),
+            iconSize: [32,32],
+            iconAnchor: [16,16]
+          })
+        }).addTo(this.animateLayer);
+    // console.log(this.map)
+        this.map.setView([lat,lon], 12 , { 
+          pan: { animate: true , duration: 0.5 }, 
+          zoom: { animate: true }, 
+          animate: true
+      })
   },
 
   // 船舶详细信息框的船舶详情
