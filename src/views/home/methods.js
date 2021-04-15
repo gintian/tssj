@@ -689,11 +689,7 @@ const marker = {
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
-          //   this.map.setView([latitude,longitude], 12 , { 
-          //     pan: { animate: true , duration: 0.5 }, 
-          //     zoom: { animate: true }, 
-          //     animate: true
-          // })
+            this.SettingNode(res.org.latitude,res.org.longitude)
             this.showInfo.port = true
             if (this.hasLayer(this.map, 'port' + e.id).length > 0) {
               res.org.showed = true
@@ -728,6 +724,7 @@ const marker = {
                 a.forEach(e => {
                   this.showInfo[e[0]] = false
                 })
+                this.SettingNode(res.org.latitude,res.org.longitude)
                 this.showInfo.navy = true
                 if (this.hasLayer(this.map, 'navy' + e.id).length > 0) {
                   res.org.showed = true
@@ -744,7 +741,7 @@ const marker = {
         })
          // 海警局
          this.service.get('/org/allList').then(res => {
-          // console.log("组织机构",res)
+          console.log("组织机构",res)
           for (let e of res.list) {
             if(e.type==4){
             let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
@@ -756,12 +753,13 @@ const marker = {
                   id:e.id
                 }
               }).then(res => {
-                // console.log("组织机构选项",res)
+                console.log("组织机构选项",res)
                 let a = Object.entries(this.showInfo)
                 // console.log('组织机构',a)
                 a.forEach(e => {
                   this.showInfo[e[0]] = false
                 })
+                this.SettingNode(res.org.latitude,res.org.longitude)
                 this.showInfo.mary = true
                 if (this.hasLayer(this.map, 'mary' + e.id).length > 0) {
                   res.org.showed = true
@@ -794,6 +792,7 @@ const marker = {
                 a.forEach(e => {
                   this.showInfo[e[0]] = false
                 })
+                this.SettingNode(res.org.latitude,res.org.longitude)
                 this.showInfo.milidivi = true
                 if (this.hasLayer(this.map, 'milidivi' + e.id).length > 0) {
                   res.org.showed = true
@@ -826,6 +825,7 @@ const marker = {
                       a.forEach(e => {
                         this.showInfo[e[0]] = false
                       })
+                      this.SettingNode(res.org.latitude,res.org.longitude)
                       this.showInfo.msa = true
                       if (this.hasLayer(this.map, 'msa' + e.id).length > 0) {
                         res.org.showed = true
@@ -858,6 +858,7 @@ const marker = {
                   a.forEach(e => {
                     this.showInfo[e[0]] = false
                   })
+                  this.SettingNode(res.org.latitude,res.org.longitude)
                   this.showInfo.psb = true
                   if (this.hasLayer(this.map, 'psb' + e.id).length > 0) {
                     res.org.showed = true
@@ -890,6 +891,7 @@ const marker = {
               a.forEach(e => {
                 this.showInfo[e[0]] = false
               })
+              this.SettingNode(res.org.latitude,res.org.longitude)
               this.showInfo.cmio = true
               if (this.hasLayer(this.map, 'cmio' + e.id).length > 0) {
                 res.org.showed = true
@@ -922,6 +924,7 @@ const marker = {
               a.forEach(e => {
                 this.showInfo[e[0]] = false
               })
+              this.SettingNode(res.org.latitude,res.org.longitude)
               this.showInfo.ofa = true
               if (this.hasLayer(this.map, 'ofa' + e.id).length > 0) {
                 res.org.showed = true
@@ -954,6 +957,7 @@ const marker = {
                   a.forEach(e => {
                     this.showInfo[e[0]] = false
                   })
+                  this.SettingNode(res.org.latitude,res.org.longitude)
                   this.showInfo.fi = true
                   if (this.hasLayer(this.map, 'fi' + e.id).length > 0) {
                     res.org.showed = true
@@ -980,19 +984,13 @@ const marker = {
                       id:e.id
                     }
                   }).then(res => {
-                    var  latitude=res.org.lat
-                    var  longitude=res.org.lon
                     // console.log("组织机构选项",res)
                     let a = Object.entries(this.showInfo)
                     // console.log('组织机构',a)
                     a.forEach(e => {
                       this.showInfo[e[0]] = false
                     })
-                    this.map.setView([latitude,longitude], 12 , { 
-                      pan: { animate: true , duration: 0.5 }, 
-                      zoom: { animate: true }, 
-                      animate: true
-                  })
+                    this.SettingNode(res.org.latitude,res.org.longitude)
                     this.showInfo.customs = true
                     if (this.hasLayer(this.map, 'customs' + e.id).length > 0) {
                       res.org.showed = true
@@ -1021,18 +1019,13 @@ const marker = {
                   id:e.id
                 }
               }).then(res => {
-                var  latitude=res.ais.lat
-                var  longitude=res.ais.lon
+               
                 console.log("ais详细信息",res)
                 let a = Object.entries(this.showInfo)  //返回一个键值对数组
                 a.forEach(e => {
                   this.showInfo[e[0]] = false
                 })
-                this.map.setView([latitude,longitude], 12 , { 
-                  pan: { animate: true , duration: 0.5 }, 
-                  zoom: { animate: true }, 
-                  animate: true
-              })
+                this.SettingNode(res.ais.lat,res.ais.lon)
                 this.showInfo.ais = true
                 if (this.hasLayer(this.map, 'ais' + e.id).length > 0) {
                   res.ais.showed = true
@@ -1075,18 +1068,13 @@ const marker = {
               id:e.id
             }
           }).then(res => {
-            var  latitude=res.radar.lat
-            var  longitude=res.radar.lon
+          
             // console.log("雷达详细信息",res)
             let a = Object.entries(this.showInfo)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
-            this.map.setView([latitude,longitude], 12 , { 
-              pan: { animate: true , duration: 0.5 }, 
-              zoom: { animate: true }, 
-              animate: true
-          })
+            this.SettingNode(res.radar.lat,res.radar.lon)
             this.showInfo.radar = true
             if (this.hasLayer(this.map, 'radar' + e.id).length > 0) {
               res.radar.showed = true
@@ -1119,18 +1107,14 @@ const marker = {
               id:e.id
             }
           }).then(res => {
-            var  latitude=res.anchorage.lat
-            var  longitude=res.anchorage.lon
+            
             // console.log("锚地详细信息",res)
             let a = Object.entries(this.showInfo)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
-            this.map.setView([latitude,longitude], 12 , { 
-              pan: { animate: true , duration: 0.5 }, 
-              zoom: { animate: true }, 
-              animate: true
-          })
+            this.SettingNode(res.anchorage.lat,res.anchorage.lon)
+
             this.showInfo.anchorage = true
             if (this.hasLayer(this.map, 'anchorage' + e.id).length > 0) {
               res.anchorage.showed = true
@@ -1165,18 +1149,13 @@ const marker = {
             }
           }).then(res => {
             // console.log("码头详细信息",res)
-            var  latitude=res.pier.lat
-            var  longitude=res.pier.lon
+           
             let a = Object.entries(this.showInfo)
             // console.log('码头的',a)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
-            this.map.setView([latitude,longitude], 12 , { 
-              pan: { animate: true , duration: 0.5 }, 
-              zoom: { animate: true }, 
-              animate: true
-          })
+            this.SettingNode(res.pier.lat,res.pier.lon)
             this.showInfo.berth = true
             if (this.hasLayer(this.map, 'berth' + e.id).length > 0) {
               res.pier.showed = true
@@ -1213,18 +1192,13 @@ const marker = {
             }
           }).then(res => {
             // console.log("摄像头详细信息",res)
-            var  latitude=res.camera.lat
-             var  longitude=res.camera.lon
+           
             let a = Object.entries(this.showInfo)
             // console.log('摄像头的',a)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
-            this.map.setView([latitude,longitude], 12 , { 
-              pan: { animate: true , duration: 0.5 }, 
-              zoom: { animate: true }, 
-              animate: true
-          })
+            this.SettingNode(res.camera.lat,res.camera.lon)
             this.showInfo.camera = true
             if (this.hasLayer(this.map, 'camera' + e.id).length > 0) {
               res.camera.showed = true
@@ -1239,16 +1213,6 @@ const marker = {
       }
     })
     // 铁塔
-    // this.service.get('/tower/findAll').then(res => {
-    //   // console.log(res.data,'tower')
-    //   for (let i of res.data) {
-    //     // console.log(i)
-    //     let bd09Arr = wgs84ToBD(i.longitude, i.latitude)
-    //     let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 15, require('../../assets/mapSigns/base4.svg'))('铁塔')(() => {})
-    //     this.MarkerClusterGroup.addLayer(marker);
-    //   }
-    
-    // })
     this.service.get('/tower/allList').then(res => {
       // console.log("区域内铁塔信息",res)
       for (let e of res.list) {
@@ -1269,6 +1233,7 @@ const marker = {
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
+            this.SettingNode(res.tower.lat,res.tower.lon)
             this.showInfo.tower = true
             if (this.hasLayer(this.map, 'tower' + e.id).length > 0) {
               res.tower.showed = true
@@ -1299,20 +1264,14 @@ const marker = {
             }
           }).then(res => {
             // console.log("泊位详细信息",res)
-            var  latitude=res.berth.lat
-            var  longitude=res.berth.lon
+         
             let a = Object.entries(this.showInfo)
             // console.log('泊位的',a)
             a.forEach(e => {
               this.showInfo[e[0]] = false
             })
-            // console.log('mapset',this.map)
-          
-            this.map.setView([latitude,longitude], 12 , { 
-              pan: { animate: true , duration: 0.5 }, 
-              zoom: { animate: true }, 
-              animate: true
-          })
+            this.SettingNode(res.berth.lat,res.berth.lon)
+
             this.showInfo.berthage = true
             if (this.hasLayer(this.map, 'berth' + e.id).length > 0) {
               res.berth.showed = true

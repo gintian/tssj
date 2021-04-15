@@ -407,8 +407,27 @@ actions = () => {
       })
       return {}
     }],
-
-    [/^true_(锚地|码头|ais|海底光缆|摄像头|泊位)$/, function() {
+    [/^true_海底光缆$/, function() {
+      console.log("seaLineLayer",this.seaLineLayer)
+      // this.MarkerClusterGroup.addLayer(marker);
+      this.seaLineLayer.eachLayer(item=>{
+        if(item.signal===this.clickedMarker.name){
+          item.setOpacity(1)
+        }
+      })
+      return {}
+    }],
+   
+    [/^false_海底光缆$/, function() {
+      // this.MarkerClusterGroup.removeLayer(marker);
+      this.seaLineLayer.eachLayer(item=>{
+        if(item.signal===this.clickedMarker.name){
+          item.setOpacity(0)
+        }
+      })
+      return {}
+    }],
+    [/^true_(锚地|码头|ais|摄像头|泊位)$/, function() {
       console.log("markerLayersGroup",this.markerLayersGroup)
       this.markerLayersGroup.eachLayer(item=>{
         if(item.signal===this.clickedMarker.name){
@@ -419,7 +438,7 @@ actions = () => {
     }],
   
  
-    [/^false_(锚地|码头|ais|海底光缆|摄像头|泊位)$/, function() {
+    [/^false_(锚地|码头|ais|摄像头|泊位)$/, function() {
       this.markerLayersGroup.eachLayer(item=>{
         if(item.signal===this.clickedMarker.name){
           item.setOpacity(0)

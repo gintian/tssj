@@ -33,7 +33,7 @@ export default {
     }
   },
   mounted() {
-    console.log("mounted shipList=====" + this.shipList);
+    // console.log("mounted shipList=====" + this.shipList);
   },
   methods: {}
 };

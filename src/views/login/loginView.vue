@@ -3,11 +3,12 @@
         <div class="loginView">
 
             <div class="content">
-                 <h3 class="title">欢迎登录</h3>
+                 <h2 class="title">欢迎登录</h2>
                 <div>
                     <el-input
                             @keyup.enter.native="loginReq"
-                            placeholder="请输入用户名"
+                            placeholder="账号"
+                            clearable
                             prefix-icon="el-icon-user-solid"
                             v-model="username">
                     </el-input>
@@ -16,7 +17,7 @@
                     <el-input
                             @keyup.enter.native="loginReq"
                             show-password
-                            placeholder="请输入密码"
+                            placeholder="密码"
                             prefix-icon="el-icon-s-goods"
                             v-model="password">
                     </el-input>
@@ -110,7 +111,7 @@
     .loginView {   
       .content{
           /*width: auto;*/
-          width: 466px;
+          width: 418px;
           padding: 233px 35px 15px 35px;
           background: #fff;
           border: 1px solid #eaeaea;
@@ -120,41 +121,71 @@
            left: 65.2%;
           top: 10%;
           height:82.3%;
-          h3{
+          h2{
             margin: 0px auto 40px auto;
             text-align: center;
             color: #505458;
+            letter-spacing: 1px;
+            font-weight: bold;
           }
-           h3::after{
-            width: 48px;
-            height: 5px;
-            background: #3A5DDF;
-            border-radius: 3px;
-            content: "";
-            position: absolute;
-            // top: 34%;
-            // left: 45%;
-            top: 264px;
-            left: 210px;
-        }
+           h2::after{
+                width: 61px;
+                  height: 5px;
+                  background: #3A5DDF;
+                  border-radius: 3px;
+                  content: "";
+                  position: absolute;
+                  top: 263px;
+                  left: 178px;
+            }
+          
           div{
               margin-bottom: 1%;
+              /deep/  input::placeholder{
+                    color:black;
+                    font-weight: bolder;
+                    font-size: 14px;
+                    position: absolute;
+                    top: 16px;
+                    left: 12%;
+                }
               /deep/.el-input{
                   width: 350px;
                   .el-input__inner{
-                      border: 1px solid rgba(255, 255, 255, 0.15);
+                      // border: 1px solid rgba(255, 255, 255, 0.15);
                       color: black!important;
-                      height: 3rem!important;
-                      line-height: 3rem;
-                      font-size: .8rem;
-                      background: rgba(255, 255, 255, 0.15);
-
+                      height: 4rem!important;
+                      // line-height: 4rem!important;
+                      line-height: 2rem;
+                      // font-size: .8rem;
+                      // margin-left: 20px;
+                      font-size: 16px;
+                      border: none;
+                      padding-left: 42px;
+                      // background: rgba(255, 255, 255, 0.15);
+                      border-bottom: 2px solid #b5b6b6;
                   }
+                   .el-input__inner:focus{
+                        border-bottom: 2px solid #5371e3;
+                   }
               }
+              /deep/ .el-input__prefix, .el-input__suffix {
+                          position: absolute;
+                          // top: 11px;
+                          top: 3px;
+                          -webkit-transition: all .3s;
+                          height: 100%;
+                          color: #78787a;
+                          text-align: center;
+                      }
+               /deep/  .el-input__icon{
+                        font-size: 18px;
+                      }
               /deep/.el-button{
                   width: 350px!important;
                   height: 3rem!important;
                   font-size: 1.1rem;
+                  box-shadow: 4px 10px 5px #d9e2f9;
               }
           }
       }
