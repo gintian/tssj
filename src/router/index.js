@@ -15,6 +15,7 @@ import Tower from '@/views/object/tower'
 import Submarine from '@/views/object/Submarine' 
 import Coast from '@/views/object/Coast'
 import port from '@/views/object/port'
+// import Berthage from '@/views/object/Berthage'
 
 import EnterpriseList from '@/views/alarmLog/index.vue'  //告警日志
 import EnterpriseAdd from '@/views/alarmLog/add.vue'

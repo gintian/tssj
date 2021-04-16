@@ -1348,22 +1348,18 @@ const marker = {
         })
         r.push(r[0])
 
+        let fillbg = L.polygon(r, {
+          //颜色
+          color: 'rgba(255,137,135,0.5)'
+        }).addTo(this.seaLineLayer)
+
         let arrow = L.polyline(p, {
           //颜色
           color: 'rgba(195,49,169,0.9)',
         }).addTo(this.seaLineLayer)
-
-        let fillbg = L.polygon(r, {
-          //颜色
-          // color: 'rgba(255,z55,255,0.9)'
-          color: 'rgba(255,137,135,0.5)'
-          // fillColor:'#ffffff',
-          // fillOpacity:0.5,
-        }).addTo(this.seaLineLayer)
-
         arrow.signal=i
         arrow.on('click', (e) => {
-          console.log("海底光缆信息",e)
+          // console.log("海底光缆信息",e)
           let a = Object.entries(this.showInfo)
           a.forEach(e => {
             this.showInfo[e[0]] = false
@@ -1373,27 +1369,18 @@ const marker = {
           this.dialogInfo.seaLine = i
         })
 
-        // var polygon = L.polygon(r, {color: "#ff7800", weight: 1}).addTo(this.seaLineLayer);
         var pd = L.polylineDecorator(r,{
-          // fillColor:'#ffffff',
-          // fillOpacity:.5,
           //添加配置
           patterns: [{
             //模式符号的偏移位置
             offset: 0,
             //模式符号的重复间隔
             repeat: 10,
-            // fill:true,
-            // fillColor:'#ff7800',
             //符号实例
             symbol: L.Symbol.dash({  
               //符号大小
               pixelSize: 5,
               pathOptions: {
-                // fill:true,
-                // fillColor:'#ff7800',
-                // fillOpacity:0.5,
-                // stroke: true,
                 //颜色
                 // color: '#d42727',
                 // color: '#585858', 

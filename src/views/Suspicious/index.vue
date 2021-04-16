@@ -26,9 +26,6 @@
                 <span class="event_nav_msg">分类：</span>
                     <el-select  v-model="listQuery.type"  class="selectInput"  :popper-append-to-body="false">
                       <el-option   v-for="item in options"  :value="item.value" :label="item.label"   :key="item.value">
-                        <!-- {{item.type}} -->
-                        <!-- <span v-if="item.type == 0">一类</span>
-                        <span v-if="item.type == 1">二类</span> -->
                       </el-option>
                     </el-select>
             </div>

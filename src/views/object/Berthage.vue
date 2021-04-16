@@ -1,354 +1,347 @@
 <template>
- <div class="app-container" >
-    <div class="container-title" >
-        <h3>泊位</h3>
-        <div>
-                <el-button class="filter-item" type="primary"  style=" margin-right: 40px;" >
-                    导入
-                </el-button>
-                <el-button class="filter-item" type="primary"  @click="download()" >
-                    导出
-                </el-button>
-         </div>
-     </div>
-    <div  class="container-middle" >
-          <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="handleAdd()" >添加</el-button>
-          <div class="select_query">
-            <el-input v-model="listQuery.name" placeholder="输入名称" style="width: 200px;" class="filter-item" @input="query()"/>
-            <el-button class="filter-item" type="primary" icon="el-icon-search" @click="query()" > 搜索</el-button>   
-          </div>
+    <div id="plan">
+        <div id="plan_main">
+<!--            <editor v-model="content" :isClear="isClear" @change="change"></editor>-->
+                <el-button type="primary" size="small" @click="add" icon="el-icon-plus" style="margin-left: 1rem">添加</el-button>
+                <el-dialog
+                        :title=dialog.title
+                        :visible.sync=dialog.visible
+                        width="45%"
+                        custom-class="videoDialog"
+                        :close-on-click-modal="false"
+                        >
+                    <el-form label-position="left" label-width="60px" :model="formLabelAlign" ref="ruleForm" :rules="formRules">
+                        <el-form-item v-for="item in addData" :key="item.id" :label="item.name" :prop="item.prop">
+                            <el-input v-model="formLabelAlign[item.prop]"  :disabled="dialog.disabled" ></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <editor v-model="content" :isClear="isClear"  ref="editor" :disabled="editorDisabled"></editor>
+                    <span slot="footer" class="dialog-footer" v-show="dialog.showBtn">
+          <el-button @click="content=''">清 空</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+        </span>
+                </el-dialog>
+
+                <div style="text-align: center; width: 250px;float: right;margin-right: 20px" id="search" >
+                    <el-input size="small" placeholder="请输入关键词" class="input-with-select" v-model="searchTxt">
+                        <el-button type="primary" slot="append" icon="el-icon-search" @click="queryData"></el-button>
+                    </el-input>
+                </div>
+
+                <PaginationTab
+                        :tableData='tableData'
+                        :tabTop='tabTop'
+                        :total='total'
+                        :isUpdata=true
+                        :isMore=true
+                        :isPass=true
+                        @handleClickMore='handleClickMore'
+                        @handleClickPass='handleClickPass'
+                        @handleSizeChange='handleSizeChange'
+                        @handleCurrentChange='handleCurrentChange'
+                        @handleClickUpdata='handleClickUpdata'
+                        @handleClickDelete='handleClickDelete'
+                />
+
+                <el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
+                    <table-map :mapData="mapData"  markerType="point" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></table-map>
+                </el-dialog>
+            </div>
     </div>
-    <el-table
-    :data="tableData"
-    style="width: 100%"
-    :header-cell-style="tableHeaderColor">
-    <el-table-column
-      prop="id"
-      label="序号"
-      align="center">
-    </el-table-column>
-    <el-table-column
-      align="center"
-      prop="name"
-      label="名称">
-    </el-table-column>
-    <el-table-column
-      align="center"
-      prop="total_length"
-      label="总长度">
-    </el-table-column>
-    <el-table-column
-      align="center"
-      prop="controller_distance"
-      label="控制距离">
-    </el-table-column>
-    <el-table-column
-      label="查看地图" 
-      align="center">
-       <template slot-scope="scope">
-          <el-button  @click="handleClickView(scope.row)" type="text" size="small" class="btn-upt">查看</el-button>
-        </template>
-    </el-table-column>
-    
-    <el-table-column label="操作" align="center">
-      <template slot-scope="scope">
-        <el-button
-          type="text" size="small" class="btn-upt" @click="handleUpdate(scope.$index, scope.row)"  >编辑</el-button>
-        <el-button
-          type="text" size="small" class="btn-upt" @click="handleDel(scope.row)">删除</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
-<!-- 查看地图弹窗 -->
-<el-dialog :visible.sync="dialog.showMap" width="520px" :show-close='false' custom-class="mapDialog">
-      <leaflet-tablemap :mapData="mapData"  markerType="Submarine" :option="{strokeColor:'blue ', strokeWeight:2, strokeOpacity:0.5}"></leaflet-tablemap>
-</el-dialog>
- <!-- 新增弹层功能 -->
-     <el-dialog title="添加海底光缆" :visible.sync="dialogFormVisible1"  custom-class="addDialog"    width="600px">
-      <el-form ref="updateForm"  :model="addsForm" label-position="left" label-width="100px"
-       style="width: 400px; margin-left:50px;">
-          <el-form-item label="名称" prop="name" >
-              <el-input v-model="addsForm.name" />
-            </el-form-item>     
-          <el-form-item label="控制距离" prop="controller_distance">
-              <el-input v-model="addsForm.controller_distance" />
-            </el-form-item>
-          <el-form-item label="点位信息" prop="points">
-            <el-input v-model="addsForm.points" />
-          </el-form-item>
-          <el-form-item label="总长度" prop="total_length ">
-            <el-input v-model="addsForm.total_length " />
-          </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible1 = false">
-          取消
-        </el-button>
-        <el-button type="primary" @click="AddData()">
-          确定
-        </el-button>
-      </div>
-    </el-dialog> 
-
-  <!-- 编辑弹层功能 -->
-     <el-dialog title="编辑码头" :visible.sync="dialogFormVisible"     width="600px">
-      <el-form ref="updateForm"  :model="temp" label-position="left" label-width="100px"
-       style="width: 400px; margin-left:50px;">
-         <el-form-item label="名称" prop="name" >
-              <el-input v-model="temp.name" />
-            </el-form-item>     
-          <el-form-item label="控制距离" prop="controller_distance">
-              <el-input v-model="temp.controller_distance" />
-            </el-form-item>
-          <el-form-item label="点位信息" prop="points">
-            <el-input v-model="temp.points" />
-          </el-form-item>
-          <el-form-item label="总长度" prop="total_length ">
-            <el-input v-model="temp.total_length " />
-          </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
-          取消
-        </el-button>
-        <el-button type="primary" @click="updateData()">
-          确定
-        </el-button>
-      </div>
-    </el-dialog> 
-
-    <!-- 删除弹层功能 -->
-    <el-dialog  :visible.sync="dialogDelVisible"  custom-class="deleteDialog"   width="200px">
-      <p>确定删除？</p>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogDelVisible = false">
-          取消
-        </el-button>
-        <el-button type="primary" @click="delData()">
-          删除
-        </el-button>
-      </div>
-    </el-dialog>
-
-    <!-- 分页 -->
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="listQuery.pageNo"
-      :page-sizes="[10, 20, 30, 40]"
-      :page-size="listQuery.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="rows">
-    </el-pagination>
- </div>
 </template>
 
 <script>
+    import editor from '../../components/editor/editor'
+    import {formRules} from '../../tools/formRules';
+    import PaginationTab from '../../components/PaginationTable'
+    // import VideoView from '../../../../zfwtowperiod/src/components/VideoView'
+    import TableMap from '../../../src/components/TableMap'
+  export default {
+    name: 'Feedback',
+    components:{
+      editor,  PaginationTab,
+    },
+    data(){
+      return{
+        isClear: false,
+        editorDisabled:false,
+        content: `<span style="color: rgb(0,0,0);">请编辑内容</span><p><br></p>`,
 
-import TableMap from '../../../src/components/TableMap'
-import LeafletTableMap from '../../../src/components/LeafletTableMap'
-export default {
-  name: 'ComplexTable',
-  components:{'leaflet-tablemap':LeafletTableMap},
-  data() {
-    return {
-      wharf:null,
-     dialog: {
+        secondaryUrl: '/feedback',
+        interfaceType:'',
+        dialog: {
           visible: false,
           title: '',
           showBtn:true,
           showMap:false,
-          disabled:false
+          disabled:false,
         },
-        delid:'',
-      mapData:{},
-      tableData: [], //表格展示的数据
-      pages:1, //总页数
-      rows:1, //总条数
-      listQuery:{
-        pageNumber:1, //当前页面
-        pageSize:10, //条数
-        name:''  //查询条件
-      },
-      dialogDelVisible:false, //删除弹层显示与隐藏
-      dialogFormVisible:false, //编辑弹层显示与隐藏
-      dialogFormVisible1:false, //新增弹层显示与隐藏
-      addsForm:{   //新增数据
-        name:'',
-        controller_distance:'',
-        points :'',
-        total_length:''
-      },
-      temp:{  //编辑的表单字段
-        id:'',
-        name:'',
-        controller_distance:'',
-        points :'',
-        total_length:''
-      },
-      Business_exception:null,
-      //  visible: false,
-    }
-  },
-  filters:{},
-  created() {
-    this.getList();
-  },
-  methods: {
-     submitUpload(){
-          this.$refs.upload.submit();
-      },
-      // 导入数据
-       uploadSectionFile(item){
-         console.log(this.$store.getters.getJSESSIONID)
-        //  console.log("导入的数据",item,process.env.VUE_APP_BASE_API+this.uploadUrl)
-           const fileObj = item.file;
-        // FormData 对象
-          const form = new FormData();
-          // 文件对象
-          form.append('file', fileObj);  
-         this.$axios({
-            method: 'post',
-            url: 'http://192.168.1.36:8093/'+this.uploadUrl,
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'my-session':this.$store.getters.getJSESSIONID
-            },
-            data: form,
-          }).then((res) => {
-            // console.log("返回数据：",res);
-            //  console.log("返回数据状态码：",res.data.error);
-            if(res.data.error==0){
-              //  this.$message.success('成功导入船舶离线数据' + '!');
-              //  this.$alert('成功导入1条船舶离线数据!');
-               this.$message({
-                type: 'success',
-                message: res.data.message,
-                offset:500
-              });
-               this.getList();
+        formRules:formRules,
+        formLabelAlign: {
+          title: '',
+        },
+        addData: [
+          {id: 0, prop: 'title', name: '标题'},
+        ],
+        mapData:[],
+        page: 1,
+        limit: 10,
+        total: 100,
+        imageUrl: '',
+        searchTxt:'',
+        tableData: [],
+        tabTop: [
+          { id: 0, prop: 'title', name: '标题' },
+          { id: 1, prop: 'name', name: '问题类型' },
+          { id: 2, prop: 'creatTime1', name: '创建人' },
+          { id: 3, prop: 'creatTime1', name: '创建时间' },
+          { id: 4, prop: 'position', name: '处理人' },
+          { id: 5, prop: 'status2', name: '处理时间' },
+          { id: 6, prop: 'position', name: '处理情况' },
+          { id: 7, prop: 'status2', name: '处理问题' },
+          // { id: 4, prop: '', name: '附件' },
+          // { id: 5, prop: 'status2', name: '处理时间' },
+        ]
 
-              // this.$notify({
-              //   type: 'success',
-              //   message: '成功导入1条船舶离线数据!'
-              //   //  duration: 0
-              //   //  position: 'bottom-left' 默认右上角
-              // });
-            }
-          });
-      } ,
-     // 修改table header的背景色
-        tableHeaderColor ({ row, column, rowIndex, columnIndex }) {
-          if (rowIndex === 0) {
-            return 'background-color: #DEE8FE;color: #000;font-weight: 500;'
+      }
+    },
+    mounted() {
+      this.queryData()
+      console.log(this.$ipConfig)
+    },
+    methods:{
+      // change(val) {
+      //   console.log(val)
+      //   this.content=val
+      //   // console.log(this.$refs['editor'].editorContent)
+      // },
+      clearEditor(){
+        this.content=''
+        // this.$refs.editor.clear();
+      },
+      add() {
+        this.interfaceType = 'add'
+        this.formLabelAlign = {}
+        this.dialog.visible = true
+        this.dialog.title = '添加'
+        this.dialog.disabled=false
+        this.dialog.showBtn = true;
+        this.editorDisabled=false
+        this.resetForm('ruleForm')//重置
+        this.content=`<span style="color: rgb(0,0,0);">请编辑内容</span><p><br></p>`
+      },
+      handleSizeChange(val)/* 调整分页每页条数 */ {
+        this.limit = val
+        console.log(`每页 ${val} 条`)
+        this.service.post(this.secondaryUrl + '/findPage', {
+          'page': this.page,
+          'limit': this.limit,
+          'condition': this.searchTxt
+        }).then(req => {
+          console.log(req)
+          this.tableData = req.data.list
+          for(let i of this.tableData){
+            i.creatTime1=new Date(i.creatTime).toLocaleDateString()
           }
-        }, 
-
-    getList(){  //获取数据
-         this.service.get( '/berth/page',{
-              params:{
-           pageNumber: this.listQuery.pageNo,
-          pageSize: this.listQuery.pageSize,
-          name: this.listQuery.name}
-         }).then(req => {
-          console.log("泊位数据",req)
-          this.tableData = req.page.list
-          this.rows=req.page.totalRow
-        }) 
-    },
-     handleClickView(row) {
-        console.log('查看地图')
-        this.dialog.showMap = true
-        // if (row.waters) {
-        //   row = { ...row, ...row.waters }
-        // }
-          this.mapData = row;
+          this.total = req.data.totalRow
+        })
       },
-     
-    // 数据写入excel
-    download() {
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('@/vandor/export2Excel.js');
-        const tHeader = ['序号', '名称','控制距离','点位信息','总长度']; // 表头
-        const filterVal = ['id', 'name','controller_distance','points','total_length']; // 值
-        const list = this.tableData;
-        console.log('后端返回的数据', list);
-        const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, '海底光缆数据excel');
-      });
-    },
-    // 格式转换
-    formatJson(filterVal, jsonData) {
-      return jsonData.map((v) => filterVal.map((j) => v[j]));
-    },
+      handleCurrentChange(val) /* 跳页 */ {
+        this.page = val
+        console.log(`当前页: ${val}`)
+        this.service.post(this.secondaryUrl + '/findPage', {
+          'page': this.page,
+          'limit': this.limit,
+          'condition': this.searchTxt
+        }).then(req => {
+          console.log(req)
+          this.tableData = req.data.list
+          for(let i of this.tableData){
+            i.creatTime1=new Date(i.creatTime).toLocaleDateString()
+          }
+          this.total = req.data.totalRow
+        })
+      },
+      handleClickUpdata(row)/* 修改 */ {
+        console.log(row)
+        this.resetForm('ruleForm')//重置
+        this.interfaceType = 'update'
+        this.formLabelAlign = {...row}
+        this.dialog.title = '预案修改'
+        this.editorDisabled=false
+        this.dialog.disabled = false;
+        this.dialog.visible = true
+        this.dialog.showBtn = true
+        this.service.post(this.secondaryUrl + '/detail', {
+          id:row.id
+        }).then(res=>{
+          console.log(res)
+          this.formLabelAlign = {...res.data}
+          this.content=res.data.content
+        })
+      },
+      handleClickMore(row)/* 详情 */ {
+        console.log(row)
+        this.resetForm('ruleForm')//重置
+        this.interfaceType = 'more'
+        // this.formLabelAlign = {...row}
+        this.dialog.visible = true
+        this.dialog.title  = '预案详情'
+        this.dialog.disabled = true;
+        this.dialog.showBtn = false
+        this.editorDisabled=true
+        this.service.post(this.secondaryUrl + '/detail', {
+          id:row.id
+        }).then(res=>{
+          console.log(res)
+          this.formLabelAlign = {...res.data}
+          this.content=res.data.content
+        })
+      },
+      handleClickDelete(row)/* 删除 */ {
+        console.log(row)
+        this.service.post(this.secondaryUrl + '/delete', {
+          id: row.id
+        }).then(req => {
+          // this.tableData = req.data.list;
+          this.queryData()
+          console.log('success')
+        }).catch(err => {
+          this.queryData()
+          //  return false;
+        })
+      },
+      handleClickPass(row) {
+        console.log(row)
+        this.service.post(this.secondaryUrl + '/through', {
+          id:row.id
+        }).then(res=>{
+          // console.log(res)
+          this.queryData()
+        })
+      },
+      resetForm(formName) {
+        if (this.$refs[formName] !== undefined) {
+          this.$refs[formName].resetFields()
+        }
+      },
+      submitForm(formName)/* 提交表单 */ {
 
-    query(){ //按名称查询
-      this.getList();
-    },
-    handleSubmit(row){
-      
-    },
-    //当前条数变化
-    handleSizeChange(val=this.listQuery.pageSize ){
-      this.listQuery.pageSize = val;
-      this.getList();
-    },
-    //当前页变化
-    handleCurrentChange(val=this.listQuery.pageNo){
-      this.listQuery.pageNo = val;
-      this.getList();
-    },
-    //删除弹层
-    handleDel(row){
-       this.delid=row.id
-      //  console.log("这行数据的id",this.delid) 
-      this.temp = {...row};
-      this.dialogDelVisible = true; //弹层显示
-    },
-    //删除提交
-    delData(){
-      this.service.get( '/berth/delete?id='+this.delid,{     
-         }).then(req => {
-          console.log("删除泊位数据",req)
-          this.getList();
-          this.dialogDelVisible = false;
-        }) 
-    },
-     //编辑弹层
-    handleUpdate(index,row){
-     this.temp = Object.assign({}, row);  //获得所有数据显示在编辑信息模态框里面
-      this.dialogFormVisible = true; //弹层显示
-    },
-    // 添加雷达
-     handleAdd(){
-      this.dialogFormVisible1 = true; //弹层显示
-    },
-     AddData(){ 
-        let userList=this.addsForm;  
-        let {name,controller_distance,points,total_length} = userList;
-          this.service.post('/berth/save',this.addsForm).then(res => {
-            console.log("新增的泊位数据",res)
-            this.getList(); 
-          this.dialogFormVisible1 = false;}
-          );
-    },
-    //编辑提交
-    updateData(){
-       this.service.post('/berth/update',{
-          id:this.temp.id,
-          name:this.temp.name,
-          controller_distance:this.temp.controller_distance,
-          points:this.temp.points,
-          total_length:this.temp.total_length,
-       }).then(req => {
-          console.log("编辑泊位信息",req)
-          this.getList();
-          this.dialogFormVisible = false;
-      })
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            // alert('submit!'); /basicData/personnel/add
+            this.content=this.$refs['editor'].editorContent
+            this.formLabelAlign.content=this.content
+            console.log(this.formLabelAlign)
+
+            this.service.post(this.secondaryUrl + '/' + this.interfaceType, {
+              ...this.formLabelAlign
+            }).then(req => {
+              console.log(req)
+
+              // this.tableData = req.data.list;
+              this.dialog.visible = false
+              this.queryData()
+            }).catch(err => {
+              this.$message({ message: err.msg, type: 'error' })
+              console.log(err)
+              this.queryData()
+
+              //  return false;
+            })
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      queryData() /* 查询数据 */ {
+        this.service.post(this.secondaryUrl + '/findPage', {
+          'page': this.page,
+          'limit': this.limit,
+          'condition': this.searchTxt
+        }).then(res => {
+          console.log('反馈',res)
+          this.tableData = res.data.list
+          for(let i of this.tableData){
+            i.creatTime1=new Date(i.creatTime).toLocaleDateString()
+          }
+          this.total = res.data.totalRow
+        })
+      },
+      disMmsi(){
+        // console.log(id,this.interfaceType)
+        if(this.interfaceType=='update'){
+          return false
+        }else{
+          if(this.interfaceType=='more'){
+            return true
+          }else{
+            return false
+          }
+        }
+      },
     }
   }
-}
 </script>
-<style  lang="less" scoped>
-@import '../../assets/css/object.less';
+<style lang="less" scoped>
+        #search {
+            /deep/ .el-input__inner {
+                background: var(--table-input-back);
+                /*border:#66B1FF solid 1px;*/
+            }
+
+            /deep/ .el-input-group__append {
+                background: #66B1FF;
+                /*border: #66B1FF 2px solid;*/
+                color: white;
+            }
+        }
+
+</style>
+<style scoped lang="less">
+    /**{*/
+    /*    margin: 0;*/
+    /*    padding: 0;*/
+    /*}*/
+
+    @media screen and (max-width: 1366px) {
+        #plan {
+            /*height: calc(100% - 121px);*/
+        }
+    }
+    @media screen and (min-width: 1367px) {
+        #plan {
+            height: calc(100% - 115px);
+        }
+    }
+
+
+    #plan{
+        padding: 0;
+        /*height: calc(100% - 95px);*/
+        /*height: 100%;*/
+        display: flex;
+        #plan_main{
+            flex: 1;
+            /*height: calc(100% - 2rem);*/
+            /*height: 100%;*/
+            padding: 1rem 2rem;
+            /deep/.el-dialog__wrapper{
+                overflow: hidden;
+            }
+            /deep/.videoDialog{
+                height: 100%;
+                max-height: 70%;
+                .el-dialog__body {
+                    overflow-y: auto;
+                    /*max-height: 350px;*/
+                    height:  calc(90% - 130px);
+                }
+            }
+            /*/deep/.videoDialog .el-dialog__body{*/
+            /*    overflow-y: auto;*/
+            /*}*/
+        }
+    }
 </style>
