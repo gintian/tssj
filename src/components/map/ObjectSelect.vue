@@ -78,7 +78,7 @@
         height: 46px;
         background: #2770D4;
         display: grid;
-        grid-template-columns: 85% 15%;
+        grid-template-columns: 76% 24%;
         h4{
             color: white;
             font-weight: 100;

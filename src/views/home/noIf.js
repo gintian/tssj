@@ -387,63 +387,78 @@ actions = () => {
       return {}
     }],
 
-    [/^true_铁塔$/, function() {
-      console.log("MarkerClusterGroup",this.MarkerClusterGroup)
-      // this.MarkerClusterGroup.addLayer(marker);
-      this.MarkerClusterGroup.eachLayer(item=>{
-        if(item.signal===this.clickedMarker.name){
-          item.setOpacity(1)
-        }
-      })
-      return {}
+    [/^true_铁塔$/, function(){
+      this.map.addLayer(this.MarkerClusterGroup)
+      return{}
     }],
+    [/^false_铁塔$/, function(){
+    this.map.removeLayer(this.MarkerClusterGroup)
+      return{}
+    }],
+    // 只对铁塔的未聚合点进行筛选
+    // [/^true_铁塔$/, function() {
+    //   console.log("MarkerClusterGroup",this.MarkerClusterGroup)
+    //   // this.MarkerClusterGroup.addLayer(marker);
+    //   this.MarkerClusterGroup.eachLayer(item=>{
+    //     if(item.signal===this.clickedMarker.name){
+    //       item.setOpacity(1)
+    //     }
+    //   })
+    //   return {}
+    // }],
    
-    [/^false_铁塔$/, function() {
-      // this.MarkerClusterGroup.removeLayer(marker);
-      this.MarkerClusterGroup.eachLayer(item=>{
-        if(item.signal===this.clickedMarker.name){
-          item.setOpacity(0)
-        }
-      })
-      return {}
-    }],
-    [/^true_海底光缆$/, function() {
-      console.log("seaLineLayer",this.seaLineLayer)
-      // this.MarkerClusterGroup.addLayer(marker);
-      this.seaLineLayer.eachLayer(item=>{
-        if(item.signal===this.clickedMarker.name){
-          item.setOpacity(1)
-        }
-      })
-      return {}
-    }],
+    // [/^false_铁塔$/, function() {
+    //   // this.MarkerClusterGroup.removeLayer(marker);
+    //   this.MarkerClusterGroup.eachLayer(item=>{
+    //     if(item.signal===this.clickedMarker.name){
+    //       item.setOpacity(0)
+    //     }
+    //   })
+    //   return {}
+    // }],
+    // [/^true_海底光缆$/, function() {
+    //   console.log("seaLineLayer",this.seaLineLayer)
+    //   // this.map.addLayer(this.seaLineLayer)
+    //   // this.seaLineLayer.eachLayer(item=>{
+    //   //   if(item.signal===this.clickedMarker.name){
+    //   //     item.setOpacity(1)
+    //   //   }
+    //   //   // console.log('海底捞',item)
+    //   //   // if(item.name.includes('海缆')&& item.signal==this.clickedMarker.name ){
+    //   //   //   item.setOpacity(1)
+    //   //   // }
+    //   // })
+    //   this.seaLineLayer.addLayer()
+    //   return {}
+    // }],
    
-    [/^false_海底光缆$/, function() {
-      // this.MarkerClusterGroup.removeLayer(marker);
-      this.seaLineLayer.eachLayer(item=>{
-        if(item.signal===this.clickedMarker.name){
-          item.setOpacity(0)
-        }
-      })
-      return {}
-    }],
-    [/^true_(锚地|码头|ais|摄像头|泊位)$/, function() {
+    // [/^false_海底光缆$/, function() {
+    //   this.seaLineLayer.clearLayers()
+    //   return {}
+    // }],
+    [/^true_(锚地|码头|ais|摄像头|泊位|海底光缆)$/, function() {
       console.log("markerLayersGroup",this.markerLayersGroup)
+   if(this.clickedMarker.name==='海底光缆') this.markerLayersGroup.addLayer(this.seaLineLayer)
+   else{
       this.markerLayersGroup.eachLayer(item=>{
         if(item.signal===this.clickedMarker.name){
           item.setOpacity(1)
         }
       })
+    }
       return {}
     }],
   
  
-    [/^false_(锚地|码头|ais|摄像头|泊位)$/, function() {
-      this.markerLayersGroup.eachLayer(item=>{
-        if(item.signal===this.clickedMarker.name){
-          item.setOpacity(0)
-        }
-      })
+    [/^false_(锚地|码头|ais|摄像头|泊位|海底光缆)$/, function() {
+  if(this.clickedMarker.name==='海底光缆') this.markerLayersGroup.removeLayer(this.seaLineLayer)
+   else{
+        this.markerLayersGroup.eachLayer(item=>{
+          if(item.signal===this.clickedMarker.name){
+            item.setOpacity(0)
+          }
+        })
+      }
       return {}
     }],
   
@@ -460,10 +475,11 @@ actions = () => {
       return {}
     }],
     [/^true_海防单位$/, function() {
-      for (let i = 1; i < 11; i++) {
+      console.log("departmentLayers",this.departmentLayers)
+      for (let i = 1; i < 10; i++) {
         // console.log(this['orgLayer'+i])
-        // this.departmentLayers.addLayer(this['orgLayer' + i])
-        this.departmentLayers.addLayer(i)
+        this.departmentLayers.addLayer(this['orgLayer' + i])
+        // this.departmentLayers.addLayer(i)
       }
       return {}
     }],

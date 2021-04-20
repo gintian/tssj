@@ -45,14 +45,14 @@
                                     <el-col :span="3">第{{index+1}}个点</el-col>
                                     <el-col :span="9">
                                         <el-form-item label="经度"
-                                                      :rules="[{required: true, message: '请输入经度', trigger: 'blur'}]"
+                                                      :rules="[{required: true,  validator:testLatLng('请输入经度',[-180,180],), trigger: 'blur'}]"
                                                       :prop="'domains.' + index + '.lon'">
                                             <el-input v-model="domain.lon" :disabled="dialog.disabled"></el-input >
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="9">
                                         <el-form-item label="纬度"
-                                                      :rules="[{required: true, message: '请输入纬度', trigger: 'blur'}]"
+                                                      :rules="[{required: true, validator:testLatLng('请输入纬度',[-90,90],),trigger: 'blur'}]"
                                                       :prop="'domains.' + index + '.lat'">
                                             <el-input v-model="domain.lat" :disabled="dialog.disabled"></el-input>
                                         </el-form-item>
@@ -106,7 +106,7 @@
 <script>
   import {formRules} from '../../utils/formRules';
   import PaginationTab from '../../components/PaginationTable'
- import LeafletTableMap from '../../../src/components/LeafletTableMap'
+ import LeafletTableMap from '../../../src/components/LeafletTableMap1'
   export default {
     // name: 'seaLine',
     components: {
@@ -158,7 +158,7 @@
           { id: 2, prop: 'total_length', name: '总长度' },
           // {id: 3, prop: 'area', name: '区域'},
           {id: 4, prop: 'controller_distance', name: '控制距离'},     
-           {id: 5, prop: 'points', name: '海底光缆节点集'}
+          //  {id: 5, prop: 'points', name: '海底光缆节点集'}
         ]
       }
     },
@@ -269,7 +269,7 @@
       },
      
       handleClickUpdata(row)/* 修改 */ {
-        // console.log('update_row',row)
+        console.log('update_row',row)
         this.resetForm('ruleForm')//重置
         this.resetForm('dynamicValidateForm')
         this.interfaceType = 'update'
@@ -297,7 +297,7 @@
             params:{
           id: row.id}
         }).then(res => {
-        //   console.log('详情',res)
+          // console.log('详情',res)
           this.formLabelAlign = res.sealine
           this.dynamicValidateForm.domains= res.sealine.points
         }).catch(err => {
@@ -327,13 +327,13 @@
       },
       handleClickView(row) {
         console.log('查看地图',row)
+        //   this.resetForm('dynamicValidateForm')
+        // this.resetForm('ruleForm')//重置
         this.dialog.showMap = true
-        // if (row.points) {
-        //   this.mapData = [...row.points]
-        // }
-        this.mapData = row;
-        // this.mapData = [row]
-        console.log(this.mapData)
+        if (row.points) {
+          this.mapData = [...row.points]
+        }
+        //  this.mapData = row;
       },
       resetForm(formName) {
         if (this.$refs[formName] !== undefined) {
@@ -382,11 +382,26 @@
             pageSize: this.listQuery.pageSize,
             name: this.listQuery.name}
         }).then(req => {
-        //   console.log('查询数据',req)
+          console.log('海底光缆数据',req)
           this.tableData = req.page.list
           this.total = req.page.totalRow     
         })
       },
+      
+       testLatLng(txt, scope, type) {
+        return (rule, value, callback) => {
+          let reg = /^\d+$|^\d+\.\d+$/g
+          if (String(value) === 'undefined' || String(value) === '') {
+            callback(new Error(txt))
+          } else if (!reg.test(value)) {
+            callback(new Error('请输入数字'))
+          } else if (value < scope[0] || value > scope[1]) {
+            callback(new Error('超出经纬度最大范围'))
+          } else {
+            callback()
+          }
+        }
+      }
     }
   }
 </script>

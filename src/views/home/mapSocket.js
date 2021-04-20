@@ -112,14 +112,24 @@ export default {
       if (this.clickedMarker.name == '雷达' && this.clickedMarker.is==false||
       this.clickedMarker.name == 'ais'&& this.clickedMarker.is==false
        ||this.clickedMarker.name == '码头'&& this.clickedMarker.is==false
-       ||this.clickedMarker.name == '锚地' && this.clickedMarker.is==false)  {
+       ||this.clickedMarker.name == '锚地' && this.clickedMarker.is==false
+       ||this.clickedMarker.name == '海底光缆'&& this.clickedMarker.is==false
+       ||this.clickedMarker.name == '铁塔' && this.clickedMarker.is==false
+       ||this.clickedMarker.name == '摄像头'&& this.clickedMarker.is==false
+       ||this.clickedMarker.name == '泊位' && this.clickedMarker.is==false
+       ||this.clickedMarker.name == '海防单位' && this.clickedMarker.is==false)  {
         this.radarLayer.clearLayers()
         //  console.log('stationCheck',this.stationCheck.radar)
       } 
       else if (this.clickedMarker.name == '雷达' && this.clickedMarker.is == true ||
       this.clickedMarker.name == 'ais'&& this.clickedMarker.is == true ||
       this.clickedMarker.name == '码头'&& this.clickedMarker.is == true||
-      this.clickedMarker.name == '锚地'&& this.clickedMarker.is == true ){
+      this.clickedMarker.name == '锚地'&& this.clickedMarker.is == true||
+     this.clickedMarker.name == '海底光缆'&& this.clickedMarker.is==true
+      ||this.clickedMarker.name == '铁塔' && this.clickedMarker.is==true
+      ||this.clickedMarker.name == '摄像头'&& this.clickedMarker.is==true
+      ||this.clickedMarker.name == '泊位' && this.clickedMarker.is==true
+      ||this.clickedMarker.name == '海防单位' && this.clickedMarker.is==true){
           for (let i of this.socketRadarData) {
             //  console.log('socketRadarData',i)
             // console.log(this.stationLayers)

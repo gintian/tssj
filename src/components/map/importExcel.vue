@@ -18,7 +18,7 @@
                 </el-upload>
                 <el-upload
                       class="upload-demo"
-                       ref="upload"
+                       ref="RadarUpload"
                       :http-request="uploadRadarFile" 
                       accept=".xls"
                       multiple
@@ -27,7 +27,6 @@
                       :file-list="fileRadarList">
                   <el-button size="small" type="primary" @click="RadarUpload"  >导入雷达目标</el-button>
                 </el-upload>
-            <!-- <el-button size="small" type="primary" @click="exportData"  style="margin-top: 20px;" >导出</el-button> -->
         </div>
     </div>
 </template>
@@ -35,7 +34,6 @@
 <script>
   export default {
     name: 'layerSelect',
-    // props:
     model:{
       prop:'zoom',
       event:'change',
@@ -53,7 +51,7 @@
       return{
         toastShow: false,
 				toastText: '',
-         action:'aaa',
+        action:'aaa',
         uploadUrl:'ship/pushExcel',
         uploadRadar:'radar/targetPushExcel',
         fileList: [],  
@@ -89,11 +87,9 @@
       },
       submitUpload(){
           this.$refs.upload.submit();
-          // this.importdialog=true
       },
       RadarUpload(){
-          this.$refs.upload.submit();
-          // this.importdialog=true
+          this.$refs.RadarUpload.submit();
       },
        // 导入AIS数据
        uploadSectionFile(item){
@@ -103,6 +99,7 @@
           const form = new FormData();
           // 文件对象
           form.append('file', fileObj);  
+          // console.log('baseURL',process.env.VUE_APP_BASE_API)
          this.$axios({
             method: 'post',
             url: 'http://192.168.1.36:8093/'+this.uploadUrl,
@@ -112,11 +109,7 @@
             },
             data: form,
           }).then((res) => {
-            // console.log("返回数据：",res);
-            //  console.log("返回数据状态码：",res.data.error);
             if(res.data.error==0){
-              //  this.$message.success('成功导入船舶离线数据' + '!');
-              //  this.$alert('成功导入1条船舶离线数据!');
               this.$message({
                   type: 'success',
                   message: res.data.message
@@ -124,7 +117,7 @@
             }
           });
       } ,  
-      // 导入雷达数据
+      // 导入雷达目标数据
        uploadRadarFile(item){
            const fileObj = item.file;
         // FormData 对象
@@ -140,8 +133,6 @@
             },
             data: form,
           }).then((res) => {
-            // console.log("返回数据：",res);
-            //  console.log("返回数据状态码：",res.data.error);
             if(res.data.error==0){
               //  this.$message.success('成功导入船舶离线数据' + '!');
               //  this.$alert('成功导入1条船舶离线数据!');
