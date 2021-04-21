@@ -162,10 +162,13 @@ const map = {
         this.loadAreaShip(0)
         this.ShipStatistical(0)
       } else {
-        console.log(this.shipselect)
-        this.loadAreaShip(1,[],this.shipselect,[])
-        this.ShipStatistical(1,[],this.shipselect,[])
+        // console.log(this.shipselect)
+        this.loadAreaShip(1,this.timeselect,this.shipselect,this.areaselect)
+        this.ShipStatistical(1,this.timeselect,this.shipselect,this.areaselect)
+        // this.loadAreaShip(1,[],this.shipselect,[])
+        // this.ShipStatistical(1,[],this.shipselect,[])
       }
+
       let swne = this.getMapBounds()
       let d = {
         'nelat': swne['neLat'],
@@ -495,8 +498,6 @@ const menu = {
           let point = e.layer.toGeoJSON().geometry.coordinates[0]
           this.showShipAreaCount = true
           console.log(point[0][0], point[0][1], point[2][0], point[2][1])
-          // L.circle([point[0][1],point[0][0]], { radius: 30, color: 'red', fillColor: '#f03', fillOpacity: 1 }).addTo(this.map);
-          // L.circle([point[2][1],point[2][0]], { radius: 30, color: 'red', fillColor: '#f03', fillOpacity: 1 }).addTo(this.map);
           let neArr = bd09towgs84(point[2][0], point[2][1])
           let swArr = bd09towgs84(point[0][0], point[0][1])
           console.log(neArr, swArr)
@@ -528,11 +529,9 @@ const menu = {
               obj.nm = parseFloat((obj.normal / obj.total * 100).toFixed(2))
               obj.radar = parseFloat((obj.radarShip / obj.total * 100).toFixed(2))
             }
-
             this.shipAreaCountData = obj
           })
         })
-
       } else {
         this.$message.error('等待船舶数据加载！')
       }
@@ -541,9 +540,7 @@ const menu = {
   },
   // 关注列表的点击事件
   focusClick(row){
-
     console.log(row)
-
     this.service.post('/focus/view',{
       id:row.id
     }).then(res=>{
@@ -561,12 +558,9 @@ const menu = {
       }else{
         this.map.setView([res.data.target.latitude,res.data.target.longitude],14)
       }
-
       if(row.type==='船舶'){
-
         let e=res.data.target
         let bd09Arr = wgs84ToBD(parseFloat(e.longitude),parseFloat( e.latitude))
-
       }
       this.map.setView([res.data.target.latitude,res.data.target.longitude], 12);
 
@@ -741,7 +735,7 @@ const marker = {
         })
          // 海警局
          this.service.get('/org/allList').then(res => {
-          console.log("组织机构",res)
+          // console.log("组织机构",res)
           for (let e of res.list) {
             if(e.type==4){
             let bd09Arr = wgs84ToBD(e.longitude, e.latitude)
@@ -753,7 +747,7 @@ const marker = {
                   id:e.id
                 }
               }).then(res => {
-                console.log("组织机构选项",res)
+                // console.log("组织机构选项",res)
                 let a = Object.entries(this.showInfo)
                 // console.log('组织机构',a)
                 a.forEach(e => {
@@ -1008,7 +1002,7 @@ const marker = {
         this.service.get('/ais/allList', {
           // 'isfocus': this.focusButton
         }).then(res => {
-          console.log("区域内ais信息",res)
+          // console.log("区域内ais信息",res)
           for (let e of res.list) {
             let bd09Arr = wgs84ToBD(e.lon, e.lat)
             let marker = this.createMarker(bd09Arr[1], bd09Arr[0], 15, 26, require('../../assets/mapSigns/ais.png'))('ais')
@@ -1019,8 +1013,7 @@ const marker = {
                   id:e.id
                 }
               }).then(res => {
-               
-                console.log("ais详细信息",res)
+                // console.log("ais详细信息",res)
                 let a = Object.entries(this.showInfo)  //返回一个键值对数组
                 a.forEach(e => {
                   this.showInfo[e[0]] = false
@@ -1332,9 +1325,9 @@ const marker = {
             name:""
           }
     }).then(res => {
-      console.log("区域内海底光缆信息",res)
+      // console.log("区域内海底光缆信息",res)
       for (let i of res.list) {
-        console.log('海底光缆信息',i)
+        // console.log('海底光缆信息',i)
         let p = [], r = []
         i.points.forEach(e => {
           let bd09Arr = wgs84ToBD(e.lon, e.lat)
@@ -1792,13 +1785,14 @@ const ship={
        mmsi: mmsi
       }
      }).then(res => {
-      //  console.log('船舶信息11111',res)
+       console.log('船舶信息11111',res)
        this.dialogInfo.ship = res.ais
        var  latitude=res.ais.lat
        var  longitude=res.ais.lon
        if (res.error === 0) {
-        let bd09Arr = wgs84ToBD(parseFloat(longitude), parseFloat(latitude))
-        L.marker([bd09Arr[1],bd09Arr[0]], {
+        let bd09Arr = wgs84ToBD(parseFloat(longitude), parseFloat(latitude)) //当传入的经纬度为空时  传入NAN
+
+        L.marker([bd09Arr[1],bd09Arr[0]], {  
           icon:L.icon({
             iconUrl: require('../../assets/mapicon/aim.png'),
             iconSize: [32,32],
@@ -2069,7 +2063,7 @@ const area={
     // console.log('1231313',this.showOrHide)
     if (this.showOrHide ==='1') {
       console.log('显示所有')
-      console.log('areaData',this.areaData)
+      // console.log('areaData',this.areaData)
 
       // this.showInfo.customArea = true
       // this.dialogInfo.customArea=this.areaData[0]
@@ -2241,7 +2235,7 @@ const area={
       this.watersLevel = res.data
     })
     this.service.get('/water/allList').then(res => {
-      console.log("全部区域个数",res)
+      // console.log("全部区域个数",res)
       // let arr=[]
       // res.data.forEach(e=>{
       //   if(!this.focusButton){
@@ -2321,8 +2315,6 @@ const area={
                 this.loadGroupData();this.drawLayer.clearLayers()
               // console.log("导入数据的状态",req.error)
              })
-
-
 
           const map={
       

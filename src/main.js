@@ -30,6 +30,9 @@ import Axios from 'axios'
 Vue.prototype.$axios=Axios
 Vue.prototype.service=service
 
+// Axios.defaults.retry = 4;
+// Axios.defaults.retryDelay = 1000;
+
 
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/css/style.css'

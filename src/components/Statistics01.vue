@@ -28,7 +28,7 @@ export default {
   },
   watch: {
     shipList(val) {
-      console.log("监听到的统计数据", val);
+      // console.log("监听到的统计数据", val);
       this.shipList = val;
     }
   },

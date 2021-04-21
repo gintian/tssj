@@ -149,7 +149,7 @@
             }
         },
         mounted() {
-            console.log('shipTabObj', this.shipTabObj)
+            // console.log('shipTabObj', this.shipTabObj)
         },
         watch: {
             shipTabObj: function (val) {

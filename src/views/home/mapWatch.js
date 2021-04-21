@@ -6,13 +6,13 @@ import { addRadarDom } from '../../../src/views/home/mapComponentFactory'
 let ShipDataImgMap = {
   1:(shipType)=>{
     if(shipType=='娱乐船'){
-      return { imgName:'kc.png',sizeWidth:16, sizeHeight:22 };//客船
+      return { imgName:'kc.svg',sizeWidth:16, sizeHeight:22 };//客船
     } else if(shipType=='引航船'){
-      return { imgName:'hc.png',sizeWidth:16, sizeHeight:22 };
+      return { imgName:'hc.svg',sizeWidth:16, sizeHeight:22 };
     } else if(shipType=='拖轮船'){
-      return { imgName:'yl.png',sizeWidth:16, sizeHeight:22 };
+      return { imgName:'yl.svg',sizeWidth:16, sizeHeight:22 };
     } else if(shipType=='水下作业'){
-      return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
+      return { imgName:'dangerbuk.svg',sizeWidth:16, sizeHeight:22 };
     } 
     //  else if(shipType=='潜水作业'){
     //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
@@ -26,33 +26,19 @@ let ShipDataImgMap = {
     //   return { imgName:'zf.png',sizeWidth:16, sizeHeight:22 };
     // }
     else{
-      return { imgName:'another.png',sizeWidth:16, sizeHeight:22 };//其他
+      return { imgName:'another.svg',sizeWidth:16, sizeHeight:22 };//其他
     } 
   },
   2:(shipType)=>{
-    return { imgName:'aim02.png',sizeWidth:16, sizeHeight:26 }  //融合目标
+    return { imgName:'aim02.svg',sizeWidth:16, sizeHeight:26 }  //融合目标
   },
   3:(shipType)=>{
-    return { imgName:'aim01.png',sizeWidth:26, sizeHeight:26 }  //雷达目标
+    return { imgName:'aim01.svg',sizeWidth:26, sizeHeight:26 }  //雷达目标
   },
   // 4:(shipType)=>{
   //   return { imgName:'aim03.png',sizeWidth:26, sizeHeight:26 }  //异常目标
   // },
 }
-// let flyDataImg=function(speed) {
-
-//   if(speed<=120){
-//     return 'fly1.svg'
-//   }else if(speed<=360){
-//     return 'fly2.svg'
-//   }else if(speed<=1000){
-//     return 'fly3.svg'
-//   }else if(speed>1000){
-//     return 'fly4.svg'
-//   }
-
-// }
-
 
 export default {
   
@@ -62,9 +48,8 @@ export default {
     this.leftDrawerShipTypeLayer.clearLayers()
     for (let i of val) {
       var  normal=i.normal
+      var  shipType=i.shipType
       // console.log('normal',normal)
-      
-      // let sim=ShipDataImgMap[i.targettype](i.abnormal, i.time)
       let sim=ShipDataImgMap[i.targettype](i.shipType)
       // console.log('sim',sim)
       let bd09Arr = wgs84ToBD(parseFloat(i.lon), parseFloat(i.lat))
@@ -82,17 +67,41 @@ export default {
       //     iconAnchor: [16,16]
       //   })
       // }
-
+      // && shipType!=='雷达目标'
       let icon;
-      if(normal==1){
-        icon =  L.icon({
-          iconUrl: require('../../assets/mapSigns/aim03.png'),
+      if(normal==1 && shipType=='其他'){
+          icon =  L.icon({
+          iconUrl: require('../../assets/mapSigns/shipAim/another_abnormal.svg'),
           iconSize: [16,22],
           iconAnchor: [16,16]
         })
-      }else{
+      }else if(normal==1 && shipType=='拖轮船'){
+            icon =  L.icon({
+            iconUrl: require('../../assets/mapSigns/shipAim/yl_ab.svg'),
+            iconSize: [16,22],
+            iconAnchor: [16,16]
+          })
+      }else if(normal==1  && shipType=='水下作业'){
+                  icon =  L.icon({
+                  iconUrl: require('../../assets/mapSigns/shipAim/dangerbuk_ab.svg'),
+                  iconSize: [16,22],
+                  iconAnchor: [16,16]
+          })
+      }else if(normal==1  && shipType=='引航船'){
+                  icon =  L.icon({
+                  iconUrl: require('../../assets/mapSigns/shipAim/hc_abnormal.svg'),
+                  iconSize: [16,22],
+                  iconAnchor: [16,16]
+          })
+      }else if(normal==1  && shipType=='娱乐船'){
+                  icon =  L.icon({
+                  iconUrl: require('../../assets/mapSigns/shipAim/kc_abnormal.svg'),
+                  iconSize: [16,22],
+                  iconAnchor: [16,16]
+          })
+      }else{
            icon = L.icon({
-            iconUrl: require('../../assets/mapSigns/' + sim.imgName),
+            iconUrl: require('../../assets/mapSigns/shipAim/' + sim.imgName),
             iconSize: [sim.sizeWidth*0.8,sim.sizeHeight*0.8],
             iconAnchor: [sim.sizeWidth*0.55, sim.sizeWidth*0.55]
           })
@@ -125,7 +134,6 @@ export default {
 
 
     this.ciLayer.addOnClickListener((e,data)=>{
-      
       this.animateLayer.clearLayers()
       let info=data[0].data.signal
       let bd09Arr = wgs84ToBD(parseFloat(info.lon), parseFloat(info.lat))

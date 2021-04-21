@@ -60,18 +60,18 @@
               { img: require('../assets/mapSigns/port.png'), label: '泊位'}
             ],
              children2: [
-              { img: require('../assets/mapSigns/aim01.svg'), label: '雷达目标' },
-              { img: require('../assets/mapSigns/aim02.svg'), label: '融合目标' },
+              { img: require('../assets/mapSigns/shipAim/aim01.svg'), label: '雷达目标' },
+              { img: require('../assets/mapSigns/shipAim/aim02.svg'), label: '融合目标' },
               // { img: require('../assets/mapSigns/kc.png'), label: '客船' },
               // { img: require('../assets/mapSigns/hc.png'), label: '货船' },
               // { img: require('../assets/mapSigns/yl.png'), label: '油轮' },
               // { img: require('../assets/mapSigns/dangerbuk.png'), label: '危险货物' },
-               { img: require('../assets/mapSigns/kc.svg'), label: '娱乐船' },
-              { img: require('../assets/mapSigns/hc.svg'), label: '引航船' },
-              { img: require('../assets/mapSigns/yl.svg'), label: '拖轮船' },
-              { img: require('../assets/mapSigns/dangerbuk.svg'), label: '水下作业' },
-              { img: require('../assets/mapSigns/another.svg'), label: '其他' },  
-              { img: require('../assets/mapSigns/aim03.svg'), label: '异常目标' },
+               { img: require('../assets/mapSigns/shipAim/kc.svg'), label: '娱乐船' },
+              { img: require('../assets/mapSigns/shipAim/hc.svg'), label: '引航船' },
+              { img: require('../assets/mapSigns/shipAim/yl.svg'), label: '拖轮船' },
+              { img: require('../assets/mapSigns/shipAim/dangerbuk.svg'), label: '水下作业' },
+              { img: require('../assets/mapSigns/shipAim/another.svg'), label: '其他' },  
+              // { img: require('../assets/mapSigns/aim03.svg'), label: '异常目标' },
               { img: require('../assets/mapSigns/zf.svg'), label: '执法船' }  
             ],
             children3: [

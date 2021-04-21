@@ -273,7 +273,6 @@
     </div>
     <!-- 显示经纬度 -->
      <div id="MapLang" style=" position: absolute;left: 10px; bottom:-5%;z-index: 400;">
-      <!-- <MapLang > </MapLang> -->
       <div class="btn"  >
           <div class="lat">{{MapLanglat}}</div>
           <div class="lon">{{MapLanglon}}</div>
@@ -1101,7 +1100,7 @@ export default {
           }
         })
         .then(res => {
-          console.log('所有区域目标', res)
+          // console.log('所有区域目标', res)
           this.objectArea = res.list;
           if (!this.objectArea) {
             return "暂无数据";
@@ -1265,7 +1264,7 @@ export default {
           ...d
         })
         .then(res => {
-          console.log("船舶统计", res);
+          // console.log("船舶统计", res);
           this.shipStatistics = res.list;
         });
     },
@@ -1293,7 +1292,7 @@ export default {
           ...d
         })
         .then(res => {
-          console.log("区域内船舶加载", res);
+          // console.log("区域内船舶加载", res);
           if (this.map.getZoom() >= this.maxMapZoom) {
             this.areaShipData = [...res.list];
             //   console.log('areaShipData', this.areaShipData)
