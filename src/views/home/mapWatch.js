@@ -71,7 +71,7 @@ export default {
       let icon;
       if(normal==1 && shipType=='其他'){
           icon =  L.icon({
-          iconUrl: require('../../assets/mapSigns/shipAim/another_abnormal.svg'),
+          iconUrl: require('../../assets/mapSigns/shipAim/another_ab.svg'),
           iconSize: [16,22],
           iconAnchor: [16,16]
         })
@@ -89,13 +89,13 @@ export default {
           })
       }else if(normal==1  && shipType=='引航船'){
                   icon =  L.icon({
-                  iconUrl: require('../../assets/mapSigns/shipAim/hc_abnormal.svg'),
+                  iconUrl: require('../../assets/mapSigns/shipAim/hc_ab.svg'),
                   iconSize: [16,22],
                   iconAnchor: [16,16]
           })
       }else if(normal==1  && shipType=='娱乐船'){
                   icon =  L.icon({
-                  iconUrl: require('../../assets/mapSigns/shipAim/kc_abnormal.svg'),
+                  iconUrl: require('../../assets/mapSigns/shipAim/kc_ab.svg'),
                   iconSize: [16,22],
                   iconAnchor: [16,16]
           })
