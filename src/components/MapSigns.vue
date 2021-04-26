@@ -31,8 +31,7 @@
                                       <img :src='child.img' alt=""  style="width: 20px; height: 20px;">
                                       <p >{{child.label}}</p>
                                   </div>
-                              </div>
-                         
+                              </div>      
                 </el-dialog>
             </div>
         </div>

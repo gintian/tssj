@@ -118,25 +118,8 @@
       this.loadData()
     },
     methods: {
-      // ...homeMethods,&&node.childNodes.length>1
        handleNodeClick(data, node, elem) {
         // console.log(node) 
-        // this.loadSettingNode()
-        //   if(node.level ==2){
-        //       if(node.data.name==areaName){
-        //         this.$emit('SettingNode',latitude,longitude);
-        //       }
-        //   }
-        // if(node.level ==2){
-        //   // console.log(node.parent.childNodes) 
-        //    for(var i  in  node.childNodes){
-        //       console.log(i,node.childNodes[i])
-        //   }
-        // }
-      
-          // Object.keys(node.childNodes).forEach(function(key){
-          //   console.log(key,obj[key])
-          // }
        },
      change(index) {
          this.number = index; 

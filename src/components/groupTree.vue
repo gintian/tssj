@@ -3,7 +3,6 @@
     <div class="tree-block">
       <div class="tree_filter">
         <el-input placeholder="请输入区域名称搜索" v-model="filterText" :input="valueChange"></el-input>
-
         <span @click="openDrawView" class="selectAdd">+</span>
       </div>
       <el-upload
@@ -102,7 +101,6 @@
 
 <script>
 import mapUtils from "../utils/mapUtils";
-//  import { addPolygon } from '../views/home/mapComponentFactory.js'
 import { wgs84ToBD } from "../utils/coordinateConvert";
 let id = 1000;
 export default {
@@ -127,7 +125,6 @@ export default {
         id: 1,
         label: "一级 1",
         isEdit: false,
-        // className: "icon_rect",
         children: [
           {
             id: 4,
@@ -458,13 +455,6 @@ export default {
   mounted() {},
   updated() {
     // console.log(this.groupData)
-    // console.log(this.areaData)
-    // this.map.addEventListener('zoomend', (e) => {
-    //
-    //   let s = 5 / (Math.pow(2, 9)) * Math.pow(2, this.map.getZoom())
-    //   console.log(s, this.map.getZoom())
-    //
-    // })
   },
   methods: {
     valueChange(e) {
@@ -521,7 +511,7 @@ export default {
       for (let i in this.tableData) {
         // console.log("i",i)
         if (this.tableData[i].show) {
-          console.log("tableData", this.tableData[i]);
+          // console.log("tableData", this.tableData[i]);
           let [level, type, name, points, radius, lat, lon] = [
             this.tableData[i].level,
             this.tableData[i].type,
@@ -542,15 +532,12 @@ export default {
               name: name
             })
             .then(req => {
-              console.log("一键导入的数据", req);
-
-              // console.log("导入的数据",req.error)
+              // console.log("一键导入的数据", req);
               if (req.error == 0) {
                 this.tableData[i].show = false;
                 this.$set(this.tableData, i, this.tableData[i]);
                 console.log("表格数据更新后", this.tableData);
               }
-              // this.$emit('loadGroupData')
             });
         }
       }
@@ -582,7 +569,6 @@ export default {
       form.append("file", fileObj);
       this.$axios({
         method: "post",
-        // url: 'http://127.0.0.1:8093/'+this.uploadUrl,
         url: "http://192.168.1.36:8093/" + this.uploadUrl,
         headers: {
           "Content-Type": "multipart/form-data",
@@ -629,7 +615,7 @@ export default {
       // return true
     },
     handleDrop(draggingNode, dropNode, dropType, ev) {
-      console.log("draggingNode", draggingNode, dropType, dropNode);
+      // console.log("draggingNode", draggingNode, dropType, dropNode);
       this.$emit("allowDrop", {
         id: draggingNode.data.id,
         groupId: dropNode.data.id
@@ -892,31 +878,7 @@ export default {
         this.areaInfo.description = data.description;
       });
     },
-    hideAllArea(data) /*隐藏所有区域*/ {
-      //
-      // var allOverlay = this.map.getOverlays()
-      // // console.log(allOverlay)
-      // for (var i = 0; i <= allOverlay.length - 1; i++) {
-      //   // console.log('id1:'+allOverlay[i].mmsi)
-      //   if (allOverlay[i].tp === 'area'||allOverlay[i].tp==='areaLabel') {
-      //     // console.log('id2:'+allOverlay[i].mmsi)
-      //     this.map.removeOverlay(allOverlay[i])
-      //     // return false;
-      //   }
-      // }
-      //
-      // for (let i of this.groupData) {
-      //   if (i.children.length > 0) {
-      //     // area.push(i.children)
-      //     for (let j of i.children) {
-      //       j.show = false
-      //     }
-      //   }
-      // }
-      // this.groupData[0].children[0].show=true
-      // console.log(this.groupData[0].children[0])
-      // console.log(area)
-    },
+ 
     showArea(ev, store, data) {
       console.log('showArea',data)
 
@@ -1176,10 +1138,6 @@ export default {
   }
 }
 
-/deep/ .el-input {
-  //   font-size: 14px;
-  // display: inline-block;
-}
 /deep/.el-input__inner {
   background: none;
 }
@@ -1188,10 +1146,7 @@ export default {
   // color: white;
   // color: #eeeeee;
 }
-.custom-tree-container {
-  // color: white;
-  // color: #eeeeee;
-}
+
 /deep/.el-tree-node:hover > .el-tree-node__content {
   background: none;
 }

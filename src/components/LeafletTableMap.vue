@@ -16,16 +16,6 @@ export default {
         return {};
       }
     },
-    // mapData:{
-    //         type:Array,
-    //         default:()=>[]
-    //     },
-    // trailData: {
-    //   type: Object,
-    //   default: () => {
-    //     return {};
-    //   }
-    // },
     markerType:  {
         type: String,
         default: ''

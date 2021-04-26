@@ -84,12 +84,6 @@ export default {
                 containLabel: true
             },
           legend: {
-                  // textStyle:{
-                  //         color:'#d0d6ed'
-                  // },
-            // orient: 'horizontal',
-            // type: 'scroll',
-            // right: 10,
             width:'100%',
             top: '85%',
             left: 'center',

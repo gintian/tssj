@@ -14,17 +14,17 @@ let ShipDataImgMap = {
     } else if(shipType=='水下作业'){
       return { imgName:'dangerbuk.svg',sizeWidth:16, sizeHeight:22 };
     } 
-    //  else if(shipType=='潜水作业'){
-    //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
-    // } else if(shipType=='补给船'){
-    //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
-    // } else if(shipType=='防污染'){
-    //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
-    // } else if(shipType=='顶推船'){
-    //   return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
-    // } else if(shipType=='执法船'){
-    //   return { imgName:'zf.png',sizeWidth:16, sizeHeight:22 };
-    // }
+     else if(shipType=='水下作业'){
+      return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
+    } else if(shipType=='补给船'){
+      return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
+    } else if(shipType=='防污染'){
+      return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
+    } else if(shipType=='顶推船'){
+      return { imgName:'dangerbuk.png',sizeWidth:16, sizeHeight:22 };
+    } else if(shipType=='执法船'){
+      return { imgName:'zf.png',sizeWidth:16, sizeHeight:22 };
+    }
     else{
       return { imgName:'another.svg',sizeWidth:16, sizeHeight:22 };//其他
     } 
